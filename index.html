@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinLevel — Бюджет 50-30-20</title>
+    <title>FinLevel — Инвестиции</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -32,33 +32,38 @@
             display: flex;
             justify-content: space-between;
             margin: 10px 0;
+            gap: 10px;
         }
-        .category {
+        .asset {
             flex: 1;
-            margin: 0 5px;
             padding: 10px;
             border-radius: 10px;
+            background: #0f3460;
         }
-        .needs { background: #e74c3c; }
-        .wants { background: #f39c12; }
-        .savings { background: #2ecc71; }
+        .stocks { border-top: 4px solid #3498db; }
+        .realty { border-top: 4px solid #2ecc71; }
+        .crypto { border-top: 4px solid #f39c12; }
         .button {
             background: #6c5ce7;
             color: white;
             border: none;
             border-radius: 16px;
-            padding: 16px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 16px;
             width: 100%;
             cursor: pointer;
-            margin: 10px 0;
+            margin: 5px 0;
         }
         .small-btn {
             background: #3498db;
             padding: 8px;
             font-size: 14px;
-            margin: 5px;
-            width: auto;
+        }
+        .profit {
+            color: #2ecc71;
+        }
+        .loss {
+            color: #e74c3c;
         }
     </style>
 </head>
@@ -68,41 +73,44 @@
     <div class="card">
         <h2>💰 Основной счёт</h2>
         <div class="balance" id="balance">0</div>
+        <p>доступно монет</p>
     </div>
 
     <div class="card">
-        <h2>📊 Бюджет 50-30-20</h2>
+        <h2>📈 Портфель</h2>
         <div class="row">
-            <div class="category needs">
-                <div>🥖 Необходимое</div>
-                <div class="balance" id="needs">0</div>
+            <div class="asset stocks">
+                <div>📊 Акции</div>
+                <div class="balance" id="stocks">0</div>
             </div>
-            <div class="category wants">
-                <div>🎮 Хотелки</div>
-                <div class="balance" id="wants">0</div>
+            <div class="asset realty">
+                <div>🏠 Недвижимость</div>
+                <div class="balance" id="realty">0</div>
             </div>
-            <div class="category savings">
-                <div>💰 Сбережения</div>
-                <div class="balance" id="savings">0</div>
+            <div class="asset crypto">
+                <div>₿ Крипта</div>
+                <div class="balance" id="crypto">0</div>
             </div>
         </div>
     </div>
 
     <div class="card">
-        <h2>➕ Заработать</h2>
+        <h2>💰 Заработать</h2>
         <button class="button" onclick="addCoin()">👆 +1 монета</button>
     </div>
 
     <div class="card">
-        <h2>💸 Потратить</h2>
-        <button class="button small-btn" onclick="spend('needs', 10)">🥖 Нужное (10)</button>
-        <button class="button small-btn" onclick="spend('wants', 10)">🎮 Хотелки (10)</button>
-        <button class="button small-btn" onclick="spend('savings', 10)">💰 Сбережения (10)</button>
+        <h2>📊 Инвестировать</h2>
+        <div class="row">
+            <button class="button small-btn" onclick="invest('stocks', 10)">📊 Акции +10</button>
+            <button class="button small-btn" onclick="invest('realty', 10)">🏠 Недвиж. +10</button>
+            <button class="button small-btn" onclick="invest('crypto', 10)">₿ Крипта +10</button>
+        </div>
     </div>
 
     <div class="card">
-        <h2>📈 Распределить доход</h2>
-        <button class="button" onclick="distributeIncome()">🔄 Распределить 100 монет по 50-30-20</button>
+        <h2>📈 Обновить рынок</h2>
+        <button class="button" onclick="updateMarket()">🔄 Рыночный день</button>
     </div>
     
     <button class="button" onclick="window.Telegram.WebApp.close()">
@@ -112,33 +120,33 @@
     <script>
         // Загрузка данных
         let coins = localStorage.getItem('finlevel_coins');
-        let needs = localStorage.getItem('finlevel_needs');
-        let wants = localStorage.getItem('finlevel_wants');
-        let savings = localStorage.getItem('finlevel_savings');
+        let stocks = localStorage.getItem('finlevel_stocks');
+        let realty = localStorage.getItem('finlevel_realty');
+        let crypto = localStorage.getItem('finlevel_crypto');
         
         coins = coins ? parseInt(coins) : 0;
-        needs = needs ? parseInt(needs) : 0;
-        wants = wants ? parseInt(wants) : 0;
-        savings = savings ? parseInt(savings) : 0;
+        stocks = stocks ? parseInt(stocks) : 0;
+        realty = realty ? parseInt(realty) : 0;
+        crypto = crypto ? parseInt(crypto) : 0;
         
         const balanceEl = document.getElementById('balance');
-        const needsEl = document.getElementById('needs');
-        const wantsEl = document.getElementById('wants');
-        const savingsEl = document.getElementById('savings');
+        const stocksEl = document.getElementById('stocks');
+        const realtyEl = document.getElementById('realty');
+        const cryptoEl = document.getElementById('crypto');
         
         function updateDisplay() {
             balanceEl.textContent = coins;
-            needsEl.textContent = needs;
-            wantsEl.textContent = wants;
-            savingsEl.textContent = savings;
+            stocksEl.textContent = stocks;
+            realtyEl.textContent = realty;
+            cryptoEl.textContent = crypto;
         }
         updateDisplay();
         
         function saveAll() {
             localStorage.setItem('finlevel_coins', coins);
-            localStorage.setItem('finlevel_needs', needs);
-            localStorage.setItem('finlevel_wants', wants);
-            localStorage.setItem('finlevel_savings', savings);
+            localStorage.setItem('finlevel_stocks', stocks);
+            localStorage.setItem('finlevel_realty', realty);
+            localStorage.setItem('finlevel_crypto', crypto);
         }
         
         function addCoin() {
@@ -150,37 +158,57 @@
             }
         }
         
-        function spend(category, amount) {
+        function invest(asset, amount) {
             if (coins < amount) {
                 alert('Недостаточно монет');
                 return;
             }
+            
             coins -= amount;
-            if (category === 'needs') needs += amount;
-            if (category === 'wants') wants += amount;
-            if (category === 'savings') savings += amount;
+            
+            if (asset === 'stocks') stocks += amount;
+            if (asset === 'realty') realty += amount;
+            if (asset === 'crypto') crypto += amount;
+            
             saveAll();
             updateDisplay();
+            
             if (window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
             }
         }
         
-        function distributeIncome() {
-            if (coins < 100) {
-                alert('Нужно минимум 100 монет для распределения');
-                return;
-            }
+        function updateMarket() {
+            // Акции: -20% до +30%
+            let stocksChange = Math.floor(Math.random() * 50) - 20;
+            let stocksDelta = Math.floor(stocks * stocksChange / 100);
+            stocks += stocksDelta;
             
-            let income = 100;
-            coins -= income;
+            // Недвижимость: -10% до +15%
+            let realtyChange = Math.floor(Math.random() * 25) - 10;
+            let realtyDelta = Math.floor(realty * realtyChange / 100);
+            realty += realtyDelta;
             
-            needs += Math.floor(income * 0.5);  // 50%
-            wants += Math.floor(income * 0.3);  // 30%
-            savings += Math.floor(income * 0.2); // 20%
+            // Крипта: -40% до +80%
+            let cryptoChange = Math.floor(Math.random() * 120) - 40;
+            let cryptoDelta = Math.floor(crypto * cryptoChange / 100);
+            crypto += cryptoDelta;
+            
+            // Не даём уйти в минус
+            if (stocks < 0) stocks = 0;
+            if (realty < 0) realty = 0;
+            if (crypto < 0) crypto = 0;
             
             saveAll();
             updateDisplay();
+            
+            // Показываем результаты
+            let message = 'Рынок обновлён:\n';
+            message += `Акции: ${stocksChange > 0 ? '+' : ''}${stocksChange}% (${stocksDelta} монет)\n`;
+            message += `Недвижимость: ${realtyChange > 0 ? '+' : ''}${realtyChange}% (${realtyDelta} монет)\n`;
+            message += `Крипта: ${cryptoChange > 0 ? '+' : ''}${cryptoChange}% (${cryptoDelta} монет)`;
+            
+            alert(message);
             
             if (window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
