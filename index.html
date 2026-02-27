@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinLevel — Империя чувств</title>
+    <title>FinLevel — Легенда о капитале</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
@@ -16,12 +16,9 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            min-height: 100vh;
-            padding: 15px;
+            background: #0a0f1e;
             color: white;
-            position: relative;
-            overflow-x: hidden;
+            padding: 16px;
         }
         
         /* Анимированный фон */
@@ -30,239 +27,213 @@
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(76, 76, 255, 0.1), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 100, 100, 0.1), transparent 50%);
             pointer-events: none;
-            z-index: 0;
-        }
-        
-        /* Конфетти */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #ff6b6b;
-            position: absolute;
-            top: -10px;
-            border-radius: 50%;
-            animation: confettiFall 3s linear forwards;
-            z-index: 9999;
-            pointer-events: none;
-        }
-        
-        @keyframes confettiFall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
+            z-index: -1;
         }
         
         h1 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #fff5a0, #ffd0a0);
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #aad0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255,215,0,0.3);
-            position: relative;
-            z-index: 1;
-            animation: titleGlow 3s infinite;
         }
         
-        @keyframes titleGlow {
-            0%, 100% { filter: drop-shadow(0 0 20px gold); }
-            50% { filter: drop-shadow(0 0 40px orange); }
-        }
-        
-        .card {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(12px);
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s;
-            pointer-events: none;
-        }
-        
-        .card:hover::before {
-            opacity: 1;
-            animation: rotate 10s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .balance-large {
-            font-size: 48px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: pulse 2s infinite;
+        .subtitle {
             text-align: center;
-            margin: 10px 0;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px gold); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 40px orange); }
-        }
-        
-        .progress-bar {
-            background: rgba(0,0,0,0.3);
-            height: 16px;
-            border-radius: 8px;
-            margin: 12px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00b894, #00cec9);
-            border-radius: 8px;
-            transition: width 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .chart {
-            background: rgba(0,0,0,0.2);
-            height: 100px;
-            border-radius: 16px;
-            margin: 15px 0;
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
+            font-size: 14px;
+            color: #a0b0d0;
+            margin-bottom: 20px;
             padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
         }
         
-        .chart-bar {
-            flex: 1;
-            background: linear-gradient(0deg, #6c5ce7, #a8a5e6);
-            border-radius: 6px 6px 0 0;
-            transition: height 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            animation: barRise 0.5s ease-out;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(20, 30, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #a0b0d0;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .trend {
+            font-size: 14px;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        
+        .trend.up {
+            background: rgba(0,200,100,0.2);
+            color: #00c864;
+        }
+        
+        .trend.down {
+            background: rgba(255,80,80,0.2);
+            color: #ff5050;
+        }
+        
+        .market-card {
+            background: rgba(30, 40, 60, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
             position: relative;
+            overflow: hidden;
         }
         
-        @keyframes barRise {
-            from { height: 0; }
-            to { height: var(--height); }
-        }
-        
-        .chart-bar::after {
+        .market-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: rgba(255,255,255,0.5);
-            animation: barGlow 2s infinite;
+            height: 4px;
+            background: linear-gradient(90deg, #00ffaa, #00aaff);
         }
         
-        @keyframes barGlow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        .button {
-            background: linear-gradient(135deg, #6c5ce7, #a363d9);
-            border: none;
-            border-radius: 20px;
-            padding: 16px 20px;
-            font-size: 16px;
+        .month-title {
+            font-size: 18px;
             font-weight: 700;
-            color: white;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            margin: 6px 0;
-            position: relative;
+            margin-bottom: 12px;
+            color: #aad0ff;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .price-row:last-child {
+            border-bottom: none;
+        }
+        
+        .price-label {
+            font-size: 16px;
+        }
+        
+        .price-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .demand-bar {
+            height: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
-            border: 1px solid rgba(255,255,255,0.2);
+            margin: 10px 0;
+            position: relative;
         }
         
-        .button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
+        .demand-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00c864, #00e6b0);
+            border-radius: 15px;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #000;
         }
         
-        .button:active::before {
-            width: 300px;
-            height: 300px;
+        .action-card {
+            background: rgba(20, 30, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
         }
         
-        .button:active {
-            transform: scale(0.95);
+        .action-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #aad0ff;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #2a3a5a, #1a2a40);
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.97);
+            background: linear-gradient(135deg, #3a4a6a, #2a3a50);
+        }
+        
+        .action-btn .cost {
+            font-size: 12px;
+            color: #ffaa00;
+            margin-top: 4px;
         }
         
         .event-popup {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border-radius: 20px;
-            padding: 15px;
-            margin: 10px 0;
+            padding: 16px;
+            margin: 16px 0;
             animation: slideIn 0.5s, glowPulse 2s infinite;
-            cursor: pointer;
         }
         
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         @keyframes glowPulse {
@@ -270,444 +241,394 @@
             50% { box-shadow: 0 0 40px #f5576c; }
         }
         
-        .friend-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255,255,255,0.05);
+        .competitor-card {
+            background: rgba(40, 30, 50, 0.7);
             border-radius: 16px;
             padding: 12px;
             margin: 8px 0;
-            transition: transform 0.2s;
+            border-left: 4px solid #ff5050;
         }
         
-        .friend-row:hover {
-            transform: translateX(5px);
-            background: rgba(255,255,255,0.1);
-        }
-        
-        .badge {
-            background: linear-gradient(135deg, #f6d365, #fda085);
-            padding: 6px 14px;
+        .next-month-btn {
+            background: linear-gradient(135deg, #00c864, #00a0a0);
+            border: none;
             border-radius: 30px;
-            font-size: 12px;
+            padding: 20px;
+            font-size: 18px;
             font-weight: 700;
-            color: #2d3436;
-            display: inline-block;
-            animation: badgePop 0.5s;
-        }
-        
-        @keyframes badgePop {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
-        }
-        
-        .achievement {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            padding: 12px;
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,200,100,0.3);
             transition: all 0.3s;
-            border: 1px solid transparent;
         }
         
-        .achievement.unlocked {
-            background: linear-gradient(135deg, #00b894, #00cec9);
-            animation: unlockShine 1s;
-            border-color: gold;
+        .next-month-btn:active {
+            transform: scale(0.95);
         }
         
-        @keyframes unlockShine {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
-        }
-        
-        .floating-particle {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: floatParticle 10s linear infinite;
-        }
-        
-        @keyframes floatParticle {
-            from {
-                transform: translateY(100vh) translateX(-50vw);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-100vh) translateX(50vw);
-                opacity: 0;
-            }
+        .game-over {
+            background: linear-gradient(135deg, #ff5050, #cc4040);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
         }
     </style>
 </head>
 <body>
-    <!-- Фоновые частицы -->
-    <div id="particles"></div>
+    <h1>👞 FinLevel</h1>
+    <div class="subtitle">
+        Легенда о капитале · Обувная фабрика «Заря»
+    </div>
     
-    <h1>💰 FinLevel</h1>
-    
-    <!-- Основной счёт с анимацией -->
-    <div class="card">
-        <div style="text-align: center; margin-bottom: 10px;">
-            <span class="badge">⚡ ИМПЕРИЯ РАСТЁТ</span>
+    <!-- Основные ресурсы -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">💰 Деньги</div>
+            <div class="stat-value" id="money">100 000₽</div>
         </div>
-        <div class="balance-large" id="balance">1000</div>
-        <div style="text-align: center; color: #a0a0a0;">капитал</div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressToGoal" style="width: 45%"></div>
+        <div class="stat-card">
+            <div class="stat-label">🏭 Производство</div>
+            <div class="stat-value" id="production">100 пар/мес</div>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 12px;">
-            <span>🎯 Цель: <span id="goalDisplay">10 000</span></span>
-            <span>📊 <span id="goalPercent">45</span>%</span>
+        <div class="stat-card">
+            <div class="stat-label">📦 На складе</div>
+            <div class="stat-value" id="stock">50 пар</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">👥 Персонал</div>
+            <div class="stat-value" id="staff">5 чел</div>
         </div>
     </div>
     
-    <!-- Инвестиции -->
-    <div class="card">
-        <h2 style="margin-bottom: 15px;">📈 Портфель</h2>
-        <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-            <div style="flex:1; text-align: center;">
-                <div>📊 Акции</div>
-                <div style="font-size: 20px; font-weight: bold;" id="stocks">500</div>
-            </div>
-            <div style="flex:1; text-align: center;">
-                <div>🏠 Недвиж.</div>
-                <div style="font-size: 20px; font-weight: bold;" id="realty">300</div>
-            </div>
-            <div style="flex:1; text-align: center;">
-                <div>₿ Крипта</div>
-                <div style="font-size: 20px; font-weight: bold;" id="crypto">200</div>
-            </div>
+    <!-- Рыночная ситуация -->
+    <div class="market-card">
+        <div class="month-title">📊 Месяц <span id="month">1</span> из 12</div>
+        
+        <div class="price-row">
+            <span class="price-label">📈 Спрос на рынке</span>
+            <span class="price-value" id="demandValue">120%</span>
+        </div>
+        <div class="demand-bar">
+            <div class="demand-fill" id="demandBar" style="width: 60%">60%</div>
         </div>
         
-        <div class="chart" id="capitalChart">
-            <!-- График заполняется через JS -->
+        <div class="price-row">
+            <span class="price-label">💰 Цена за пару</span>
+            <span class="price-value" id="price">2 500₽</span>
         </div>
-        
-        <div style="display: flex; gap: 8px;">
-            <button class="button" onclick="invest('stocks', 10)">📊 +10</button>
-            <button class="button" onclick="invest('realty', 10)">🏠 +10</button>
-            <button class="button" onclick="invest('crypto', 10)">₿ +10</button>
+        <div class="price-row">
+            <span class="price-label">💸 Себестоимость</span>
+            <span class="price-value" id="cost">1 800₽</span>
         </div>
-        <button class="button" onclick="triggerMarketEvent()" style="margin-top: 8px;">
-            🌪️ Рыночный день
-        </button>
     </div>
     
-    <!-- Событие (появляется случайно) -->
-    <div id="eventContainer" style="display: none;"></div>
+    <!-- Конкуренты -->
+    <div class="market-card">
+        <div class="month-title">👥 Конкуренты</div>
+        <div class="competitor-card">
+            <div>Фабрика «Скороход»</div>
+            <div style="font-size: 14px; color: #ffaa00;">Цена: 2 300₽ · Доля: 35%</div>
+        </div>
+        <div class="competitor-card">
+            <div>Обувной цех №5</div>
+            <div style="font-size: 14px; color: #ffaa00;">Цена: 2 700₽ · Доля: 25%</div>
+        </div>
+    </div>
     
-    <!-- Дивиденды и действия -->
-    <div class="card">
-        <div style="display: flex; gap: 8px;">
-            <button class="button" onclick="collectDividends()" style="background: linear-gradient(135deg, #00b894, #00cec9);">
-                💵 Собрать дивиденды
+    <!-- Событие -->
+    <div id="eventContainer"></div>
+    
+    <!-- Действия -->
+    <div class="action-card">
+        <div class="action-title">⚡ Действия</div>
+        <div class="button-grid">
+            <button class="action-btn" onclick="buyMaterial()">
+                📦 Закупить материалы
+                <span class="cost">-5 000₽</span>
             </button>
-            <button class="button" onclick="saveToPillow()" style="background: linear-gradient(135deg, #e17055, #d63031);">
-                🛡️ Подушка 10%
+            <button class="action-btn" onclick="hireStaff()">
+                👥 Нанять рабочего
+                <span class="cost">-3 000₽/мес</span>
+            </button>
+            <button class="action-btn" onclick="advertise()">
+                📺 Запустить рекламу
+                <span class="cost">-8 000₽</span>
+            </button>
+            <button class="action-btn" onclick="improveQuality()">
+                ✨ Улучшить качество
+                <span class="cost">-15 000₽</span>
             </button>
         </div>
     </div>
     
-    <!-- Друзья и рейтинг -->
-    <div class="card">
-        <h2 style="margin-bottom: 15px;">👥 Друзья онлайн</h2>
-        <div class="friend-row">
-            <span>👤 Игрок_1</span>
-            <span style="color: gold;">⚡ 2 450</span>
-        </div>
-        <div class="friend-row">
-            <span>👤 Игрок_2</span>
-            <span style="color: silver;">⚡ 1 890</span>
-        </div>
-        <div class="friend-row">
-            <span>👤 Игрок_3</span>
-            <span style="color: #cd7f32;">⚡ 1 230</span>
-        </div>
-        <div style="margin-top: 15px;">
-            <span class="badge">🏆 Твоё место: #42</span>
+    <div class="action-card">
+        <div class="action-title">💰 Ценовая политика</div>
+        <div class="button-grid">
+            <button class="action-btn" onclick="changePrice('down')">
+                📉 Снизить цену
+                <span class="cost">-200₽</span>
+            </button>
+            <button class="action-btn" onclick="changePrice('up')">
+                📈 Повысить цену
+                <span class="cost">+200₽</span>
+            </button>
         </div>
     </div>
     
-    <!-- Достижения -->
-    <div class="card">
-        <h2 style="margin-bottom: 15px;">🏆 Достижения</h2>
-        <div id="achievement1" class="achievement">
-            <span>💰 1000 монет</span>
-            <span id="ach1">❌</span>
-        </div>
-        <div id="achievement2" class="achievement">
-            <span>🔄 Диверсификация</span>
-            <span id="ach2">❌</span>
-        </div>
-        <div id="achievement3" class="achievement">
-            <span>💵 500 дивидендов</span>
-            <span id="ach3">❌</span>
-        </div>
-    </div>
+    <!-- Кнопка следующего месяца -->
+    <button class="next-month-btn" onclick="nextMonth()" id="nextMonthBtn">
+        ⏩ Следующий месяц
+    </button>
     
-    <!-- Кнопка закрытия -->
-    <div class="card">
-        <button class="button" onclick="window.Telegram.WebApp.close()" style="background: linear-gradient(135deg, #636e72, #2d3436);">
-            Закрыть
-        </button>
-    </div>
+    <!-- Конец игры -->
+    <div id="gameOverContainer"></div>
 
     <script>
-        // ==================== СОЗДАНИЕ ЧАСТИЦ ====================
-        function createParticles() {
-            const particlesDiv = document.getElementById('particles');
-            for (let i = 0; i < 30; i++) {
-                let particle = document.createElement('div');
-                particle.className = 'floating-particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                particle.style.background = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.3)`;
-                particlesDiv.appendChild(particle);
-            }
-        }
-        createParticles();
-        
-        // ==================== КОНФЕТТИ ====================
-        function createConfetti() {
-            for (let i = 0; i < 20; i++) {
-                let confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.animationDelay = Math.random() * 2 + 's';
-                confetti.style.background = `hsl(${Math.random() * 360}, 80%, 60%)`;
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 3000);
-            }
-        }
-        
-        // ==================== ВИБРАЦИЯ (HAPTIC) ====================
-        function hapticFeedback(style = 'light') {
-            if (window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred(style);
-            }
-        }
-        
         // ==================== ИГРОВЫЕ ДАННЫЕ ====================
-        let coins = 1000;
-        let stocks = 500;
-        let realty = 300;
-        let crypto = 200;
-        let totalDividends = 0;
-        let goal = 10000;
-        let turnCount = 0;
+        let money = 100000;
+        let production = 100; // пар в месяц
+        let stock = 50; // пар на складе
+        let staff = 5;
+        let month = 1;
+        let price = 2500;
+        let baseCost = 1800;
+        let demand = 120; // в процентах
+        let quality = 1.0;
+        let reputation = 50;
+        let gameActive = true;
         
         // Элементы
-        const balanceEl = document.getElementById('balance');
-        const stocksEl = document.getElementById('stocks');
-        const realtyEl = document.getElementById('realty');
-        const cryptoEl = document.getElementById('crypto');
-        const progressToGoal = document.getElementById('progressToGoal');
-        const goalPercentEl = document.getElementById('goalPercent');
-        const goalDisplayEl = document.getElementById('goalDisplay');
-        const chartEl = document.getElementById('capitalChart');
+        const moneyEl = document.getElementById('money');
+        const productionEl = document.getElementById('production');
+        const stockEl = document.getElementById('stock');
+        const staffEl = document.getElementById('staff');
+        const monthEl = document.getElementById('month');
+        const demandValueEl = document.getElementById('demandValue');
+        const demandBarEl = document.getElementById('demandBar');
+        const priceEl = document.getElementById('price');
+        const costEl = document.getElementById('cost');
         const eventContainer = document.getElementById('eventContainer');
+        const gameOverContainer = document.getElementById('gameOverContainer');
         
-        // Достижения
-        const ach1 = document.getElementById('ach1');
-        const ach2 = document.getElementById('ach2');
-        const ach3 = document.getElementById('ach3');
-        const achDiv1 = document.getElementById('achievement1');
-        const achDiv2 = document.getElementById('achievement2');
-        const achDiv3 = document.getElementById('achievement3');
-        
-        // ==================== ГРАФИК ====================
-        let capitalHistory = [500, 600, 750, 820, 900, 1000, 1100, 1250, 1300, 1450];
-        
-        function updateChart() {
-            let totalCapital = coins;
-            capitalHistory.push(totalCapital);
-            if (capitalHistory.length > 20) capitalHistory.shift();
+        function updateDisplay() {
+            moneyEl.textContent = money.toLocaleString() + '₽';
+            productionEl.textContent = production + ' пар/мес';
+            stockEl.textContent = stock + ' пар';
+            staffEl.textContent = staff + ' чел';
+            monthEl.textContent = month;
+            demandValueEl.textContent = demand + '%';
+            demandBarEl.style.width = demand + '%';
+            demandBarEl.textContent = demand + '%';
+            priceEl.textContent = price.toLocaleString() + '₽';
             
-            let maxCapital = Math.max(...capitalHistory, 1);
-            let bars = '';
-            for (let i = 0; i < capitalHistory.length; i++) {
-                let height = (capitalHistory[i] / maxCapital) * 100;
-                bars += `<div class="chart-bar" style="height: ${height}px;"></div>`;
-            }
-            chartEl.innerHTML = bars;
+            let currentCost = Math.floor(baseCost * (2 - quality));
+            costEl.textContent = currentCost.toLocaleString() + '₽';
         }
         
-        // ==================== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ====================
-        function updateAll() {
-            balanceEl.textContent = coins;
-            stocksEl.textContent = stocks;
-            realtyEl.textContent = realty;
-            cryptoEl.textContent = crypto;
-            
-            let percent = (coins / goal) * 100;
-            if (percent > 100) percent = 100;
-            progressToGoal.style.width = percent + '%';
-            goalPercentEl.textContent = Math.round(percent);
-            goalDisplayEl.textContent = goal.toLocaleString();
-            
-            updateChart();
-            updateAchievements();
-        }
-        
-        function updateAchievements() {
-            if (coins >= 1000) {
-                ach1.textContent = '✅';
-                achDiv1.classList.add('unlocked');
-            }
-            if (stocks > 0 && realty > 0 && crypto > 0) {
-                ach2.textContent = '✅';
-                achDiv2.classList.add('unlocked');
-            }
-            if (totalDividends >= 500) {
-                ach3.textContent = '✅';
-                achDiv3.classList.add('unlocked');
-            }
-        }
-        
-        function saveAll() {
-            // В реальной игре сохраняем в localStorage
-        }
-        
-        // ==================== ИНВЕСТИЦИИ ====================
-        function invest(asset, amount) {
-            if (coins < amount) {
-                alert('❌ Недостаточно монет');
+        // ==================== ДЕЙСТВИЯ ====================
+        function buyMaterial() {
+            if (!gameActive) return;
+            if (money < 5000) {
+                showEvent('❌ Недостаточно денег');
                 return;
             }
-            
-            coins -= amount;
-            if (asset === 'stocks') stocks += amount;
-            if (asset === 'realty') realty += amount;
-            if (asset === 'crypto') crypto += amount;
-            
-            // Визуальный эффект
-            createConfetti();
-            hapticFeedback('medium');
-            
-            updateAll();
-            checkRandomEvent();
+            money -= 5000;
+            stock += 30;
+            showEvent('📦 Закуплено 30 пар материалов');
+            updateDisplay();
         }
         
-        // ==================== РЫНОЧНЫЙ ДЕНЬ ====================
-        function triggerMarketEvent() {
-            let stocksChange = Math.floor(Math.random() * 50) - 20;
-            let realtyChange = Math.floor(Math.random() * 30) - 15;
-            let cryptoChange = Math.floor(Math.random() * 100) - 40;
-            
-            stocks = Math.max(0, stocks + Math.floor(stocks * stocksChange / 100));
-            realty = Math.max(0, realty + Math.floor(realty * realtyChange / 100));
-            crypto = Math.max(0, crypto + Math.floor(crypto * cryptoChange / 100));
-            
-            createConfetti();
-            hapticFeedback('heavy');
-            
-            showEvent(`📊 Рынок изменился: Акции ${stocksChange}%, Недвижимость ${realtyChange}%, Крипта ${cryptoChange}%`);
-            updateAll();
-        }
-        
-        // ==================== ДИВИДЕНДЫ ====================
-        function collectDividends() {
-            let total = stocks + realty + crypto;
-            if (total === 0) {
-                alert('Нет активов');
+        function hireStaff() {
+            if (!gameActive) return;
+            if (money < 3000) {
+                showEvent('❌ Недостаточно денег');
                 return;
             }
-            let dividend = Math.floor(total * 0.02);
-            if (dividend < 1) dividend = 1;
-            
-            coins += dividend;
-            totalDividends += dividend;
-            
-            createConfetti();
-            hapticFeedback('light');
-            showEvent(`💵 Получено ${dividend} монет дивидендов!`);
-            updateAll();
+            money -= 3000;
+            staff += 1;
+            production += 20;
+            showEvent('👥 Нанят новый рабочий, производство +20 пар/мес');
+            updateDisplay();
         }
         
-        // ==================== ПОДУШКА ====================
-        function saveToPillow() {
-            if (coins < 10) {
-                alert('❌ Мало монет');
+        function advertise() {
+            if (!gameActive) return;
+            if (money < 8000) {
+                showEvent('❌ Недостаточно денег');
                 return;
             }
-            let saveAmount = Math.floor(coins * 0.1);
-            coins -= saveAmount;
-            // В реальной игре добавляем в подушку
-            
-            hapticFeedback('light');
-            showEvent(`🛡️ Отложено ${saveAmount} монет в подушку`);
-            updateAll();
+            money -= 8000;
+            demand += 15;
+            showEvent('📺 Реклама сработала! Спрос +15%');
+            updateDisplay();
+        }
+        
+        function improveQuality() {
+            if (!gameActive) return;
+            if (money < 15000) {
+                showEvent('❌ Недостаточно денег');
+                return;
+            }
+            money -= 15000;
+            quality += 0.2;
+            baseCost += 200;
+            showEvent('✨ Качество улучшено! Себестоимость +200₽');
+            updateDisplay();
+        }
+        
+        function changePrice(direction) {
+            if (!gameActive) return;
+            if (direction === 'up') {
+                price += 200;
+                demand = Math.max(50, demand - 5);
+                showEvent('📈 Цена повышена, спрос снизился');
+            } else {
+                price = Math.max(baseCost + 100, price - 200);
+                demand += 8;
+                showEvent('📉 Цена снижена, спрос вырос');
+            }
+            updateDisplay();
         }
         
         // ==================== СЛУЧАЙНЫЕ СОБЫТИЯ ====================
-        function checkRandomEvent() {
-            turnCount++;
-            if (turnCount % 5 === 0) {
-                let events = [
-                    { name: '💰 Экономический бум!', effect: 'Все активы +10%' },
-                    { name: '📉 Кризис!', effect: 'Акции -15%' },
-                    { name: '🚀 Крипто-хайп!', effect: 'Крипта +30%' },
-                    { name: '🏦 Ставка снижена', effect: 'Дивиденды +50% сегодня' },
-                    { name: '💼 Крупная сделка', effect: '+200 монет' }
-                ];
-                let event = events[Math.floor(Math.random() * events.length)];
-                
-                // Применяем эффект
-                if (event.name.includes('бум')) {
-                    stocks = Math.floor(stocks * 1.1);
-                    realty = Math.floor(realty * 1.1);
-                    crypto = Math.floor(crypto * 1.1);
-                } else if (event.name.includes('Кризис')) {
-                    stocks = Math.floor(stocks * 0.85);
-                } else if (event.name.includes('Крипто')) {
-                    crypto = Math.floor(crypto * 1.3);
-                } else if (event.name.includes('сделка')) {
-                    coins += 200;
+        function randomEvent() {
+            let events = [
+                {
+                    name: '🔥 Пожар',
+                    text: 'На фабрике случился небольшой пожар!',
+                    effect: () => {
+                        stock = Math.floor(stock * 0.7);
+                        money -= 20000;
+                    }
+                },
+                {
+                    name: '💼 Крупный заказ',
+                    text: 'Сеть магазинов хочет купить 200 пар!',
+                    effect: () => {
+                        if (stock >= 200) {
+                            money += price * 200 * 0.9;
+                            stock -= 200;
+                        } else {
+                            money += price * stock * 0.9;
+                            stock = 0;
+                        }
+                    }
+                },
+                {
+                    name: '👠 Новая мода',
+                    text: 'На вашу обувь резко вырос спрос!',
+                    effect: () => {
+                        demand += 25;
+                    }
+                },
+                {
+                    name: '📉 Конкуренты демпингуют',
+                    text: 'Конкуренты снизили цены, спрос упал',
+                    effect: () => {
+                        demand -= 15;
+                    }
                 }
-                
-                showEvent(`🎁 ${event.name} ${event.effect}`);
-                createConfetti();
-                hapticFeedback('heavy');
-                updateAll();
+            ];
+            
+            if (Math.random() < 0.4) { // 40% шанс события
+                let event = events[Math.floor(Math.random() * events.length)];
+                showEvent(`🎁 ${event.name}: ${event.text}`);
+                event.effect();
+                updateDisplay();
             }
         }
         
-        function showEvent(message) {
+        function showEvent(text) {
             eventContainer.innerHTML = `
                 <div class="event-popup" onclick="this.remove()">
-                    <strong>✨ Событие</strong><br>
-                    ${message}
+                    ${text}
                 </div>
             `;
-            eventContainer.style.display = 'block';
             setTimeout(() => {
-                eventContainer.style.display = 'none';
+                eventContainer.innerHTML = '';
             }, 5000);
         }
         
-        // ==================== ЗАПУСК ====================
-        updateAll();
+        // ==================== СЛЕДУЮЩИЙ МЕСЯЦ ====================
+        function nextMonth() {
+            if (!gameActive) return;
+            
+            // Производим обувь
+            let produced = production;
+            stock += produced;
+            
+            // Рассчитываем продажи
+            let maxSales = Math.floor(demand * 2); // спрос в парах
+            let sales = Math.min(stock, maxSales);
+            stock -= sales;
+            
+            // Доход
+            let revenue = sales * price;
+            let costTotal = sales * baseCost + staff * 3000;
+            money += revenue - costTotal;
+            
+            // Месяц прошёл
+            month++;
+            
+            // Меняем спрос
+            demand += Math.floor(Math.random() * 20) - 10;
+            demand = Math.max(50, Math.min(200, demand));
+            
+            // Случайное событие
+            randomEvent();
+            
+            // Проверка на конец игры
+            if (money <= 0) {
+                gameOver('bankrupt');
+                return;
+            }
+            
+            if (month > 12) {
+                gameOver('win');
+                return;
+            }
+            
+            updateDisplay();
+            
+            // Тактильная отдача
+            if (window.Telegram.WebApp.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            }
+        }
+        
+        function gameOver(reason) {
+            gameActive = false;
+            document.getElementById('nextMonthBtn').disabled = true;
+            
+            if (reason === 'bankrupt') {
+                gameOverContainer.innerHTML = `
+                    <div class="game-over">
+                        <h2>💔 Банкротство</h2>
+                        <p>Фабрика закрыта. Вы потеряли бизнес.</p>
+                        <button class="next-month-btn" onclick="location.reload()">🔄 Начать заново</button>
+                    </div>
+                `;
+            } else {
+                let total = money;
+                gameOverContainer.innerHTML = `
+                    <div class="game-over" style="background: linear-gradient(135deg, #00c864, #00a0a0);">
+                        <h2>🏆 ПОБЕДА!</h2>
+                        <p>Вы продержались год! Капитал: ${total.toLocaleString()}₽</p>
+                        <button class="next-month-btn" onclick="location.reload()">🔄 Играть снова</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // ==================== СТАРТ ====================
+        updateDisplay();
         
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        
-        // Периодические события
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                triggerMarketEvent();
-            }
-        }, 30000);
     </script>
 </body>
 </html>
