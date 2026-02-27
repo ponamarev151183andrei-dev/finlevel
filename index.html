@@ -2,68 +2,90 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FinLevel — Инвестиции</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
+            padding: 10px;
             background: #1a1a2e;
             color: white;
-            text-align: center;
         }
         h1 {
             color: #6c5ce7;
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
         }
         .card {
             background: #16213e;
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
         }
         .balance {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             color: #f1c40f;
         }
         .row {
             display: flex;
-            justify-content: space-between;
+            gap: 8px;
             margin: 10px 0;
-            gap: 10px;
+            flex-wrap: wrap;
         }
         .asset {
             flex: 1;
+            min-width: 100px;
             padding: 10px;
             border-radius: 10px;
             background: #0f3460;
+            text-align: center;
         }
-        .stocks { border-top: 4px solid #3498db; }
-        .realty { border-top: 4px solid #2ecc71; }
-        .crypto { border-top: 4px solid #f39c12; }
+        .asset-title {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .asset-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
         .button {
             background: #6c5ce7;
             color: white;
             border: none;
-            border-radius: 16px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 12px 20px;
             font-size: 16px;
-            width: 100%;
             cursor: pointer;
-            margin: 5px 0;
+            transition: opacity 0.2s;
         }
-        .small-btn {
+        .button:active {
+            opacity: 0.7;
+        }
+        .button-small {
             background: #3498db;
-            padding: 8px;
+            padding: 8px 12px;
             font-size: 14px;
         }
-        .profit {
-            color: #2ecc71;
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        .loss {
-            color: #e74c3c;
+        .market-btn {
+            background: #e67e22;
+        }
+        .close-btn {
+            background: #7f8c8d;
         }
     </style>
 </head>
@@ -71,54 +93,58 @@
     <h1>💰 FinLevel</h1>
     
     <div class="card">
-        <h2>💰 Основной счёт</h2>
-        <div class="balance" id="balance">0</div>
-        <p>доступно монет</p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>💰 Основной счёт</span>
+            <span class="balance" id="balance">0</span>
+        </div>
     </div>
 
     <div class="card">
-        <h2>📈 Портфель</h2>
+        <h3 style="margin-bottom: 10px;">📈 Портфель</h3>
         <div class="row">
-            <div class="asset stocks">
-                <div>📊 Акции</div>
-                <div class="balance" id="stocks">0</div>
+            <div class="asset">
+                <div class="asset-title">📊 Акции</div>
+                <div class="asset-value" id="stocks">0</div>
             </div>
-            <div class="asset realty">
-                <div>🏠 Недвижимость</div>
-                <div class="balance" id="realty">0</div>
+            <div class="asset">
+                <div class="asset-title">🏠 Недвижимость</div>
+                <div class="asset-value" id="realty">0</div>
             </div>
-            <div class="asset crypto">
-                <div>₿ Крипта</div>
-                <div class="balance" id="crypto">0</div>
+            <div class="asset">
+                <div class="asset-title">₿ Крипта</div>
+                <div class="asset-value" id="crypto">0</div>
             </div>
         </div>
     </div>
 
     <div class="card">
-        <h2>💰 Заработать</h2>
-        <button class="button" onclick="addCoin()">👆 +1 монета</button>
-    </div>
-
-    <div class="card">
-        <h2>📊 Инвестировать</h2>
-        <div class="row">
-            <button class="button small-btn" onclick="invest('stocks', 10)">📊 Акции +10</button>
-            <button class="button small-btn" onclick="invest('realty', 10)">🏠 Недвиж. +10</button>
-            <button class="button small-btn" onclick="invest('crypto', 10)">₿ Крипта +10</button>
+        <div class="button-group">
+            <button class="button button-small" onclick="addCoin()">➕ +1 монета</button>
         </div>
     </div>
 
     <div class="card">
-        <h2>📈 Обновить рынок</h2>
-        <button class="button" onclick="updateMarket()">🔄 Рыночный день</button>
+        <h3 style="margin-bottom: 8px;">📊 Инвестировать</h3>
+        <div class="button-group">
+            <button class="button button-small" onclick="invest('stocks', 10)">📊 Акции +10</button>
+            <button class="button button-small" onclick="invest('realty', 10)">🏠 Недвиж. +10</button>
+            <button class="button button-small" onclick="invest('crypto', 10)">₿ Крипта +10</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="button-group">
+            <button class="button market-btn" onclick="updateMarket()">🔄 Рыночный день</button>
+        </div>
     </div>
     
-    <button class="button" onclick="window.Telegram.WebApp.close()">
-        Закрыть
-    </button>
+    <div class="card">
+        <div class="button-group">
+            <button class="button close-btn" onclick="window.Telegram.WebApp.close()">Закрыть</button>
+        </div>
+    </div>
 
     <script>
-        // Загрузка данных
         let coins = localStorage.getItem('finlevel_coins');
         let stocks = localStorage.getItem('finlevel_stocks');
         let realty = localStorage.getItem('finlevel_realty');
@@ -179,22 +205,18 @@
         }
         
         function updateMarket() {
-            // Акции: -20% до +30%
             let stocksChange = Math.floor(Math.random() * 50) - 20;
             let stocksDelta = Math.floor(stocks * stocksChange / 100);
             stocks += stocksDelta;
             
-            // Недвижимость: -10% до +15%
             let realtyChange = Math.floor(Math.random() * 25) - 10;
             let realtyDelta = Math.floor(realty * realtyChange / 100);
             realty += realtyDelta;
             
-            // Крипта: -40% до +80%
             let cryptoChange = Math.floor(Math.random() * 120) - 40;
             let cryptoDelta = Math.floor(crypto * cryptoChange / 100);
             crypto += cryptoDelta;
             
-            // Не даём уйти в минус
             if (stocks < 0) stocks = 0;
             if (realty < 0) realty = 0;
             if (crypto < 0) crypto = 0;
@@ -202,11 +224,13 @@
             saveAll();
             updateDisplay();
             
-            // Показываем результаты
             let message = 'Рынок обновлён:\n';
-            message += `Акции: ${stocksChange > 0 ? '+' : ''}${stocksChange}% (${stocksDelta} монет)\n`;
-            message += `Недвижимость: ${realtyChange > 0 ? '+' : ''}${realtyChange}% (${realtyDelta} монет)\n`;
-            message += `Крипта: ${cryptoChange > 0 ? '+' : ''}${cryptoChange}% (${cryptoDelta} монет)`;
+            message += `📊 Акции: ${stocksChange > 0 ? '+' : ''}${stocksChange}% `;
+            message += stocksDelta >= 0 ? `(+${stocksDelta})` : `(${stocksDelta})`;
+            message += `\n🏠 Недвижимость: ${realtyChange > 0 ? '+' : ''}${realtyChange}% `;
+            message += realtyDelta >= 0 ? `(+${realtyDelta})` : `(${realtyDelta})`;
+            message += `\n₿ Крипта: ${cryptoChange > 0 ? '+' : ''}${cryptoChange}% `;
+            message += cryptoDelta >= 0 ? `(+${cryptoDelta})` : `(${cryptoDelta})`;
             
             alert(message);
             
