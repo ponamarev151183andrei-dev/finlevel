@@ -62,12 +62,20 @@
     </button>
 
     <script>
-        let coins = 0;
+        let coins = localStorage.getItem('finlevel_coins');
+        if (coins === null) {
+            coins = 0;
+        } else {
+            coins = parseInt(coins);
+        }
+        
         const balanceElement = document.getElementById('balance');
+        balanceElement.textContent = coins;
         
         function addCoin() {
             coins++;
             balanceElement.textContent = coins;
+            localStorage.setItem('finlevel_coins', coins);
             
             if (window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
