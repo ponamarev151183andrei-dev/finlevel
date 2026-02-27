@@ -122,13 +122,18 @@
         .close-btn { background: #7f8c8d; }
         .budget-btn { background: #f39c12; }
         .reset-btn { background: #e74c3c; }
-        
-        .stats {
+        .achievement { 
+            background: #0f3460; 
+            padding: 10px; 
+            border-radius: 10px; 
+            margin: 5px 0;
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
-            font-size: 14px;
-            color: #a0a0a0;
+            align-items: center;
+        }
+        .achievement.unlocked {
+            background: #27ae60;
+            opacity: 0.9;
         }
         .badge {
             background: #6c5ce7;
@@ -259,7 +264,24 @@
         </div>
     </div>
     
-    <!-- СБРОС ПРОГРЕССА (НОВЫЙ БЛОК) -->
+    <!-- ДОСТИЖЕНИЯ -->
+    <div class="card">
+        <h2>🏆 Достижения</h2>
+        <div id="achievement1" class="achievement">
+            <span>💰 100 монет</span>
+            <span id="ach1">❌</span>
+        </div>
+        <div id="achievement2" class="achievement">
+            <span>🔄 Диверсификация (все активы > 0)</span>
+            <span id="ach2">❌</span>
+        </div>
+        <div id="achievement3" class="achievement">
+            <span>💵 100+ дивидендов</span>
+            <span id="ach3">❌</span>
+        </div>
+    </div>
+    
+    <!-- СБРОС ПРОГРЕССА -->
     <div class="card">
         <h2>🔄 Сброс прогресса</h2>
         <button class="button reset-btn" onclick="resetProgress()">
@@ -285,6 +307,7 @@
         let realty = localStorage.getItem('finlevel_realty');
         let crypto = localStorage.getItem('finlevel_crypto');
         let goal = localStorage.getItem('finlevel_goal');
+        let totalDividends = localStorage.getItem('finlevel_totalDividends');
         
         coins = coins ? parseInt(coins) : 0;
         pillow = pillow ? parseInt(pillow) : 0;
@@ -295,6 +318,7 @@
         realty = realty ? parseInt(realty) : 0;
         crypto = crypto ? parseInt(crypto) : 0;
         goal = goal ? parseInt(goal) : 10000;
+        totalDividends = totalDividends ? parseInt(totalDividends) : 0;
         
         // Элементы
         const balanceEl = document.getElementById('balance');
@@ -310,6 +334,43 @@
         const goalDisplayEl = document.getElementById('goalDisplay');
         const goalProgressEl = document.getElementById('goalProgress');
         const goalProgressBar = document.getElementById('goalProgressBar');
+        
+        // Достижения
+        const ach1 = document.getElementById('ach1');
+        const ach2 = document.getElementById('ach2');
+        const ach3 = document.getElementById('ach3');
+        const achDiv1 = document.getElementById('achievement1');
+        const achDiv2 = document.getElementById('achievement2');
+        const achDiv3 = document.getElementById('achievement3');
+        
+        function updateAchievements() {
+            // Достижение 1: 100 монет
+            if (coins >= 100) {
+                ach1.textContent = '✅';
+                achDiv1.classList.add('unlocked');
+            } else {
+                ach1.textContent = '❌';
+                achDiv1.classList.remove('unlocked');
+            }
+            
+            // Достижение 2: диверсификация (все активы > 0)
+            if (stocks > 0 && realty > 0 && crypto > 0) {
+                ach2.textContent = '✅';
+                achDiv2.classList.add('unlocked');
+            } else {
+                ach2.textContent = '❌';
+                achDiv2.classList.remove('unlocked');
+            }
+            
+            // Достижение 3: 100+ дивидендов всего
+            if (totalDividends >= 100) {
+                ach3.textContent = '✅';
+                achDiv3.classList.add('unlocked');
+            } else {
+                ach3.textContent = '❌';
+                achDiv3.classList.remove('unlocked');
+            }
+        }
         
         function updateAll() {
             balanceEl.textContent = coins;
@@ -332,6 +393,8 @@
             goalProgressBar.style.width = goalPercent + '%';
             goalProgressEl.textContent = Math.round(goalPercent) + '%';
             goalDisplayEl.textContent = goal.toLocaleString();
+            
+            updateAchievements();
         }
         updateAll();
         
@@ -345,6 +408,7 @@
             localStorage.setItem('finlevel_realty', realty);
             localStorage.setItem('finlevel_crypto', crypto);
             localStorage.setItem('finlevel_goal', goal);
+            localStorage.setItem('finlevel_totalDividends', totalDividends);
         }
         
         // Уровень 1
@@ -471,6 +535,7 @@
             let dividend = Math.floor(totalPortfolio * 0.01);
             if (dividend < 1) dividend = 1;
             coins += dividend;
+            totalDividends += dividend;
             saveAll();
             updateAll();
             alert(`💵 Получено ${dividend} монет дивидендов`);
@@ -487,7 +552,7 @@
             }
         }
         
-        // СБРОС ПРОГРЕССА (новая функция)
+        // Сброс прогресса
         function resetProgress() {
             if (confirm('Точно сбросить весь прогресс? Все монеты, инвестиции и цели будут потеряны.')) {
                 coins = 0;
@@ -499,6 +564,7 @@
                 realty = 0;
                 crypto = 0;
                 goal = 10000;
+                totalDividends = 0;
                 saveAll();
                 updateAll();
                 alert('✅ Прогресс сброшен');
