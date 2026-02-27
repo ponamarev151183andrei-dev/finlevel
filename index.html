@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinLevel — Подушка безопасности</title>
+    <title>FinLevel — Бюджет 50-30-20</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -28,20 +28,20 @@
             font-weight: bold;
             color: #f1c40f;
         }
-        .progress-bar {
-            background: #0f3460;
-            height: 20px;
-            border-radius: 10px;
+        .row {
+            display: flex;
+            justify-content: space-between;
             margin: 10px 0;
-            overflow: hidden;
         }
-        .progress-fill {
-            background: #6c5ce7;
-            height: 100%;
-            width: 0%;
+        .category {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
             border-radius: 10px;
-            transition: width 0.3s;
         }
+        .needs { background: #e74c3c; }
+        .wants { background: #f39c12; }
+        .savings { background: #2ecc71; }
         .button {
             background: #6c5ce7;
             color: white;
@@ -53,10 +53,12 @@
             cursor: pointer;
             margin: 10px 0;
         }
-        .goal {
+        .small-btn {
+            background: #3498db;
+            padding: 8px;
             font-size: 14px;
-            color: #a0a0a0;
-            margin-top: 5px;
+            margin: 5px;
+            width: auto;
         }
     </style>
 </head>
@@ -66,81 +68,122 @@
     <div class="card">
         <h2>💰 Основной счёт</h2>
         <div class="balance" id="balance">0</div>
-        <p>монет</p>
     </div>
 
     <div class="card">
-        <h2>🛡️ Подушка безопасности</h2>
-        <div class="balance" id="pillow">0</div>
-        <p>отложено</p>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress"></div>
+        <h2>📊 Бюджет 50-30-20</h2>
+        <div class="row">
+            <div class="category needs">
+                <div>🥖 Необходимое</div>
+                <div class="balance" id="needs">0</div>
+            </div>
+            <div class="category wants">
+                <div>🎮 Хотелки</div>
+                <div class="balance" id="wants">0</div>
+            </div>
+            <div class="category savings">
+                <div>💰 Сбережения</div>
+                <div class="balance" id="savings">0</div>
+            </div>
         </div>
-        <div class="goal">Цель: 1000 монет</div>
     </div>
-    
-    <button class="button" onclick="addCoin()">
-        👆 Заработать
-    </button>
-    
-    <button class="button" onclick="saveToPillow()">
-        🛡️ Отложить 10% в подушку
-    </button>
+
+    <div class="card">
+        <h2>➕ Заработать</h2>
+        <button class="button" onclick="addCoin()">👆 +1 монета</button>
+    </div>
+
+    <div class="card">
+        <h2>💸 Потратить</h2>
+        <button class="button small-btn" onclick="spend('needs', 10)">🥖 Нужное (10)</button>
+        <button class="button small-btn" onclick="spend('wants', 10)">🎮 Хотелки (10)</button>
+        <button class="button small-btn" onclick="spend('savings', 10)">💰 Сбережения (10)</button>
+    </div>
+
+    <div class="card">
+        <h2>📈 Распределить доход</h2>
+        <button class="button" onclick="distributeIncome()">🔄 Распределить 100 монет по 50-30-20</button>
+    </div>
     
     <button class="button" onclick="window.Telegram.WebApp.close()">
         Закрыть
     </button>
 
     <script>
+        // Загрузка данных
         let coins = localStorage.getItem('finlevel_coins');
-        let pillow = localStorage.getItem('finlevel_pillow');
+        let needs = localStorage.getItem('finlevel_needs');
+        let wants = localStorage.getItem('finlevel_wants');
+        let savings = localStorage.getItem('finlevel_savings');
         
         coins = coins ? parseInt(coins) : 0;
-        pillow = pillow ? parseInt(pillow) : 0;
+        needs = needs ? parseInt(needs) : 0;
+        wants = wants ? parseInt(wants) : 0;
+        savings = savings ? parseInt(savings) : 0;
         
         const balanceEl = document.getElementById('balance');
-        const pillowEl = document.getElementById('pillow');
-        const progressEl = document.getElementById('progress');
+        const needsEl = document.getElementById('needs');
+        const wantsEl = document.getElementById('wants');
+        const savingsEl = document.getElementById('savings');
         
         function updateDisplay() {
             balanceEl.textContent = coins;
-            pillowEl.textContent = pillow;
-            
-            let percent = (pillow / 1000) * 100;
-            if (percent > 100) percent = 100;
-            progressEl.style.width = percent + '%';
+            needsEl.textContent = needs;
+            wantsEl.textContent = wants;
+            savingsEl.textContent = savings;
         }
         updateDisplay();
         
+        function saveAll() {
+            localStorage.setItem('finlevel_coins', coins);
+            localStorage.setItem('finlevel_needs', needs);
+            localStorage.setItem('finlevel_wants', wants);
+            localStorage.setItem('finlevel_savings', savings);
+        }
+        
         function addCoin() {
             coins++;
-            localStorage.setItem('finlevel_coins', coins);
+            saveAll();
             updateDisplay();
-            
             if (window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
             }
         }
         
-        function saveToPillow() {
-            if (coins < 1) {
-                alert('Нет монет для откладывания');
+        function spend(category, amount) {
+            if (coins < amount) {
+                alert('Недостаточно монет');
+                return;
+            }
+            coins -= amount;
+            if (category === 'needs') needs += amount;
+            if (category === 'wants') wants += amount;
+            if (category === 'savings') savings += amount;
+            saveAll();
+            updateDisplay();
+            if (window.Telegram.WebApp.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            }
+        }
+        
+        function distributeIncome() {
+            if (coins < 100) {
+                alert('Нужно минимум 100 монет для распределения');
                 return;
             }
             
-            let saveAmount = Math.floor(coins * 0.1);
-            if (saveAmount < 1) saveAmount = 1;
+            let income = 100;
+            coins -= income;
             
-            coins = coins - saveAmount;
-            pillow = pillow + saveAmount;
+            needs += Math.floor(income * 0.5);  // 50%
+            wants += Math.floor(income * 0.3);  // 30%
+            savings += Math.floor(income * 0.2); // 20%
             
-            localStorage.setItem('finlevel_coins', coins);
-            localStorage.setItem('finlevel_pillow', pillow);
-            
+            saveAll();
             updateDisplay();
             
             if (window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
             }
         }
         
