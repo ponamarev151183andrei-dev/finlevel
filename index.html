@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinLevel — Инвестиции</title>
+    <title>FinLevel — Полная версия</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -23,6 +23,11 @@
             margin-bottom: 10px;
             text-align: center;
         }
+        h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #a0a0a0;
+        }
         .card {
             background: #16213e;
             border-radius: 16px;
@@ -40,40 +45,54 @@
             margin: 10px 0;
             flex-wrap: wrap;
         }
+        .category-row {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .category {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .needs { background: #e74c3c; }
+        .wants { background: #f39c12; }
+        .savings { background: #2ecc71; }
         .asset {
             flex: 1;
-            min-width: 100px;
             padding: 10px;
             border-radius: 10px;
             background: #0f3460;
             text-align: center;
         }
-        .asset-title {
-            font-size: 14px;
-            opacity: 0.9;
+        .progress-bar {
+            background: #0f3460;
+            height: 16px;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow: hidden;
         }
-        .asset-value {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 5px;
+        .progress-fill {
+            background: #6c5ce7;
+            height: 100%;
+            width: 0%;
+            border-radius: 8px;
+            transition: width 0.3s;
         }
         .button {
             background: #6c5ce7;
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 12px 20px;
-            font-size: 16px;
+            padding: 12px 16px;
+            font-size: 14px;
             cursor: pointer;
             transition: opacity 0.2s;
+            margin: 4px;
         }
         .button:active {
             opacity: 0.7;
-        }
-        .button-small {
-            background: #3498db;
-            padding: 8px 12px;
-            font-size: 14px;
         }
         .button-group {
             display: flex;
@@ -81,161 +100,306 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        .market-btn {
-            background: #e67e22;
-        }
-        .close-btn {
-            background: #7f8c8d;
-        }
+        .pillow-btn { background: #27ae60; }
+        .market-btn { background: #e67e22; }
+        .risk-btn { background: #9b59b6; }
     </style>
 </head>
 <body>
     <h1>💰 FinLevel</h1>
     
+    <!-- УРОВЕНЬ 1: Основной счёт -->
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span>💰 Основной счёт</span>
             <span class="balance" id="balance">0</span>
         </div>
+        <div class="button-group">
+            <button class="button" onclick="addCoin()">➕ +1 монета</button>
+        </div>
     </div>
 
+    <!-- УРОВЕНЬ 2: Подушка безопасности -->
     <div class="card">
-        <h3 style="margin-bottom: 10px;">📈 Портфель</h3>
+        <h2>🛡️ Подушка безопасности (Уровень 2)</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Накоплено:</span>
+            <span class="balance" style="font-size: 20px;" id="pillow">0</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="pillowProgress"></div>
+        </div>
+        <div style="font-size: 14px; color: #a0a0a0; margin-bottom: 10px;">
+            Цель: 1000 монет
+        </div>
+        <button class="button pillow-btn" onclick="saveToPillow()">
+            🛡️ Отложить 10% в подушку
+        </button>
+    </div>
+
+    <!-- УРОВЕНЬ 3: Бюджет 50-30-20 -->
+    <div class="card">
+        <h2>📊 Бюджет 50-30-20 (Уровень 3)</h2>
+        <div class="category-row">
+            <div class="category needs">
+                <div>🥖 Нужное</div>
+                <div style="font-size: 18px; font-weight: bold;" id="needs">0</div>
+            </div>
+            <div class="category wants">
+                <div>🎮 Хотелки</div>
+                <div style="font-size: 18px; font-weight: bold;" id="wants">0</div>
+            </div>
+            <div class="category savings">
+                <div>💰 Сбереж.</div>
+                <div style="font-size: 18px; font-weight: bold;" id="budgetSavings">0</div>
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="button" onclick="distributeIncome()">🔄 Распределить 100 монет</button>
+        </div>
+        <div class="button-group">
+            <button class="button" style="background: #3498db;" onclick="spend('needs', 10)">🥖 Нужное -10</button>
+            <button class="button" style="background: #3498db;" onclick="spend('wants', 10)">🎮 Хотелки -10</button>
+            <button class="button" style="background: #3498db;" onclick="spend('budgetSavings', 10)">💰 Сбереж. -10</button>
+        </div>
+    </div>
+
+    <!-- УРОВЕНЬ 4: Инвестиции -->
+    <div class="card">
+        <h2>📈 Инвестиции (Уровень 4)</h2>
         <div class="row">
             <div class="asset">
-                <div class="asset-title">📊 Акции</div>
-                <div class="asset-value" id="stocks">0</div>
+                <div>📊 Акции</div>
+                <div style="font-size: 18px; font-weight: bold;" id="stocks">0</div>
             </div>
             <div class="asset">
-                <div class="asset-title">🏠 Недвижимость</div>
-                <div class="asset-value" id="realty">0</div>
+                <div>🏠 Недвиж.</div>
+                <div style="font-size: 18px; font-weight: bold;" id="realty">0</div>
             </div>
             <div class="asset">
-                <div class="asset-title">₿ Крипта</div>
-                <div class="asset-value" id="crypto">0</div>
+                <div>₿ Крипта</div>
+                <div style="font-size: 18px; font-weight: bold;" id="crypto">0</div>
             </div>
         </div>
-    </div>
-
-    <div class="card">
         <div class="button-group">
-            <button class="button button-small" onclick="addCoin()">➕ +1 монета</button>
+            <button class="button" onclick="invest('stocks', 10)">📊 Акции +10</button>
+            <button class="button" onclick="invest('realty', 10)">🏠 Недвиж. +10</button>
+            <button class="button" onclick="invest('crypto', 10)">₿ Крипта +10</button>
         </div>
-    </div>
-
-    <div class="card">
-        <h3 style="margin-bottom: 8px;">📊 Инвестировать</h3>
-        <div class="button-group">
-            <button class="button button-small" onclick="invest('stocks', 10)">📊 Акции +10</button>
-            <button class="button button-small" onclick="invest('realty', 10)">🏠 Недвиж. +10</button>
-            <button class="button button-small" onclick="invest('crypto', 10)">₿ Крипта +10</button>
-        </div>
-    </div>
-
-    <div class="card">
         <div class="button-group">
             <button class="button market-btn" onclick="updateMarket()">🔄 Рыночный день</button>
         </div>
     </div>
+
+    <!-- УРОВЕНЬ 5: Диверсификация и анализ -->
+    <div class="card">
+        <h2>📊 Анализ портфеля (Уровень 5)</h2>
+        <div id="riskAnalysis" style="margin: 10px 0; padding: 10px; background: #0f3460; border-radius: 8px;">
+            Нажмите кнопку для анализа
+        </div>
+        <button class="button risk-btn" onclick="analyzeRisk()">🔍 Анализировать риски</button>
+    </div>
+    
+    <!-- УРОВЕНЬ 6-7: Пассивный доход и цели -->
+    <div class="card">
+        <h2>🎯 Цели и доход (Уровни 6-7)</h2>
+        <div class="button-group">
+            <button class="button" onclick="collectDividends()">💵 Собрать дивиденды (1% от портфеля)</button>
+            <button class="button" style="background: #e67e22;" onclick="setGoal()">🎯 Установить цель</button>
+        </div>
+        <div id="goalDisplay" style="margin-top: 10px; color: #a0a0a0;"></div>
+    </div>
     
     <div class="card">
         <div class="button-group">
-            <button class="button close-btn" onclick="window.Telegram.WebApp.close()">Закрыть</button>
+            <button class="button" style="background: #7f8c8d;" onclick="window.Telegram.WebApp.close()">Закрыть</button>
         </div>
     </div>
 
     <script>
+        // Загрузка всех данных
         let coins = localStorage.getItem('finlevel_coins');
+        let pillow = localStorage.getItem('finlevel_pillow');
+        let needs = localStorage.getItem('finlevel_needs');
+        let wants = localStorage.getItem('finlevel_wants');
+        let budgetSavings = localStorage.getItem('finlevel_budgetSavings');
         let stocks = localStorage.getItem('finlevel_stocks');
         let realty = localStorage.getItem('finlevel_realty');
         let crypto = localStorage.getItem('finlevel_crypto');
+        let goal = localStorage.getItem('finlevel_goal');
         
         coins = coins ? parseInt(coins) : 0;
+        pillow = pillow ? parseInt(pillow) : 0;
+        needs = needs ? parseInt(needs) : 0;
+        wants = wants ? parseInt(wants) : 0;
+        budgetSavings = budgetSavings ? parseInt(budgetSavings) : 0;
         stocks = stocks ? parseInt(stocks) : 0;
         realty = realty ? parseInt(realty) : 0;
         crypto = crypto ? parseInt(crypto) : 0;
+        goal = goal ? parseInt(goal) : 10000;
         
+        // Элементы
         const balanceEl = document.getElementById('balance');
+        const pillowEl = document.getElementById('pillow');
+        const pillowProgress = document.getElementById('pillowProgress');
+        const needsEl = document.getElementById('needs');
+        const wantsEl = document.getElementById('wants');
+        const budgetSavingsEl = document.getElementById('budgetSavings');
         const stocksEl = document.getElementById('stocks');
         const realtyEl = document.getElementById('realty');
         const cryptoEl = document.getElementById('crypto');
+        const riskEl = document.getElementById('riskAnalysis');
+        const goalEl = document.getElementById('goalDisplay');
         
-        function updateDisplay() {
+        function updateAll() {
             balanceEl.textContent = coins;
+            pillowEl.textContent = pillow;
+            needsEl.textContent = needs;
+            wantsEl.textContent = wants;
+            budgetSavingsEl.textContent = budgetSavings;
             stocksEl.textContent = stocks;
             realtyEl.textContent = realty;
             cryptoEl.textContent = crypto;
+            
+            let percent = (pillow / 1000) * 100;
+            if (percent > 100) percent = 100;
+            pillowProgress.style.width = percent + '%';
+            
+            goalEl.textContent = `Цель: ${goal} монет (осталось ${goal - coins})`;
         }
-        updateDisplay();
+        updateAll();
         
         function saveAll() {
             localStorage.setItem('finlevel_coins', coins);
+            localStorage.setItem('finlevel_pillow', pillow);
+            localStorage.setItem('finlevel_needs', needs);
+            localStorage.setItem('finlevel_wants', wants);
+            localStorage.setItem('finlevel_budgetSavings', budgetSavings);
             localStorage.setItem('finlevel_stocks', stocks);
             localStorage.setItem('finlevel_realty', realty);
             localStorage.setItem('finlevel_crypto', crypto);
         }
         
+        // Уровень 1
         function addCoin() {
             coins++;
             saveAll();
-            updateDisplay();
+            updateAll();
             if (window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
             }
         }
         
-        function invest(asset, amount) {
-            if (coins < amount) {
-                alert('Недостаточно монет');
+        // Уровень 2
+        function saveToPillow() {
+            if (coins < 1) {
+                alert('Нет монет');
                 return;
             }
-            
+            let saveAmount = Math.floor(coins * 0.1);
+            if (saveAmount < 1) saveAmount = 1;
+            coins -= saveAmount;
+            pillow += saveAmount;
+            saveAll();
+            updateAll();
+        }
+        
+        // Уровень 3
+        function distributeIncome() {
+            if (coins < 100) {
+                alert('Нужно 100 монет');
+                return;
+            }
+            coins -= 100;
+            needs += 50;
+            wants += 30;
+            budgetSavings += 20;
+            saveAll();
+            updateAll();
+        }
+        
+        function spend(category, amount) {
+            if (coins < amount) {
+                alert('Нет монет');
+                return;
+            }
             coins -= amount;
-            
+            if (category === 'needs') needs += amount;
+            if (category === 'wants') wants += amount;
+            if (category === 'budgetSavings') budgetSavings += amount;
+            saveAll();
+            updateAll();
+        }
+        
+        // Уровень 4
+        function invest(asset, amount) {
+            if (coins < amount) {
+                alert('Нет монет');
+                return;
+            }
+            coins -= amount;
             if (asset === 'stocks') stocks += amount;
             if (asset === 'realty') realty += amount;
             if (asset === 'crypto') crypto += amount;
-            
             saveAll();
-            updateDisplay();
-            
-            if (window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-            }
+            updateAll();
         }
         
         function updateMarket() {
             let stocksChange = Math.floor(Math.random() * 50) - 20;
-            let stocksDelta = Math.floor(stocks * stocksChange / 100);
-            stocks += stocksDelta;
-            
             let realtyChange = Math.floor(Math.random() * 25) - 10;
-            let realtyDelta = Math.floor(realty * realtyChange / 100);
-            realty += realtyDelta;
-            
             let cryptoChange = Math.floor(Math.random() * 120) - 40;
-            let cryptoDelta = Math.floor(crypto * cryptoChange / 100);
-            crypto += cryptoDelta;
             
-            if (stocks < 0) stocks = 0;
-            if (realty < 0) realty = 0;
-            if (crypto < 0) crypto = 0;
+            stocks = Math.max(0, stocks + Math.floor(stocks * stocksChange / 100));
+            realty = Math.max(0, realty + Math.floor(realty * realtyChange / 100));
+            crypto = Math.max(0, crypto + Math.floor(crypto * cryptoChange / 100));
             
             saveAll();
-            updateDisplay();
+            updateAll();
+            alert(`Рынок:\nАкции: ${stocksChange}%\nНедвижимость: ${realtyChange}%\nКрипта: ${cryptoChange}%`);
+        }
+        
+        // Уровень 5
+        function analyzeRisk() {
+            let total = stocks + realty + crypto;
+            if (total === 0) {
+                riskEl.textContent = 'Нет активов для анализа';
+                return;
+            }
+            let stocksPct = (stocks / total * 100).toFixed(1);
+            let realtyPct = (realty / total * 100).toFixed(1);
+            let cryptoPct = (crypto / total * 100).toFixed(1);
             
-            let message = 'Рынок обновлён:\n';
-            message += `📊 Акции: ${stocksChange > 0 ? '+' : ''}${stocksChange}% `;
-            message += stocksDelta >= 0 ? `(+${stocksDelta})` : `(${stocksDelta})`;
-            message += `\n🏠 Недвижимость: ${realtyChange > 0 ? '+' : ''}${realtyChange}% `;
-            message += realtyDelta >= 0 ? `(+${realtyDelta})` : `(${realtyDelta})`;
-            message += `\n₿ Крипта: ${cryptoChange > 0 ? '+' : ''}${cryptoChange}% `;
-            message += cryptoDelta >= 0 ? `(+${cryptoDelta})` : `(${cryptoDelta})`;
+            let risk = '🟢 Низкий';
+            if (crypto > total * 0.3) risk = '🔴 Высокий (много крипты)';
+            else if (stocks > total * 0.5) risk = '🟡 Средний';
             
-            alert(message);
-            
-            if (window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+            riskEl.innerHTML = `
+                📊 Распределение:<br>
+                Акции: ${stocksPct}%<br>
+                Недвижимость: ${realtyPct}%<br>
+                Крипта: ${cryptoPct}%<br>
+                Риск: ${risk}
+            `;
+        }
+        
+        // Уровень 6
+        function collectDividends() {
+            let dividend = Math.floor((stocks + realty + crypto) * 0.01);
+            if (dividend < 1) dividend = 1;
+            coins += dividend;
+            saveAll();
+            updateAll();
+            alert(`Получено ${dividend} монет дивидендов`);
+        }
+        
+        // Уровень 7
+        function setGoal() {
+            let newGoal = prompt('Введите цель (количество монет):', goal);
+            if (newGoal && !isNaN(newGoal)) {
+                goal = parseInt(newGoal);
+                localStorage.setItem('finlevel_goal', goal);
+                updateAll();
             }
         }
         
