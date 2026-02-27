@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinLevel — Полная стратегия</title>
+    <title>FinLevel — Полная версия</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -122,6 +122,8 @@
         .close-btn { background: #7f8c8d; }
         .budget-btn { background: #f39c12; }
         .reset-btn { background: #e74c3c; }
+        .shop-btn { background: #9b59b6; }
+        .referral-btn { background: #3498db; }
         .achievement { 
             background: #0f3460; 
             padding: 10px; 
@@ -143,10 +145,33 @@
             color: white;
             margin-left: 5px;
         }
+        .chart {
+            background: #0f3460;
+            height: 100px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            padding: 5px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: #6c5ce7;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s;
+            min-width: 3px;
+        }
     </style>
 </head>
 <body>
     <h1>💰 FinLevel</h1>
+    
+    <!-- ВИЗУАЛИЗАЦИЯ: График роста капитала -->
+    <div class="card">
+        <h2>📈 График роста капитала</h2>
+        <div class="chart" id="capitalChart"></div>
+    </div>
     
     <!-- УРОВЕНЬ 1: Основной счёт -->
     <div class="card">
@@ -280,6 +305,38 @@
             <span id="ach3">❌</span>
         </div>
     </div>
+
+    <!-- МАГАЗИН УЛУЧШЕНИЙ -->
+    <div class="card">
+        <h2>🛒 Магазин улучшений</h2>
+        <div class="button-group">
+            <button class="button shop-btn" onclick="buyMultiplier()" id="multiplerBtn">
+                📈 Множитель дохода x2 (цена: 500)
+            </button>
+            <button class="button shop-btn" onclick="buyAutoClicker()" id="autoclickerBtn">
+                ⚡ Автокликер (цена: 1000)
+            </button>
+        </div>
+        <div style="margin-top: 10px; font-size: 14px;">
+            <span id="multiplierStatus">Множитель: x1</span> | 
+            <span id="autoclickerStatus">Автокликер: выкл</span>
+        </div>
+    </div>
+
+    <!-- РЕФЕРАЛЬНАЯ СИСТЕМА -->
+    <div class="card">
+        <h2>👥 Реферальная система</h2>
+        <div class="stats">
+            <span>Приглашено друзей: <span id="referralCount">0</span></span>
+            <span>Бонус: <span id="referralBonus">0</span></span>
+        </div>
+        <div class="button-group">
+            <button class="button referral-btn" onclick="generateReferralLink()">
+                🔗 Создать ссылку для друга
+            </button>
+        </div>
+        <div id="referralLink" style="margin-top: 10px; padding: 10px; background: #0f3460; border-radius: 8px; word-break: break-all; display: none;"></div>
+    </div>
     
     <!-- СБРОС ПРОГРЕССА -->
     <div class="card">
@@ -309,6 +366,13 @@
         let goal = localStorage.getItem('finlevel_goal');
         let totalDividends = localStorage.getItem('finlevel_totalDividends');
         
+        // Новые данные для магазина и рефералов
+        let multiplier = localStorage.getItem('finlevel_multiplier');
+        let autoclicker = localStorage.getItem('finlevel_autoclicker');
+        let referralCount = localStorage.getItem('finlevel_referralCount');
+        let referralBonus = localStorage.getItem('finlevel_referralBonus');
+        let capitalHistory = localStorage.getItem('finlevel_capitalHistory');
+        
         coins = coins ? parseInt(coins) : 0;
         pillow = pillow ? parseInt(pillow) : 0;
         needs = needs ? parseInt(needs) : 0;
@@ -319,6 +383,17 @@
         crypto = crypto ? parseInt(crypto) : 0;
         goal = goal ? parseInt(goal) : 10000;
         totalDividends = totalDividends ? parseInt(totalDividends) : 0;
+        
+        // Магазин
+        multiplier = multiplier ? parseInt(multiplier) : 1;
+        autoclicker = autoclicker ? autoclicker === 'true' : false;
+        
+        // Рефералы
+        referralCount = referralCount ? parseInt(referralCount) : 0;
+        referralBonus = referralBonus ? parseInt(referralBonus) : 0;
+        
+        // История капитала для графика
+        capitalHistory = capitalHistory ? JSON.parse(capitalHistory) : [0, 0, 0, 0, 0, 0, 0];
         
         // Элементы
         const balanceEl = document.getElementById('balance');
@@ -342,6 +417,39 @@
         const achDiv1 = document.getElementById('achievement1');
         const achDiv2 = document.getElementById('achievement2');
         const achDiv3 = document.getElementById('achievement3');
+        
+        // Магазин
+        const multiplierBtn = document.getElementById('multiplerBtn');
+        const autoclickerBtn = document.getElementById('autoclickerBtn');
+        const multiplierStatus = document.getElementById('multiplierStatus');
+        const autoclickerStatus = document.getElementById('autoclickerStatus');
+        
+        // Рефералы
+        const referralCountEl = document.getElementById('referralCount');
+        const referralBonusEl = document.getElementById('referralBonus');
+        const referralLinkDiv = document.getElementById('referralLink');
+        
+        // График
+        const capitalChart = document.getElementById('capitalChart');
+        
+        function updateCapitalHistory() {
+            // Добавляем текущий капитал в историю
+            let totalCapital = coins + stocks + realty + crypto + pillow;
+            capitalHistory.push(totalCapital);
+            if (capitalHistory.length > 30) {
+                capitalHistory = capitalHistory.slice(-30);
+            }
+            localStorage.setItem('finlevel_capitalHistory', JSON.stringify(capitalHistory));
+            
+            // Обновляем график
+            let maxCapital = Math.max(...capitalHistory, 1);
+            let bars = '';
+            for (let i = 0; i < capitalHistory.length; i++) {
+                let height = (capitalHistory[i] / maxCapital) * 100;
+                bars += `<div class="chart-bar" style="height: ${height}px;"></div>`;
+            }
+            capitalChart.innerHTML = bars;
+        }
         
         function updateAchievements() {
             // Достижение 1: 100 монет
@@ -394,9 +502,30 @@
             goalProgressEl.textContent = Math.round(goalPercent) + '%';
             goalDisplayEl.textContent = goal.toLocaleString();
             
+            // Статус магазина
+            multiplierBtn.textContent = multiplier === 1 ? '📈 Множитель дохода x2 (цена: 500)' : '✅ Множитель x2 куплен';
+            multiplierBtn.disabled = multiplier > 1;
+            multiplierStatus.textContent = `Множитель: x${multiplier}`;
+            
+            autoclickerBtn.textContent = autoclicker ? '✅ Автокликер куплен' : '⚡ Автокликер (цена: 1000)';
+            autoclickerBtn.disabled = autoclicker;
+            autoclickerStatus.textContent = `Автокликер: ${autoclicker ? 'вкл' : 'выкл'}`;
+            
+            // Рефералы
+            referralCountEl.textContent = referralCount;
+            referralBonusEl.textContent = referralBonus;
+            
             updateAchievements();
+            updateCapitalHistory();
         }
         updateAll();
+        
+        // Автокликер
+        if (autoclicker) {
+            setInterval(() => {
+                addCoin();
+            }, 5000);
+        }
         
         function saveAll() {
             localStorage.setItem('finlevel_coins', coins);
@@ -409,11 +538,15 @@
             localStorage.setItem('finlevel_crypto', crypto);
             localStorage.setItem('finlevel_goal', goal);
             localStorage.setItem('finlevel_totalDividends', totalDividends);
+            localStorage.setItem('finlevel_multiplier', multiplier);
+            localStorage.setItem('finlevel_autoclicker', autoclicker);
+            localStorage.setItem('finlevel_referralCount', referralCount);
+            localStorage.setItem('finlevel_referralBonus', referralBonus);
         }
         
         // Уровень 1
         function addCoin() {
-            coins++;
+            coins += multiplier;
             saveAll();
             updateAll();
             if (window.Telegram.WebApp.HapticFeedback) {
@@ -552,6 +685,47 @@
             }
         }
         
+        // Магазин
+        function buyMultiplier() {
+            if (coins < 500) {
+                alert('Недостаточно монет');
+                return;
+            }
+            coins -= 500;
+            multiplier = 2;
+            saveAll();
+            updateAll();
+            alert('✅ Множитель дохода x2 куплен! Теперь за каждый клик +2 монеты.');
+        }
+        
+        function buyAutoClicker() {
+            if (coins < 1000) {
+                alert('Недостаточно монет');
+                return;
+            }
+            coins -= 1000;
+            autoclicker = true;
+            saveAll();
+            updateAll();
+            alert('✅ Автокликер куплен! Он будет автоматически добавлять монеты каждые 5 секунд.');
+        }
+        
+        // Реферальная система
+        function generateReferralLink() {
+            let referralCode = Math.random().toString(36).substring(2, 10);
+            let link = `https://t.me/FinLevelGameBot?start=ref_${referralCode}`;
+            referralLinkDiv.innerHTML = `🔗 Твоя реферальная ссылка:<br><code>${link}</code>`;
+            referralLinkDiv.style.display = 'block';
+            
+            // Для демо добавляем бонус
+            referralCount++;
+            referralBonus += 50;
+            coins += 50;
+            saveAll();
+            updateAll();
+            alert('🎁 За создание ссылки ты получил 50 монет! Отправь её друзьям.');
+        }
+        
         // Сброс прогресса
         function resetProgress() {
             if (confirm('Точно сбросить весь прогресс? Все монеты, инвестиции и цели будут потеряны.')) {
@@ -565,6 +739,11 @@
                 crypto = 0;
                 goal = 10000;
                 totalDividends = 0;
+                multiplier = 1;
+                autoclicker = false;
+                referralCount = 0;
+                referralBonus = 0;
+                capitalHistory = [0, 0, 0, 0, 0, 0, 0];
                 saveAll();
                 updateAll();
                 alert('✅ Прогресс сброшен');
