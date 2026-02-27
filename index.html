@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinLevel</title>
+    <title>FinLevel — Кликер</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -23,6 +23,10 @@
             padding: 20px;
             margin: 20px 0;
         }
+        .coin {
+            font-size: 48px;
+            margin: 20px;
+        }
         .button {
             background: #6c5ce7;
             color: white;
@@ -32,19 +36,44 @@
             font-size: 18px;
             width: 100%;
             cursor: pointer;
+            margin: 10px 0;
+        }
+        .balance {
+            font-size: 32px;
+            font-weight: bold;
+            color: #f1c40f;
         }
     </style>
 </head>
 <body>
     <h1>💰 FinLevel</h1>
     <div class="card">
-        <p>Добро пожаловать в игру!</p>
-        <p>Здесь будет твой финансовый прогресс</p>
+        <div class="coin">🪙</div>
+        <div class="balance" id="balance">0</div>
+        <p>монет</p>
     </div>
+    
+    <button class="button" onclick="addCoin()">
+        👆 Нажми, чтобы заработать
+    </button>
+    
     <button class="button" onclick="window.Telegram.WebApp.close()">
         Закрыть
     </button>
+
     <script>
+        let coins = 0;
+        const balanceElement = document.getElementById('balance');
+        
+        function addCoin() {
+            coins++;
+            balanceElement.textContent = coins;
+            
+            if (window.Telegram.WebApp.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            }
+        }
+        
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
