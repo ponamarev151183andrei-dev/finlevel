@@ -121,6 +121,7 @@
         .goal-btn { background: #e67e22; }
         .close-btn { background: #7f8c8d; }
         .budget-btn { background: #f39c12; }
+        .reset-btn { background: #e74c3c; }
         
         .stats {
             display: flex;
@@ -256,6 +257,14 @@
         <div class="button-group">
             <button class="button goal-btn" onclick="setGoal()">🎯 Установить новую цель</button>
         </div>
+    </div>
+    
+    <!-- СБРОС ПРОГРЕССА (НОВЫЙ БЛОК) -->
+    <div class="card">
+        <h2>🔄 Сброс прогресса</h2>
+        <button class="button reset-btn" onclick="resetProgress()">
+            ⚠️ Сбросить все данные
+        </button>
     </div>
     
     <!-- Кнопка закрытия -->
@@ -475,6 +484,24 @@
                 saveAll();
                 updateAll();
                 alert(`✅ Новая цель установлена: ${goal} монет`);
+            }
+        }
+        
+        // СБРОС ПРОГРЕССА (новая функция)
+        function resetProgress() {
+            if (confirm('Точно сбросить весь прогресс? Все монеты, инвестиции и цели будут потеряны.')) {
+                coins = 0;
+                pillow = 0;
+                needs = 0;
+                wants = 0;
+                budgetSavings = 0;
+                stocks = 0;
+                realty = 0;
+                crypto = 0;
+                goal = 10000;
+                saveAll();
+                updateAll();
+                alert('✅ Прогресс сброшен');
             }
         }
         
