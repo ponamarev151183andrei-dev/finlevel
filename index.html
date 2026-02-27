@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinLevel</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+        }
+        h1 {
+            color: #6c5ce7;
+        }
+        .card {
+            background: #16213e;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 18px;
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>💰 FinLevel</h1>
+    <div class="card">
+        <p>Добро пожаловать в игру!</p>
+        <p>Здесь будет твой финансовый прогресс</p>
+    </div>
+    <button class="button" onclick="window.Telegram.WebApp.close()">
+        Закрыть
+    </button>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+    </script>
+</body>
+</html>
