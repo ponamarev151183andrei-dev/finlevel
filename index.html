@@ -43,6 +43,11 @@
             font-weight: bold;
             color: #f1c40f;
         }
+        .level {
+            font-size: 18px;
+            color: #a0a0a0;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +56,7 @@
         <div class="coin">🪙</div>
         <div class="balance" id="balance">0</div>
         <p>монет</p>
+        <div class="level" id="level">Уровень 1</div>
     </div>
     
     <button class="button" onclick="addCoin()">
@@ -62,20 +68,25 @@
     </button>
 
     <script>
-        let coins = localStorage.getItem('finlevel_coins');
-        if (coins === null) {
-            coins = 0;
-        } else {
-            coins = parseInt(coins);
-        }
+        let saved = localStorage.getItem('finlevel_coins');
+        let coins = saved ? parseInt(saved) : 0;
         
         const balanceElement = document.getElementById('balance');
+        const levelElement = document.getElementById('level');
+        
         balanceElement.textContent = coins;
+        
+        function updateLevel() {
+            let level = Math.floor(coins / 10) + 1;
+            levelElement.textContent = 'Уровень ' + level;
+        }
+        updateLevel();
         
         function addCoin() {
             coins++;
             balanceElement.textContent = coins;
             localStorage.setItem('finlevel_coins', coins);
+            updateLevel();
             
             if (window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
