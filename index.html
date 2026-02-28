@@ -3,73 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinLevel — Легенда о капитале</title>
+    <title>Hero's Quest — RPG</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
             background: #0a0f1e;
-            color: white;
-            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
         }
         
-        /* Анимированный фон */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(76, 76, 255, 0.1), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 100, 100, 0.1), transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        h1 {
-            font-size: 28px;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff, #aad0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .subtitle {
-            text-align: center;
-            font-size: 14px;
-            color: #a0b0d0;
-            margin-bottom: 20px;
-            padding: 8px;
-            background: rgba(255,255,255,0.05);
+        #gameContainer {
+            background: #1a1f2e;
             border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: rgba(20, 30, 50, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 20px;
+            background: #2a2f3e;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        
+        .stats-panel {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
         }
         
         .stat-label {
@@ -79,552 +72,693 @@
         }
         
         .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .control-btn {
+            background: #2a3a5a;
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1a2a40;
+            transition: all 0.1s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .control-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        
+        .attack-btn {
+            background: #c44;
+            box-shadow: 0 4px 0 #a22;
+            grid-column: span 2;
+        }
+        
+        .restart-btn {
+            background: #44a;
+            box-shadow: 0 4px 0 #228;
+            grid-column: span 2;
+        }
+        
+        .inventory-panel {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .inventory-title {
+            color: #a0b0d0;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
         
-        .trend {
-            font-size: 14px;
-            padding: 2px 8px;
-            border-radius: 20px;
-        }
-        
-        .trend.up {
-            background: rgba(0,200,100,0.2);
-            color: #00c864;
-        }
-        
-        .trend.down {
-            background: rgba(255,80,80,0.2);
-            color: #ff5050;
-        }
-        
-        .market-card {
-            background: rgba(30, 40, 60, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.15);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .market-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #00ffaa, #00aaff);
-        }
-        
-        .month-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #aad0ff;
-        }
-        
-        .price-row {
+        .inventory-slot {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            aspect-ratio: 1;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            justify-content: center;
+            font-size: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .price-row:last-child {
+        .log-panel {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 10px;
+            margin-top: 15px;
+            height: 80px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #a0b0d0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .log-entry {
+            padding: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .log-entry:last-child {
             border-bottom: none;
         }
         
-        .price-label {
-            font-size: 16px;
-        }
-        
-        .price-value {
-            font-size: 18px;
-            font-weight: 700;
-        }
-        
-        .demand-bar {
-            height: 30px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            overflow: hidden;
-            margin: 10px 0;
-            position: relative;
-        }
-        
-        .demand-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00c864, #00e6b0);
-            border-radius: 15px;
-            transition: width 0.5s;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #000;
-        }
-        
-        .action-card {
-            background: rgba(20, 30, 50, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-        
-        .action-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #aad0ff;
-        }
-        
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        
-        .action-btn {
-            background: linear-gradient(135deg, #2a3a5a, #1a2a40);
+        .skill-btn {
+            background: #5a4a8a;
             border: none;
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 8px;
             color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .action-btn:active {
-            transform: scale(0.97);
-            background: linear-gradient(135deg, #3a4a6a, #2a3a50);
-        }
-        
-        .action-btn .cost {
             font-size: 12px;
-            color: #ffaa00;
-            margin-top: 4px;
-        }
-        
-        .event-popup {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 20px;
-            padding: 16px;
-            margin: 16px 0;
-            animation: slideIn 0.5s, glowPulse 2s infinite;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 20px #f093fb; }
-            50% { box-shadow: 0 0 40px #f5576c; }
-        }
-        
-        .competitor-card {
-            background: rgba(40, 30, 50, 0.7);
-            border-radius: 16px;
-            padding: 12px;
-            margin: 8px 0;
-            border-left: 4px solid #ff5050;
-        }
-        
-        .next-month-btn {
-            background: linear-gradient(135deg, #00c864, #00a0a0);
-            border: none;
-            border-radius: 30px;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-            width: 100%;
             cursor: pointer;
-            margin: 20px 0;
-            box-shadow: 0 10px 30px rgba(0,200,100,0.3);
-            transition: all 0.3s;
+            margin: 2px;
         }
         
-        .next-month-btn:active {
-            transform: scale(0.95);
+        @keyframes damageFlash {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+            100% { filter: brightness(1); }
         }
         
-        .game-over {
-            background: linear-gradient(135deg, #ff5050, #cc4040);
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin: 30px 0;
+        .damage-effect {
+            animation: damageFlash 0.2s;
         }
     </style>
 </head>
 <body>
-    <h1>👞 FinLevel</h1>
-    <div class="subtitle">
-        Легенда о капитале · Обувная фабрика «Заря»
-    </div>
-    
-    <!-- Основные ресурсы -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-label">💰 Деньги</div>
-            <div class="stat-value" id="money">100 000₽</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">🏭 Производство</div>
-            <div class="stat-value" id="production">100 пар/мес</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">📦 На складе</div>
-            <div class="stat-value" id="stock">50 пар</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">👥 Персонал</div>
-            <div class="stat-value" id="staff">5 чел</div>
-        </div>
-    </div>
-    
-    <!-- Рыночная ситуация -->
-    <div class="market-card">
-        <div class="month-title">📊 Месяц <span id="month">1</span> из 12</div>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
         
-        <div class="price-row">
-            <span class="price-label">📈 Спрос на рынке</span>
-            <span class="price-value" id="demandValue">120%</span>
-        </div>
-        <div class="demand-bar">
-            <div class="demand-fill" id="demandBar" style="width: 60%">60%</div>
+        <div class="stats-panel">
+            <div class="stat">
+                <div class="stat-label">❤️ Здоровье</div>
+                <div class="stat-value" id="healthDisplay">100/100</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">📊 Уровень</div>
+                <div class="stat-value" id="levelDisplay">1</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">⚡ Опыт</div>
+                <div class="stat-value" id="expDisplay">0/100</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">💰 Золото</div>
+                <div class="stat-value" id="goldDisplay">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">⚔️ Сила</div>
+                <div class="stat-value" id="powerDisplay">10</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">🛡️ Защита</div>
+                <div class="stat-value" id="defenseDisplay">5</div>
+            </div>
         </div>
         
-        <div class="price-row">
-            <span class="price-label">💰 Цена за пару</span>
-            <span class="price-value" id="price">2 500₽</span>
+        <div class="inventory-panel">
+            <div class="inventory-title">🎒 Инвентарь</div>
+            <div class="inventory-grid" id="inventoryGrid">
+                <div class="inventory-slot">⚔️</div>
+                <div class="inventory-slot">🛡️</div>
+                <div class="inventory-slot">🧪</div>
+                <div class="inventory-slot">📿</div>
+            </div>
         </div>
-        <div class="price-row">
-            <span class="price-label">💸 Себестоимость</span>
-            <span class="price-value" id="cost">1 800₽</span>
+        
+        <div class="controls">
+            <button class="control-btn" id="upBtn">↑</button>
+            <button class="control-btn" id="downBtn">↓</button>
+            <button class="control-btn" id="leftBtn">←</button>
+            <button class="control-btn" id="rightBtn">→</button>
+            <button class="control-btn attack-btn" id="attackBtn">⚔️ Атака</button>
+            <button class="control-btn" id="skillBtn">✨ Умение</button>
+            <button class="control-btn restart-btn" id="restartBtn">🔄 Заново</button>
         </div>
-    </div>
-    
-    <!-- Конкуренты -->
-    <div class="market-card">
-        <div class="month-title">👥 Конкуренты</div>
-        <div class="competitor-card">
-            <div>Фабрика «Скороход»</div>
-            <div style="font-size: 14px; color: #ffaa00;">Цена: 2 300₽ · Доля: 35%</div>
-        </div>
-        <div class="competitor-card">
-            <div>Обувной цех №5</div>
-            <div style="font-size: 14px; color: #ffaa00;">Цена: 2 700₽ · Доля: 25%</div>
-        </div>
-    </div>
-    
-    <!-- Событие -->
-    <div id="eventContainer"></div>
-    
-    <!-- Действия -->
-    <div class="action-card">
-        <div class="action-title">⚡ Действия</div>
-        <div class="button-grid">
-            <button class="action-btn" onclick="buyMaterial()">
-                📦 Закупить материалы
-                <span class="cost">-5 000₽</span>
-            </button>
-            <button class="action-btn" onclick="hireStaff()">
-                👥 Нанять рабочего
-                <span class="cost">-3 000₽/мес</span>
-            </button>
-            <button class="action-btn" onclick="advertise()">
-                📺 Запустить рекламу
-                <span class="cost">-8 000₽</span>
-            </button>
-            <button class="action-btn" onclick="improveQuality()">
-                ✨ Улучшить качество
-                <span class="cost">-15 000₽</span>
-            </button>
+        
+        <div class="log-panel" id="logPanel">
+            <div class="log-entry">✨ Добро пожаловать в Hero's Quest!</div>
+            <div class="log-entry">⚔️ Убей всех врагов, чтобы победить</div>
+            <div class="log-entry">💡 Используй умение для мощной атаки</div>
         </div>
     </div>
-    
-    <div class="action-card">
-        <div class="action-title">💰 Ценовая политика</div>
-        <div class="button-grid">
-            <button class="action-btn" onclick="changePrice('down')">
-                📉 Снизить цену
-                <span class="cost">-200₽</span>
-            </button>
-            <button class="action-btn" onclick="changePrice('up')">
-                📈 Повысить цену
-                <span class="cost">+200₽</span>
-            </button>
-        </div>
-    </div>
-    
-    <!-- Кнопка следующего месяца -->
-    <button class="next-month-btn" onclick="nextMonth()" id="nextMonthBtn">
-        ⏩ Следующий месяц
-    </button>
-    
-    <!-- Конец игры -->
-    <div id="gameOverContainer"></div>
 
     <script>
-        // ==================== ИГРОВЫЕ ДАННЫЕ ====================
-        let money = 100000;
-        let production = 100; // пар в месяц
-        let stock = 50; // пар на складе
-        let staff = 5;
-        let month = 1;
-        let price = 2500;
-        let baseCost = 1800;
-        let demand = 120; // в процентах
-        let quality = 1.0;
-        let reputation = 50;
-        let gameActive = true;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
         
-        // Элементы
-        const moneyEl = document.getElementById('money');
-        const productionEl = document.getElementById('production');
-        const stockEl = document.getElementById('stock');
-        const staffEl = document.getElementById('staff');
-        const monthEl = document.getElementById('month');
-        const demandValueEl = document.getElementById('demandValue');
-        const demandBarEl = document.getElementById('demandBar');
-        const priceEl = document.getElementById('price');
-        const costEl = document.getElementById('cost');
-        const eventContainer = document.getElementById('eventContainer');
-        const gameOverContainer = document.getElementById('gameOverContainer');
+        // ==================== ИГРОВЫЕ ПЕРЕМЕННЫЕ ====================
+        let gameRunning = true;
+        let keys = {};
+        let lastTime = 0;
+        let logMessages = [];
+        let skillCooldown = 0;
+        let skillCooldownMax = 300; // 5 секунд при 60fps
         
-        function updateDisplay() {
-            moneyEl.textContent = money.toLocaleString() + '₽';
-            productionEl.textContent = production + ' пар/мес';
-            stockEl.textContent = stock + ' пар';
-            staffEl.textContent = staff + ' чел';
-            monthEl.textContent = month;
-            demandValueEl.textContent = demand + '%';
-            demandBarEl.style.width = demand + '%';
-            demandBarEl.textContent = demand + '%';
-            priceEl.textContent = price.toLocaleString() + '₽';
+        // ==================== ИГРОК ====================
+        let player = {
+            x: 300,
+            y: 300,
+            width: 30,
+            height: 30,
+            speed: 3,
+            health: 100,
+            maxHealth: 100,
+            level: 1,
+            exp: 0,
+            expToNext: 100,
+            gold: 0,
+            power: 10,
+            defense: 5,
+            attackCooldown: 0,
+            attackCooldownMax: 20,
+            invincible: 0,
+            inventory: ['sword', 'shield', 'potion', 'amulet']
+        };
+        
+        // ==================== ВРАГИ ====================
+        let enemies = [
+            { x: 100, y: 100, width: 25, height: 25, health: 40, maxHealth: 40, power: 5, defense: 2, speed: 1, type: 'goblin', value: 20, expValue: 15 },
+            { x: 500, y: 150, width: 25, height: 25, health: 40, maxHealth: 40, power: 5, defense: 2, speed: 1.2, type: 'goblin', value: 20, expValue: 15 },
+            { x: 200, y: 500, width: 25, height: 25, health: 40, maxHealth: 40, power: 5, defense: 2, speed: 0.8, type: 'goblin', value: 20, expValue: 15 },
+            { x: 450, y: 450, width: 40, height: 40, health: 80, maxHealth: 80, power: 12, defense: 5, speed: 0.4, type: 'ogre', value: 50, expValue: 40 },
+            { x: 300, y: 100, width: 20, height: 20, health: 25, maxHealth: 25, power: 8, defense: 1, speed: 1.5, type: 'imp', value: 15, expValue: 10 }
+        ];
+        
+        // ==================== ПРЕДМЕТЫ ====================
+        let items = [
+            { x: 400, y: 200, width: 15, height: 15, type: 'gold', value: 10 },
+            { x: 150, y: 400, width: 15, height: 15, type: 'gold', value: 10 },
+            { x: 350, y: 350, width: 20, height: 20, type: 'potion', value: 30 },
+            { x: 250, y: 250, width: 20, height: 20, type: 'healthPotion', value: 50 },
+            { x: 500, y: 500, width: 20, height: 20, type: 'sword', value: 5 }
+        ];
+        
+        // ==================== ЛОГИРОВАНИЕ ====================
+        function addLog(message) {
+            logMessages.unshift(message);
+            if (logMessages.length > 5) logMessages.pop();
+            updateLogPanel();
+        }
+        
+        function updateLogPanel() {
+            const panel = document.getElementById('logPanel');
+            panel.innerHTML = logMessages.map(msg => `<div class="log-entry">${msg}</div>`).join('');
+        }
+        
+        // ==================== ОБНОВЛЕНИЕ СТАТИСТИКИ ====================
+        function updateStats() {
+            document.getElementById('healthDisplay').textContent = `${player.health}/${player.maxHealth}`;
+            document.getElementById('levelDisplay').textContent = player.level;
+            document.getElementById('expDisplay').textContent = `${player.exp}/${player.expToNext}`;
+            document.getElementById('goldDisplay').textContent = player.gold;
+            document.getElementById('powerDisplay').textContent = player.power;
+            document.getElementById('defenseDisplay').textContent = player.defense;
+        }
+        
+        // ==================== ИНВЕНТАРЬ ====================
+        function updateInventory() {
+            const grid = document.getElementById('inventoryGrid');
+            let icons = {
+                'sword': '⚔️',
+                'shield': '🛡️',
+                'potion': '🧪',
+                'amulet': '📿',
+                'healthPotion': '💊'
+            };
+            grid.innerHTML = player.inventory.map(item => 
+                `<div class="inventory-slot">${icons[item] || '📦'}</div>`
+            ).join('');
+        }
+        
+        // ==================== ДВИЖЕНИЕ ИГРОКА ====================
+        function movePlayer() {
+            if (!gameRunning) return;
             
-            let currentCost = Math.floor(baseCost * (2 - quality));
-            costEl.textContent = currentCost.toLocaleString() + '₽';
-        }
-        
-        // ==================== ДЕЙСТВИЯ ====================
-        function buyMaterial() {
-            if (!gameActive) return;
-            if (money < 5000) {
-                showEvent('❌ Недостаточно денег');
-                return;
+            let dx = 0, dy = 0;
+            
+            if (keys['w'] || keys['W'] || keys['ArrowUp']) dy -= 1;
+            if (keys['s'] || keys['S'] || keys['ArrowDown']) dy += 1;
+            if (keys['a'] || keys['A'] || keys['ArrowLeft']) dx -= 1;
+            if (keys['d'] || keys['D'] || keys['ArrowRight']) dx += 1;
+            
+            if (dx !== 0 || dy !== 0) {
+                let length = Math.sqrt(dx*dx + dy*dy);
+                dx = dx / length * player.speed;
+                dy = dy / length * player.speed;
+                
+                let newX = player.x + dx;
+                let newY = player.y + dy;
+                
+                // Границы
+                player.x = Math.max(20, Math.min(580, newX));
+                player.y = Math.max(20, Math.min(580, newY));
             }
-            money -= 5000;
-            stock += 30;
-            showEvent('📦 Закуплено 30 пар материалов');
-            updateDisplay();
         }
         
-        function hireStaff() {
-            if (!gameActive) return;
-            if (money < 3000) {
-                showEvent('❌ Недостаточно денег');
-                return;
-            }
-            money -= 3000;
-            staff += 1;
-            production += 20;
-            showEvent('👥 Нанят новый рабочий, производство +20 пар/мес');
-            updateDisplay();
-        }
-        
-        function advertise() {
-            if (!gameActive) return;
-            if (money < 8000) {
-                showEvent('❌ Недостаточно денег');
-                return;
-            }
-            money -= 8000;
-            demand += 15;
-            showEvent('📺 Реклама сработала! Спрос +15%');
-            updateDisplay();
-        }
-        
-        function improveQuality() {
-            if (!gameActive) return;
-            if (money < 15000) {
-                showEvent('❌ Недостаточно денег');
-                return;
-            }
-            money -= 15000;
-            quality += 0.2;
-            baseCost += 200;
-            showEvent('✨ Качество улучшено! Себестоимость +200₽');
-            updateDisplay();
-        }
-        
-        function changePrice(direction) {
-            if (!gameActive) return;
-            if (direction === 'up') {
-                price += 200;
-                demand = Math.max(50, demand - 5);
-                showEvent('📈 Цена повышена, спрос снизился');
-            } else {
-                price = Math.max(baseCost + 100, price - 200);
-                demand += 8;
-                showEvent('📉 Цена снижена, спрос вырос');
-            }
-            updateDisplay();
-        }
-        
-        // ==================== СЛУЧАЙНЫЕ СОБЫТИЯ ====================
-        function randomEvent() {
-            let events = [
-                {
-                    name: '🔥 Пожар',
-                    text: 'На фабрике случился небольшой пожар!',
-                    effect: () => {
-                        stock = Math.floor(stock * 0.7);
-                        money -= 20000;
-                    }
-                },
-                {
-                    name: '💼 Крупный заказ',
-                    text: 'Сеть магазинов хочет купить 200 пар!',
-                    effect: () => {
-                        if (stock >= 200) {
-                            money += price * 200 * 0.9;
-                            stock -= 200;
-                        } else {
-                            money += price * stock * 0.9;
-                            stock = 0;
+        // ==================== АТАКА ====================
+        function attack() {
+            if (!gameRunning || player.attackCooldown > 0) return;
+            
+            player.attackCooldown = player.attackCooldownMax;
+            
+            let attackRange = 60;
+            let attackDamage = player.power;
+            
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                let enemy = enemies[i];
+                let dx = enemy.x - player.x;
+                let dy = enemy.y - player.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < attackRange) {
+                    let damage = Math.max(1, attackDamage - enemy.defense);
+                    enemy.health -= damage;
+                    addLog(`⚔️ Атака! ${damage} урона гоблину`);
+                    
+                    if (enemy.health <= 0) {
+                        player.gold += enemy.value;
+                        player.exp += enemy.expValue;
+                        enemies.splice(i, 1);
+                        addLog(`💀 Убит враг! +${enemy.value}💰 +${enemy.expValue}✨`);
+                        
+                        // Повышение уровня
+                        if (player.exp >= player.expToNext) {
+                            player.level++;
+                            player.exp -= player.expToNext;
+                            player.expToNext = Math.floor(player.expToNext * 1.5);
+                            player.maxHealth += 20;
+                            player.health = player.maxHealth;
+                            player.power += 5;
+                            player.defense += 2;
+                            addLog(`✨ УРОВЕНЬ ${player.level}! Сила+5 Защита+2`);
                         }
                     }
-                },
-                {
-                    name: '👠 Новая мода',
-                    text: 'На вашу обувь резко вырос спрос!',
-                    effect: () => {
-                        demand += 25;
-                    }
-                },
-                {
-                    name: '📉 Конкуренты демпингуют',
-                    text: 'Конкуренты снизили цены, спрос упал',
-                    effect: () => {
-                        demand -= 15;
+                }
+            }
+        }
+        
+        // ==================== УМЕНИЕ ====================
+        function useSkill() {
+            if (!gameRunning || skillCooldown > 0) return;
+            
+            skillCooldown = skillCooldownMax;
+            addLog(`✨ МОЩНОЕ УМЕНИЕ! Урон x2`);
+            
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                let enemy = enemies[i];
+                let dx = enemy.x - player.x;
+                let dy = enemy.y - player.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < 100) {
+                    let damage = player.power * 3;
+                    enemy.health -= damage;
+                    addLog(`💥 КРИТ! ${damage} урона`);
+                    
+                    if (enemy.health <= 0) {
+                        player.gold += enemy.value * 2;
+                        player.exp += enemy.expValue * 2;
+                        enemies.splice(i, 1);
                     }
                 }
-            ];
-            
-            if (Math.random() < 0.4) { // 40% шанс события
-                let event = events[Math.floor(Math.random() * events.length)];
-                showEvent(`🎁 ${event.name}: ${event.text}`);
-                event.effect();
-                updateDisplay();
             }
         }
         
-        function showEvent(text) {
-            eventContainer.innerHTML = `
-                <div class="event-popup" onclick="this.remove()">
-                    ${text}
-                </div>
-            `;
-            setTimeout(() => {
-                eventContainer.innerHTML = '';
-            }, 5000);
+        // ==================== ДВИЖЕНИЕ ВРАГОВ ====================
+        function moveEnemies() {
+            for (let enemy of enemies) {
+                let dx = player.x - enemy.x;
+                let dy = player.y - enemy.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance > 0) {
+                    dx = dx / distance * enemy.speed;
+                    dy = dy / distance * enemy.speed;
+                    
+                    enemy.x += dx;
+                    enemy.y += dy;
+                    
+                    enemy.x = Math.max(15, Math.min(585, enemy.x));
+                    enemy.y = Math.max(15, Math.min(585, enemy.y));
+                }
+            }
         }
         
-        // ==================== СЛЕДУЮЩИЙ МЕСЯЦ ====================
-        function nextMonth() {
-            if (!gameActive) return;
-            
-            // Производим обувь
-            let produced = production;
-            stock += produced;
-            
-            // Рассчитываем продажи
-            let maxSales = Math.floor(demand * 2); // спрос в парах
-            let sales = Math.min(stock, maxSales);
-            stock -= sales;
-            
-            // Доход
-            let revenue = sales * price;
-            let costTotal = sales * baseCost + staff * 3000;
-            money += revenue - costTotal;
-            
-            // Месяц прошёл
-            month++;
-            
-            // Меняем спрос
-            demand += Math.floor(Math.random() * 20) - 10;
-            demand = Math.max(50, Math.min(200, demand));
-            
-            // Случайное событие
-            randomEvent();
-            
-            // Проверка на конец игры
-            if (money <= 0) {
-                gameOver('bankrupt');
+        // ==================== КОЛЛИЗИИ ====================
+        function checkCollisions() {
+            if (!gameRunning || player.invincible > 0) {
+                player.invincible--;
                 return;
             }
             
-            if (month > 12) {
-                gameOver('win');
-                return;
-            }
-            
-            updateDisplay();
-            
-            // Тактильная отдача
-            if (window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            for (let enemy of enemies) {
+                let dx = player.x - enemy.x;
+                let dy = player.y - enemy.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < (player.width/2 + enemy.width/2)) {
+                    let damage = Math.max(1, enemy.power - player.defense/2);
+                    player.health -= damage;
+                    player.invincible = 30;
+                    canvas.classList.add('damage-effect');
+                    setTimeout(() => canvas.classList.remove('damage-effect'), 200);
+                    addLog(`💔 Получен урон: ${damage}`);
+                    
+                    if (player.health <= 0) {
+                        gameRunning = false;
+                        addLog('❌ Ты погиб... Нажми "Заново"');
+                    }
+                }
             }
         }
         
-        function gameOver(reason) {
-            gameActive = false;
-            document.getElementById('nextMonthBtn').disabled = true;
-            
-            if (reason === 'bankrupt') {
-                gameOverContainer.innerHTML = `
-                    <div class="game-over">
-                        <h2>💔 Банкротство</h2>
-                        <p>Фабрика закрыта. Вы потеряли бизнес.</p>
-                        <button class="next-month-btn" onclick="location.reload()">🔄 Начать заново</button>
-                    </div>
-                `;
-            } else {
-                let total = money;
-                gameOverContainer.innerHTML = `
-                    <div class="game-over" style="background: linear-gradient(135deg, #00c864, #00a0a0);">
-                        <h2>🏆 ПОБЕДА!</h2>
-                        <p>Вы продержались год! Капитал: ${total.toLocaleString()}₽</p>
-                        <button class="next-month-btn" onclick="location.reload()">🔄 Играть снова</button>
-                    </div>
-                `;
+        // ==================== СБОР ПРЕДМЕТОВ ====================
+        function collectItems() {
+            for (let i = items.length - 1; i >= 0; i--) {
+                let item = items[i];
+                let dx = player.x - item.x;
+                let dy = player.y - item.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < (player.width/2 + item.width/2)) {
+                    if (item.type === 'gold') {
+                        player.gold += item.value;
+                        addLog(`💰 +${item.value} золота`);
+                    } else if (item.type === 'potion') {
+                        player.power += item.value;
+                        addLog(`⚔️ Сила +${item.value}`);
+                    } else if (item.type === 'healthPotion') {
+                        player.health = Math.min(player.maxHealth, player.health + item.value);
+                        addLog(`❤️ Здоровье +${item.value}`);
+                    } else {
+                        player.inventory.push(item.type);
+                        addLog(`📦 Найден предмет!`);
+                        updateInventory();
+                    }
+                    items.splice(i, 1);
+                }
             }
         }
+        
+        // ==================== ПРОВЕРКА ПОБЕДЫ ====================
+        function checkVictory() {
+            if (enemies.length === 0) {
+                gameRunning = false;
+                addLog('🏆 ПОБЕДА! Все враги повержены!');
+                addLog(`💰 Итоговое золото: ${player.gold}`);
+                addLog(`📊 Достигнут уровень: ${player.level}`);
+            }
+        }
+        
+        // ==================== ОТРИСОВКА ====================
+        function draw() {
+            ctx.clearRect(0, 0, 600, 600);
+            
+            // Сетка
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 600; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, 600);
+                ctx.stroke();
+                ctx.moveTo(0, i);
+                ctx.lineTo(600, i);
+                ctx.stroke();
+            }
+            
+            // Предметы
+            for (let item of items) {
+                ctx.shadowBlur = 20;
+                if (item.type === 'gold') {
+                    ctx.fillStyle = '#ffd700';
+                    ctx.shadowColor = '#ffd700';
+                } else if (item.type === 'potion') {
+                    ctx.fillStyle = '#ff6b6b';
+                    ctx.shadowColor = '#ff6b6b';
+                } else if (item.type === 'healthPotion') {
+                    ctx.fillStyle = '#ff4444';
+                    ctx.shadowColor = '#ff4444';
+                } else {
+                    ctx.fillStyle = '#aa88ff';
+                    ctx.shadowColor = '#aa88ff';
+                }
+                
+                ctx.beginPath();
+                ctx.arc(item.x, item.y, item.width/2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Враги
+            for (let enemy of enemies) {
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = enemy.type === 'ogre' ? '#f44' : (enemy.type === 'imp' ? '#f90' : '#4a4');
+                
+                // Тело
+                if (enemy.type === 'goblin') {
+                    ctx.fillStyle = '#4a4';
+                } else if (enemy.type === 'ogre') {
+                    ctx.fillStyle = '#c44';
+                } else {
+                    ctx.fillStyle = '#f90';
+                }
+                
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.width/2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Глаза
+                ctx.fillStyle = '#fff';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(enemy.x-5, enemy.y-5, 3, 0, Math.PI * 2);
+                ctx.arc(enemy.x+5, enemy.y-5, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(enemy.x-5, enemy.y-5, 1.5, 0, Math.PI * 2);
+                ctx.arc(enemy.x+5, enemy.y-5, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Полоска здоровья
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#000';
+                ctx.fillRect(enemy.x-15, enemy.y-25, 30, 4);
+                let healthPercent = enemy.health / enemy.maxHealth;
+                ctx.fillStyle = healthPercent > 0.6 ? '#0f0' : (healthPercent > 0.3 ? '#ff0' : '#f00');
+                ctx.fillRect(enemy.x-15, enemy.y-25, 30 * healthPercent, 4);
+            }
+            
+            // Игрок
+            ctx.shadowBlur = player.invincible > 0 ? 40 : 20;
+            ctx.shadowColor = player.invincible > 0 ? '#ff0' : '#4af';
+            
+            ctx.fillStyle = '#4af';
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.width/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Глаза
+            ctx.fillStyle = '#fff';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(player.x-6, player.y-8, 4, 0, Math.PI * 2);
+            ctx.arc(player.x+6, player.y-8, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#00f';
+            ctx.beginPath();
+            ctx.arc(player.x-6 + (keys['d']?2:0) - (keys['a']?-2:0), 
+                    player.y-8 + (keys['s']?2:0) - (keys['w']?-2:0), 2, 0, Math.PI * 2);
+            ctx.arc(player.x+6 + (keys['d']?2:0) - (keys['a']?-2:0), 
+                    player.y-8 + (keys['s']?2:0) - (keys['w']?-2:0), 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Меч при атаке
+            if (player.attackCooldown > 0) {
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = '#ff0';
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(player.x, player.y);
+                ctx.lineTo(player.x + 40, player.y - 20);
+                ctx.stroke();
+            }
+            
+            // Полоска здоровья
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(player.x-25, player.y-35, 50, 6);
+            let healthPercent = player.health / player.maxHealth;
+            ctx.fillStyle = healthPercent > 0.6 ? '#0f0' : (healthPercent > 0.3 ? '#ff0' : '#f00');
+            ctx.fillRect(player.x-25, player.y-35, 50 * healthPercent, 6);
+            
+            // Кулдаун умения
+            if (skillCooldown > 0) {
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                ctx.beginPath();
+                ctx.arc(550, 50, 20, 0, (skillCooldown / skillCooldownMax) * Math.PI * 2);
+                ctx.lineTo(550, 50);
+                ctx.fill();
+            }
+        }
+        
+        // ==================== ИГРОВОЙ ЦИКЛ ====================
+        function gameLoop() {
+            if (gameRunning) {
+                movePlayer();
+                moveEnemies();
+                checkCollisions();
+                collectItems();
+                checkVictory();
+                player.attackCooldown = Math.max(0, player.attackCooldown - 1);
+                skillCooldown = Math.max(0, skillCooldown - 1);
+            }
+            
+            draw();
+            updateStats();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // ==================== УПРАВЛЕНИЕ ====================
+        document.getElementById('upBtn').addEventListener('mousedown', () => keys['w'] = true);
+        document.getElementById('upBtn').addEventListener('mouseup', () => keys['w'] = false);
+        document.getElementById('upBtn').addEventListener('mouseleave', () => keys['w'] = false);
+        
+        document.getElementById('downBtn').addEventListener('mousedown', () => keys['s'] = true);
+        document.getElementById('downBtn').addEventListener('mouseup', () => keys['s'] = false);
+        document.getElementById('downBtn').addEventListener('mouseleave', () => keys['s'] = false);
+        
+        document.getElementById('leftBtn').addEventListener('mousedown', () => keys['a'] = true);
+        document.getElementById('leftBtn').addEventListener('mouseup', () => keys['a'] = false);
+        document.getElementById('leftBtn').addEventListener('mouseleave', () => keys['a'] = false);
+        
+        document.getElementById('rightBtn').addEventListener('mousedown', () => keys['d'] = true);
+        document.getElementById('rightBtn').addEventListener('mouseup', () => keys['d'] = false);
+        document.getElementById('rightBtn').addEventListener('mouseleave', () => keys['d'] = false);
+        
+        document.getElementById('attackBtn').addEventListener('click', attack);
+        document.getElementById('skillBtn').addEventListener('click', useSkill);
+        
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            location.reload();
+        });
+        
+        // Клавиатура
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            if (e.key === ' ') {
+                attack();
+                e.preventDefault();
+            }
+            if (e.key === 'e' || e.key === 'E') {
+                useSkill();
+                e.preventDefault();
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+        
+        // Сенсорное управление
+        let touchStartX, touchStartY;
+        let touchThreshold = 30;
+        
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            let touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!touchStartX || !touchStartY) return;
+            
+            let touch = e.touches[0];
+            let dx = touch.clientX - touchStartX;
+            let dy = touch.clientY - touchStartY;
+            
+            keys['w'] = keys['a'] = keys['s'] = keys['d'] = false;
+            
+            if (Math.abs(dx) > touchThreshold) {
+                keys[dx > 0 ? 'd' : 'a'] = true;
+            }
+            if (Math.abs(dy) > touchThreshold) {
+                keys[dy > 0 ? 's' : 'w'] = true;
+            }
+        });
+        
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keys['w'] = keys['a'] = keys['s'] = keys['d'] = false;
+            touchStartX = touchStartY = null;
+        });
+        
+        // Двойной тап для атаки
+        let lastTap = 0;
+        canvas.addEventListener('touchend', (e) => {
+            let currentTime = new Date().getTime();
+            let tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                attack();
+            }
+            lastTap = currentTime;
+        });
         
         // ==================== СТАРТ ====================
-        updateDisplay();
+        updateInventory();
+        gameLoop();
+        updateStats();
         
         const tg = window.Telegram.WebApp;
         tg.ready();
