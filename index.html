@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DRAGON REALM — 3D RPG</title>
+    <title>PIXEL LEGEND — 2D RPG</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -11,68 +11,71 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
         
         body {
-            background: #000;
+            background: #1a1a2a;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Courier New', monospace;
         }
         
         #gameContainer {
             position: relative;
             width: 400px;
             height: 700px;
-            background: linear-gradient(180deg, #0a1a2a, #1a3a5a);
-            border-radius: 30px;
+            background: #2a2a3a;
+            border-radius: 20px;
             overflow: hidden;
-            border: 3px solid #ffaa00;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            border: 4px solid #ffaa00;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
         
         canvas {
             display: block;
             width: 100%;
             height: 500px;
-            background: #2a4a6a;
+            background: #3a5a3a;
             touch-action: none;
+            cursor: crosshair;
+            image-rendering: pixelated;
         }
         
         .ui-panel {
             height: 200px;
-            background: linear-gradient(145deg, #2a2a3a, #1a1a2a);
+            background: #2a2a3a;
             padding: 15px;
-            color: #fff;
-            border-top: 3px solid #ffaa00;
+            color: #ffaa00;
+            border-top: 4px solid #ffaa00;
             overflow-y: auto;
         }
         
         .stats {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             margin-bottom: 15px;
-            background: rgba(255,170,0,0.2);
-            padding: 12px;
-            border-radius: 20px;
-            border: 1px solid #ffaa00;
+            background: #1a1a2a;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #ffaa00;
         }
         
         .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #ffaa00;
-            text-shadow: 2px 2px 0 #000;
             font-size: 14px;
+            color: #ffaa00;
         }
         
         .stat-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            color: #fff;
+            color: white;
         }
         
         .inventory {
@@ -83,9 +86,9 @@
         }
         
         .item-slot {
-            background: linear-gradient(145deg, #3a3a4a, #2a2a3a);
+            background: #1a1a2a;
             border: 2px solid #ffaa00;
-            border-radius: 15px;
+            border-radius: 8px;
             height: 45px;
             display: flex;
             align-items: center;
@@ -96,9 +99,8 @@
         }
         
         .item-slot:active {
-            transform: scale(0.95);
             background: #ffaa00;
-            color: #000;
+            color: #1a1a2a;
         }
         
         .controls {
@@ -108,26 +110,27 @@
         
         .ctrl-btn {
             flex: 1;
-            background: linear-gradient(145deg, #ffaa00, #cc8800);
+            background: #ffaa00;
             border: none;
-            border-radius: 30px;
-            padding: 15px;
-            color: #000;
+            border-radius: 20px;
+            padding: 12px;
+            color: #1a1a2a;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 5px 0 #664400;
+            border-bottom: 4px solid #886600;
+            transition: all 0.1s;
         }
         
         .ctrl-btn:active {
-            transform: translateY(5px);
-            box-shadow: none;
+            transform: translateY(4px);
+            border-bottom-width: 0;
         }
         
-        #attackBtn { background: linear-gradient(145deg, #ff4444, #aa2222); }
-        #skillBtn { background: linear-gradient(145deg, #4444ff, #2222aa); }
+        #attackBtn { background: #ff4444; color: white; }
+        #skillBtn { background: #4444ff; color: white; }
         
-        .joystick-area {
+        .joystick {
             position: absolute;
             bottom: 210px;
             left: 20px;
@@ -135,25 +138,22 @@
             height: 80px;
             background: rgba(0,0,0,0.6);
             border: 3px solid #ffaa00;
-            border-radius: 50px;
+            border-radius: 40px;
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 20px #ffaa00;
         }
         
-        .damage-number {
+        .damage {
             position: absolute;
             color: #ffaa00;
             font-weight: bold;
-            font-size: 24px;
-            text-shadow: 2px 2px 0 #000;
+            font-size: 20px;
             pointer-events: none;
             animation: floatUp 1s forwards;
-            z-index: 100;
         }
         
         @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
         }
         
         .level-up {
@@ -162,14 +162,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #ffaa00;
-            font-size: 40px;
+            font-size: 30px;
             font-weight: bold;
-            text-shadow: 3px 3px 0 #000;
-            animation: levelPulse 2s;
-            z-index: 200;
+            animation: pulse 2s;
         }
         
-        @keyframes levelPulse {
+        @keyframes pulse {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
             50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
@@ -183,300 +181,237 @@
         <div class="ui-panel">
             <div class="stats">
                 <div class="stat-item">❤️<div class="stat-value" id="hp">100</div></div>
-                <div class="stat-item">⚔️<div class="stat-value" id="atk">25</div></div>
-                <div class="stat-item">🛡️<div class="stat-value" id="def">15</div></div>
+                <div class="stat-item">⚔️<div class="stat-value" id="atk">20</div></div>
+                <div class="stat-item">🛡️<div class="stat-value" id="def">10</div></div>
                 <div class="stat-item">📊<div class="stat-value" id="lvl">1</div></div>
                 <div class="stat-item">💰<div class="stat-value" id="gold">0</div></div>
             </div>
             
             <div class="inventory" id="inventory">
-                <div class="item-slot" onclick="useItem(0)">⚔️ Меч</div>
-                <div class="item-slot" onclick="useItem(1)">🛡️ Щит</div>
-                <div class="item-slot" onclick="useItem(2)">⛑️ Шлем</div>
-                <div class="item-slot" onclick="useItem(3)">🧪 Зелье</div>
+                <div class="item-slot" onclick="useItem(0)">⚔️</div>
+                <div class="item-slot" onclick="useItem(1)">🛡️</div>
+                <div class="item-slot" onclick="useItem(2)">⛑️</div>
+                <div class="item-slot" onclick="useItem(3)">🧪 x3</div>
             </div>
             
             <div class="controls">
                 <button class="ctrl-btn" id="attackBtn">⚔️ АТАКА</button>
-                <button class="ctrl-btn" id="skillBtn">✨ УМЕНИЕ</button>
+                <button class="ctrl-btn" id="skillBtn">✨ МАГИЯ</button>
             </div>
         </div>
+        
+        <div class="joystick" id="joystick"></div>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
-        // ==================== 3D ПАРАМЕТРЫ ====================
-        let camera = {
-            x: 0,
-            y: 0,
-            z: 300,
-            rotation: 0
-        };
-        
         // ==================== ИГРОК ====================
         let player = {
-            x: 0, y: 0, z: 0,
+            x: 200, y: 250,
             health: 100,
             maxHealth: 100,
-            attack: 25,
-            defense: 15,
+            attack: 20,
+            defense: 10,
             level: 1,
             exp: 0,
             expToNext: 100,
             gold: 0,
             attackCooldown: 0,
             invincible: 0,
-            speed: 5,
+            speed: 3,
             weapon: { damage: 5, equipped: true },
             armor: { defense: 3, equipped: true },
-            helmet: { defense: 2, equipped: true },
             potions: 3,
-            rotation: 0,
-            animation: 0
+            frame: 0,
+            direction: 'down'
         };
         
-        // ==================== 3D ОБЪЕКТЫ ====================
-        let enemies = [];
-        let projectiles = [];
-        
-        // ==================== ГЕНЕРАЦИЯ МИРА ====================
-        function generateWorld() {
-            // Стены замка
-            for (let i = 0; i < 8; i++) {
-                let angle = (i / 8) * Math.PI * 2;
-                let x = Math.cos(angle) * 200;
-                let z = Math.sin(angle) * 200;
-                
-                // Башни
-                enemies.push({
-                    type: 'tower',
-                    x: x, y: 0, z: z,
-                    width: 30,
-                    height: 100,
-                    depth: 30,
-                    health: 200,
-                    maxHealth: 200
-                });
+        // ==================== МОНСТРЫ ====================
+        let monsters = [
+            {
+                type: 'goblin',
+                x: 300, y: 200,
+                health: 50,
+                maxHealth: 50,
+                attack: 8,
+                defense: 2,
+                exp: 20,
+                gold: 10,
+                speed: 1.5,
+                size: 20,
+                frame: 0
+            },
+            {
+                type: 'skeleton',
+                x: 100, y: 300,
+                health: 80,
+                maxHealth: 80,
+                attack: 12,
+                defense: 3,
+                exp: 30,
+                gold: 15,
+                speed: 1.2,
+                size: 22,
+                frame: 0
+            },
+            {
+                type: 'boss',
+                x: 200, y: 100,
+                health: 300,
+                maxHealth: 300,
+                attack: 20,
+                defense: 8,
+                exp: 100,
+                gold: 50,
+                speed: 0.8,
+                size: 30,
+                frame: 0
             }
-            
-            // Главный дракон
-            enemies.push({
-                type: 'dragon',
-                x: 100, y: 50, z: 100,
-                width: 80,
-                height: 60,
-                depth: 40,
-                health: 500,
-                maxHealth: 500,
-                attack: 30,
-                defense: 20,
-                exp: 300,
-                gold: 500,
-                speed: 2,
-                animation: 0,
-                active: true
-            });
-            
-            // Стражи
-            for (let i = 0; i < 5; i++) {
-                let angle = Math.random() * Math.PI * 2;
-                let dist = 150 + Math.random() * 100;
-                enemies.push({
-                    type: 'knight',
-                    x: Math.cos(angle) * dist,
-                    y: 0,
-                    z: Math.sin(angle) * dist,
-                    width: 25,
-                    height: 50,
-                    depth: 20,
-                    health: 100,
-                    maxHealth: 100,
-                    attack: 15,
-                    defense: 10,
-                    exp: 50,
-                    gold: 30,
-                    speed: 3,
-                    animation: 0
-                });
-            }
-        }
+        ];
         
-        generateWorld();
-        
-        // ==================== 3D ПРОЕКЦИЯ ====================
-        function project3D(x, y, z) {
-            let scale = 300 / (z + 300);
-            let screenX = 200 + (x - player.x) * scale;
-            let screenY = 250 - (y - player.y) * scale;
-            return { x: screenX, y: screenY, scale: scale };
-        }
-        
-        // ==================== РИСОВАНИЕ 3D МИРА ====================
-        function draw3D() {
+        // ==================== РИСОВАНИЕ КАРТЫ ====================
+        function drawMap() {
             // Пол
-            for (let i = -5; i <= 5; i++) {
-                for (let j = -5; j <= 5; j++) {
-                    let worldX = i * 100;
-                    let worldZ = j * 100;
-                    let pos = project3D(worldX, 0, worldZ);
-                    
-                    if (pos.scale > 0) {
-                        let size = 100 * pos.scale;
-                        ctx.fillStyle = '#3a5a3a';
-                        ctx.fillRect(pos.x - size/2, pos.y - size/2, size, size/4);
-                        
-                        // Текстура
-                        ctx.strokeStyle = '#2a4a2a';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(pos.x - size/2, pos.y - size/2, size, size/4);
-                    }
+            ctx.fillStyle = '#3a5a3a';
+            ctx.fillRect(0, 0, 400, 500);
+            
+            // Клетки
+            ctx.strokeStyle = '#2a4a2a';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 20; i++) {
+                for (let j = 0; j < 25; j++) {
+                    ctx.strokeRect(i*20, j*20, 20, 20);
                 }
             }
             
-            // Враги
-            enemies = enemies.filter(e => e.health > 0);
-            
-            for (let e of enemies) {
-                e.animation += 0.05;
-                let pos = project3D(e.x, e.y, e.z);
+            // Деревья
+            for (let i = 0; i < 5; i++) {
+                let x = 50 + i * 70;
+                let y = 100 + Math.sin(i) * 30;
                 
-                if (pos.scale > 0) {
-                    let size = e.width * pos.scale;
-                    let height = e.height * pos.scale;
-                    
-                    // Тень
-                    ctx.fillStyle = 'rgba(0,0,0,' + pos.scale * 0.3 + ')';
-                    ctx.beginPath();
-                    ctx.ellipse(pos.x, pos.y + height/2, size/2, size/4, 0, 0, Math.PI*2);
-                    ctx.fill();
-                    
-                    if (e.type === 'dragon') {
-                        // Тело дракона
-                        ctx.fillStyle = '#c44';
-                        ctx.beginPath();
-                        ctx.ellipse(pos.x, pos.y - height/2, size/2, height/2, 0, 0, Math.PI*2);
-                        ctx.fill();
-                        
-                        // Голова
-                        ctx.fillStyle = '#a44';
-                        ctx.beginPath();
-                        ctx.ellipse(pos.x + size/2, pos.y - height, size/3, size/4, 0, 0, Math.PI*2);
-                        ctx.fill();
-                        
-                        // Глаза
-                        ctx.fillStyle = '#ff0';
-                        ctx.beginPath();
-                        ctx.arc(pos.x + size/1.5, pos.y - height - 5, size/8, 0, Math.PI*2);
-                        ctx.fill();
-                        
-                        ctx.fillStyle = '#000';
-                        ctx.beginPath();
-                        ctx.arc(pos.x + size/1.5, pos.y - height - 5, size/16, 0, Math.PI*2);
-                        ctx.fill();
-                        
-                        // Крылья
-                        ctx.fillStyle = '#a44';
-                        let wingAngle = Math.sin(e.animation) * 0.3;
-                        
-                        ctx.save();
-                        ctx.translate(pos.x - size/3, pos.y - height/2);
-                        ctx.rotate(wingAngle);
-                        ctx.fillRect(-size/2, -height/4, size, height/2);
-                        ctx.restore();
-                        
-                        ctx.save();
-                        ctx.translate(pos.x + size/3, pos.y - height/2);
-                        ctx.rotate(-wingAngle);
-                        ctx.fillRect(0, -height/4, size, height/2);
-                        ctx.restore();
-                        
-                        // Полоска здоровья босса
-                        ctx.fillStyle = '#000';
-                        ctx.fillRect(pos.x - 50, pos.y - height - 30, 100, 10);
-                        let hpPercent = e.health / e.maxHealth;
-                        ctx.fillStyle = '#f44';
-                        ctx.fillRect(pos.x - 50, pos.y - height - 30, 100 * hpPercent, 10);
-                        
-                    } else if (e.type === 'knight') {
-                        // Рыцарь
-                        ctx.fillStyle = '#88a';
-                        ctx.fillRect(pos.x - size/2, pos.y - height, size, height);
-                        
-                        // Голова
-                        ctx.fillStyle = '#e0b07a';
-                        ctx.beginPath();
-                        ctx.arc(pos.x, pos.y - height - size/2, size/3, 0, Math.PI*2);
-                        ctx.fill();
-                        
-                        // Шлем
-                        ctx.fillStyle = '#aac';
-                        ctx.fillRect(pos.x - size/3, pos.y - height - size, size*0.7, size/3);
-                        
-                        // Меч
-                        ctx.strokeStyle = '#aaa';
-                        ctx.lineWidth = 3;
-                        ctx.beginPath();
-                        ctx.moveTo(pos.x + size/2, pos.y - height/2);
-                        ctx.lineTo(pos.x + size, pos.y - height);
-                        ctx.stroke();
-                    }
-                }
+                // Ствол
+                ctx.fillStyle = '#8b5a2b';
+                ctx.fillRect(x-3, y+10, 6, 20);
+                
+                // Крона
+                ctx.fillStyle = '#2a7a2a';
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, Math.PI*2);
+                ctx.fill();
             }
             
-            // Игрок
-            player.animation += 0.1;
-            let playerPos = project3D(0, 0, 0);
+            // Замок
+            ctx.fillStyle = '#8a6a4a';
+            ctx.fillRect(320, 100, 60, 100);
             
-            // Тень игрока
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
-            ctx.beginPath();
-            ctx.ellipse(playerPos.x, playerPos.y + 20, 20, 5, 0, 0, Math.PI*2);
-            ctx.fill();
+            // Башни
+            ctx.fillStyle = '#a88a6a';
+            ctx.fillRect(330, 60, 10, 40);
+            ctx.fillRect(360, 60, 10, 40);
+            
+            // Флаг
+            ctx.fillStyle = '#f44';
+            ctx.fillRect(340, 45, 20, 5);
+        }
+        
+        // ==================== РИСОВАНИЕ ИГРОКА ====================
+        function drawPlayer() {
+            player.frame += 0.1;
             
             // Тело
             ctx.fillStyle = '#44a';
-            ctx.fillRect(playerPos.x - 15, playerPos.y - 40, 30, 40);
+            ctx.fillRect(player.x-10, player.y-15, 20, 25);
             
             // Голова
             ctx.fillStyle = '#e0b07a';
             ctx.beginPath();
-            ctx.arc(playerPos.x, playerPos.y - 55, 12, 0, Math.PI*2);
+            ctx.arc(player.x, player.y-25, 8, 0, Math.PI*2);
             ctx.fill();
             
             // Шлем
             ctx.fillStyle = '#66c';
-            ctx.fillRect(playerPos.x - 10, playerPos.y - 65, 20, 10);
+            ctx.fillRect(player.x-6, player.y-33, 12, 6);
             
             // Глаза
             ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(playerPos.x - 5, playerPos.y - 58, 2, 0, Math.PI*2);
-            ctx.arc(playerPos.x + 5, playerPos.y - 58, 2, 0, Math.PI*2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(playerPos.x - 5, playerPos.y - 58, 1, 0, Math.PI*2);
-            ctx.arc(playerPos.x + 5, playerPos.y - 58, 1, 0, Math.PI*2);
-            ctx.fill();
+            ctx.fillRect(player.x-5, player.y-28, 3, 3);
+            ctx.fillRect(player.x+2, player.y-28, 3, 3);
             
             // Оружие
-            let weaponSway = Math.sin(player.animation) * 5;
-            ctx.strokeStyle = '#aaa';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(playerPos.x + 15, playerPos.y - 40);
-            ctx.lineTo(playerPos.x + 35 + weaponSway, playerPos.y - 50 - weaponSway);
-            ctx.stroke();
+            ctx.fillStyle = '#aaa';
+            ctx.fillRect(player.x+12, player.y-22, 15, 3);
+            ctx.fillRect(player.x+22, player.y-27, 3, 10);
             
             // Полоска здоровья
             ctx.fillStyle = '#000';
-            ctx.fillRect(playerPos.x - 25, playerPos.y - 80, 50, 5);
+            ctx.fillRect(player.x-15, player.y-40, 30, 4);
             let hpPercent = player.health / player.maxHealth;
             ctx.fillStyle = '#4f4';
-            ctx.fillRect(playerPos.x - 25, playerPos.y - 80, 50 * hpPercent, 5);
+            ctx.fillRect(player.x-15, player.y-40, 30 * hpPercent, 4);
+        }
+        
+        // ==================== РИСОВАНИЕ МОНСТРОВ ====================
+        function drawMonsters() {
+            for (let m of monsters) {
+                if (m.health <= 0) continue;
+                
+                m.frame += 0.1;
+                
+                if (m.type === 'goblin') {
+                    // Тело
+                    ctx.fillStyle = '#4a8';
+                    ctx.fillRect(m.x-10, m.y-10, 20, 20);
+                    
+                    // Голова
+                    ctx.fillStyle = '#6a4';
+                    ctx.beginPath();
+                    ctx.arc(m.x, m.y-15, 7, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Глаза
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(m.x-4, m.y-18, 3, 3);
+                    ctx.fillRect(m.x+1, m.y-18, 3, 3);
+                    
+                } else if (m.type === 'skeleton') {
+                    ctx.fillStyle = '#ddd';
+                    ctx.fillRect(m.x-8, m.y-10, 16, 20);
+                    ctx.beginPath();
+                    ctx.arc(m.x, m.y-18, 6, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Глаза
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(m.x-3, m.y-20, 2, 2);
+                    ctx.fillRect(m.x+1, m.y-20, 2, 2);
+                    
+                } else if (m.type === 'boss') {
+                    ctx.fillStyle = '#c44';
+                    ctx.fillRect(m.x-15, m.y-20, 30, 30);
+                    
+                    ctx.beginPath();
+                    ctx.arc(m.x, m.y-30, 10, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#ff0';
+                    ctx.fillRect(m.x-4, m.y-33, 3, 3);
+                    ctx.fillRect(m.x+1, m.y-33, 3, 3);
+                    
+                    // Рога
+                    ctx.fillStyle = '#622';
+                    ctx.fillRect(m.x-10, m.y-40, 3, 8);
+                    ctx.fillRect(m.x+7, m.y-40, 3, 8);
+                }
+                
+                // Полоска здоровья
+                ctx.fillStyle = '#000';
+                ctx.fillRect(m.x-15, m.y-35, 30, 3);
+                let hpPercent = m.health / m.maxHealth;
+                ctx.fillStyle = '#f44';
+                ctx.fillRect(m.x-15, m.y-35, 30 * hpPercent, 3);
+            }
         }
         
         // ==================== АТАКА ====================
@@ -484,49 +419,66 @@
             if (player.attackCooldown > 0) return;
             player.attackCooldown = 20;
             
-            let totalDamage = player.attack + (player.weapon.equipped ? 5 : 0);
-            
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                let e = enemies[i];
-                let dx = e.x - 0;
-                let dy = e.y - 0;
-                let dz = e.z - 0;
-                let dist = Math.sqrt(dx*dx + dz*dz);
+            for (let i = monsters.length - 1; i >= 0; i--) {
+                let m = monsters[i];
+                let dx = m.x - player.x;
+                let dy = m.y - player.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                if (dist < 100) {
-                    let damage = totalDamage - (e.defense || 5);
+                if (dist < 40) {
+                    let damage = player.attack + (player.weapon.equipped ? 5 : 0) - m.defense;
                     if (damage < 1) damage = 1;
                     
-                    e.health -= damage;
+                    m.health -= damage;
+                    showDamage(m.x, m.y, damage);
                     
-                    // Показываем урон
-                    let pos = project3D(e.x, e.y, e.z);
-                    showDamage(pos.x, pos.y, damage);
-                    
-                    if (e.health <= 0) {
-                        player.exp += e.exp || 50;
-                        player.gold += e.gold || 30;
+                    if (m.health <= 0) {
+                        player.exp += m.exp;
+                        player.gold += m.gold;
+                        monsters.splice(i, 1);
                         
-                        // Проверка уровня
                         while (player.exp >= player.expToNext) {
                             player.level++;
                             player.exp -= player.expToNext;
                             player.expToNext = Math.floor(player.expToNext * 1.5);
                             player.maxHealth += 20;
                             player.health = player.maxHealth;
-                            player.attack += 5;
-                            player.defense += 3;
-                            
+                            player.attack += 3;
+                            player.defense += 2;
                             showLevelUp();
+                        }
+                        
+                        if (monsters.length < 3) {
+                            spawnNewMonster();
                         }
                     }
                 }
             }
         }
         
+        function spawnNewMonster() {
+            let types = ['goblin', 'skeleton'];
+            let type = types[Math.floor(Math.random() * types.length)];
+            let monster = {
+                type: type,
+                x: Math.random() * 300 + 50,
+                y: Math.random() * 300 + 100,
+                health: type === 'goblin' ? 50 : 80,
+                maxHealth: type === 'goblin' ? 50 : 80,
+                attack: type === 'goblin' ? 8 : 12,
+                defense: type === 'goblin' ? 2 : 3,
+                exp: type === 'goblin' ? 20 : 30,
+                gold: type === 'goblin' ? 10 : 15,
+                speed: type === 'goblin' ? 1.5 : 1.2,
+                size: type === 'goblin' ? 20 : 22,
+                frame: 0
+            };
+            monsters.push(monster);
+        }
+        
         function showDamage(x, y, damage) {
             let div = document.createElement('div');
-            div.className = 'damage-number';
+            div.className = 'damage';
             div.style.left = x + 'px';
             div.style.top = y + 'px';
             div.textContent = '-' + damage;
@@ -542,37 +494,57 @@
             setTimeout(() => div.remove(), 2000);
         }
         
+        // ==================== МАГИЯ ====================
+        function castSpell() {
+            for (let m of monsters) {
+                m.health -= 50;
+                showDamage(m.x, m.y, 50);
+            }
+        }
+        
         // ==================== УПРАВЛЕНИЕ ====================
         let keys = {};
+        let joystick = document.getElementById('joystick');
         
-        canvas.addEventListener('touchstart', (e) => {
+        joystick.addEventListener('touchstart', (e) => {
             e.preventDefault();
             let touch = e.touches[0];
-            let rect = canvas.getBoundingClientRect();
+            let rect = joystick.getBoundingClientRect();
             let x = touch.clientX - rect.left;
+            let y = touch.clientY - rect.top;
             
-            if (x < 200) {
-                keys['left'] = true;
-            } else {
-                keys['right'] = true;
-            }
+            keys['up'] = y < 30;
+            keys['down'] = y > 50;
+            keys['left'] = x < 30;
+            keys['right'] = x > 50;
         });
         
-        canvas.addEventListener('touchend', () => {
+        joystick.addEventListener('touchend', () => {
             keys = {};
         });
         
         function movePlayer() {
-            if (keys['left']) {
-                player.rotation -= 0.05;
-            }
-            if (keys['right']) {
-                player.rotation += 0.05;
-            }
+            if (keys['up']) player.y -= player.speed;
+            if (keys['down']) player.y += player.speed;
+            if (keys['left']) player.x -= player.speed;
+            if (keys['right']) player.x += player.speed;
             
-            // Движение вперёд всегда
-            player.x += Math.sin(player.rotation) * player.speed;
-            player.z += Math.cos(player.rotation) * player.speed;
+            player.x = Math.max(20, Math.min(380, player.x));
+            player.y = Math.max(40, Math.min(460, player.y));
+        }
+        
+        // ==================== ИНВЕНТАРЬ ====================
+        function useItem(index) {
+            if (index === 3 && player.potions > 0) {
+                player.health = Math.min(player.maxHealth, player.health + 30);
+                player.potions--;
+                let slots = document.querySelectorAll('.item-slot');
+                slots[3].innerHTML = `🧪 x${player.potions}`;
+            } else if (index === 0) {
+                player.weapon.equipped = !player.weapon.equipped;
+            } else if (index === 1) {
+                player.armor.equipped = !player.armor.equipped;
+            }
         }
         
         // ==================== ОБНОВЛЕНИЕ UI ====================
@@ -584,56 +556,52 @@
             document.getElementById('gold').textContent = player.gold;
         }
         
-        function useItem(index) {
-            if (index === 3 && player.potions > 0) {
-                player.health = Math.min(player.maxHealth, player.health + 50);
-                player.potions--;
-            } else if (index === 0) {
-                player.weapon.equipped = !player.weapon.equipped;
-            } else if (index === 1) {
-                player.armor.equipped = !player.armor.equipped;
-            }
-            
-            let slots = document.querySelectorAll('.item-slot');
-            slots[3].innerHTML = `🧪 Зелье x${player.potions}`;
-        }
-        
         // ==================== ИГРОВОЙ ЦИКЛ ====================
         function gameLoop() {
             movePlayer();
             
             if (player.attackCooldown > 0) player.attackCooldown--;
-            if (player.invincible > 0) player.invincible--;
             
-            // Движение врагов к игроку
-            for (let e of enemies) {
-                if (e.type !== 'tower') {
-                    let dx = 0 - e.x;
-                    let dz = 0 - e.z;
-                    let dist = Math.sqrt(dx*dx + dz*dz);
+            // Движение монстров
+            for (let m of monsters) {
+                if (m.health > 0) {
+                    let dx = player.x - m.x;
+                    let dy = player.y - m.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
                     
                     if (dist > 0) {
-                        e.x += dx / dist * (e.speed || 1);
-                        e.z += dz / dist * (e.speed || 1);
+                        m.x += dx / dist * m.speed;
+                        m.y += dy / dist * m.speed;
+                    }
+                    
+                    // Атака монстра
+                    if (dist < 25 && player.invincible <= 0) {
+                        let damage = m.attack - player.defense - (player.armor.equipped ? 3 : 0);
+                        if (damage < 1) damage = 1;
+                        player.health -= damage;
+                        player.invincible = 30;
                     }
                 }
             }
             
-            draw3D();
+            if (player.invincible > 0) player.invincible--;
+            
+            drawMap();
+            drawMonsters();
+            drawPlayer();
             updateUI();
             
             requestAnimationFrame(gameLoop);
         }
         
         document.getElementById('attackBtn').addEventListener('click', attack);
-        document.getElementById('skillBtn').addEventListener('click', () => {
-            // Огненный шар
-            for (let e of enemies) {
-                e.health -= 100;
-            }
-        });
+        document.getElementById('skillBtn').addEventListener('click', castSpell);
         
         gameLoop();
+        
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
     </script>
 </body>
 </html>
