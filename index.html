@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LEGENDARY ARENA — PREMIUM GRAPHICS</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>LEGENDARY ARENA — ТОП RPG</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
         
         #gameContainer {
@@ -29,7 +29,6 @@
             background: linear-gradient(145deg, #1a2a3a, #0f1a2a);
             border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
             border: 3px solid #ffd700;
         }
         
@@ -37,141 +36,76 @@
             display: block;
             width: 100%;
             height: 500px;
-            background: radial-gradient(circle at 30% 30%, #3a6a8a, #1a3a5a);
+            background: #2a4a6a;
             touch-action: none;
+            cursor: crosshair;
         }
         
         .ui-panel {
             height: 200px;
-            background: linear-gradient(145deg, #2a2a3a, #1a1a2a);
-            padding: 15px;
-            color: #fff;
+            background: #1a1a2a;
+            padding: 10px;
+            color: white;
             border-top: 3px solid #ffd700;
             overflow-y: auto;
-            box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
         }
         
         .stats {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 15px;
-            background: rgba(255,215,0,0.1);
-            padding: 12px;
-            border-radius: 20px;
-            border: 1px solid #ffd700;
-            backdrop-filter: blur(5px);
-        }
-        
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            color: #ffd700;
-            text-shadow: 2px 2px 0 #000;
-        }
-        
-        .stat-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
+            margin-bottom: 10px;
+            background: #2a2a3a;
+            padding: 8px;
+            border-radius: 10px;
         }
         
         .inventory {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 5px;
+            margin-bottom: 10px;
         }
         
         .item-slot {
-            background: linear-gradient(145deg, #3a3a4a, #2a2a3a);
+            background: #2a2a3a;
             border: 2px solid #ffd700;
-            border-radius: 15px;
-            height: 45px;
+            border-radius: 8px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: #ffd700;
-            box-shadow: 0 5px 0 #8a6a2a;
-            transition: all 0.1s;
+            font-size: 20px;
+            cursor: pointer;
         }
         
         .item-slot:active {
-            transform: translateY(5px);
-            box-shadow: none;
+            background: #ffd700;
+            color: #000;
         }
         
         .controls {
             display: flex;
-            gap: 15px;
-            justify-content: center;
+            gap: 10px;
         }
         
         .ctrl-btn {
-            background: linear-gradient(145deg, #ffd700, #d4af37);
+            background: #ffd700;
             border: none;
-            border-radius: 40px;
-            padding: 15px 30px;
-            color: #1a0a0a;
+            border-radius: 20px;
+            padding: 12px;
+            color: #000;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 8px 0 #8a6a2a;
-            transition: all 0.1s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             flex: 1;
         }
         
         .ctrl-btn:active {
-            transform: translateY(8px);
-            box-shadow: none;
+            transform: scale(0.95);
         }
         
-        .joystick-area {
-            position: absolute;
-            bottom: 210px;
-            left: 20px;
-            width: 80px;
-            height: 80px;
-            background: rgba(0,0,0,0.6);
-            border: 3px solid #ffd700;
-            border-radius: 50px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 30px rgba(255,215,0,0.3);
-        }
-        
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #ffd700;
-            border-radius: 2px;
-            pointer-events: none;
-            animation: particleFloat 1s forwards;
-        }
-        
-        @keyframes particleFloat {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: translateY(-50px) scale(0); opacity: 0; }
-        }
-        
-        .damage-number {
-            position: absolute;
-            color: #ffaa00;
-            font-weight: bold;
-            font-size: 24px;
-            text-shadow: 2px 2px 0 #000;
-            pointer-events: none;
-            animation: damageFloat 1s forwards;
-        }
-        
-        @keyframes damageFloat {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
-        }
+        #attackBtn { background: #c44; color: white; }
+        #skillBtn { background: #44a; color: white; }
     </style>
 </head>
 <body>
@@ -180,23 +114,23 @@
         
         <div class="ui-panel">
             <div class="stats">
-                <div class="stat-item">❤️<div class="stat-value" id="hp">100/100</div></div>
-                <div class="stat-item">⚔️<div class="stat-value" id="atk">45</div></div>
-                <div class="stat-item">🛡️<div class="stat-value" id="def">22</div></div>
-                <div class="stat-item">📊<div class="stat-value" id="lvl">5</div></div>
-                <div class="stat-item">💰<div class="stat-value" id="gold">1250</div></div>
+                <div>❤️ <span id="hp">100</span>/100</div>
+                <div>⚔️ <span id="atk">25</span></div>
+                <div>🛡️ <span id="def">15</span></div>
+                <div>📊 <span id="lvl">1</span></div>
+                <div>💰 <span id="gold">100</span></div>
             </div>
             
             <div class="inventory" id="inventory">
-                <div class="item-slot">⚔️+5</div>
-                <div class="item-slot">🛡️+3</div>
-                <div class="item-slot">⛑️+2</div>
-                <div class="item-slot">🧪x3</div>
+                <div class="item-slot" onclick="useItem(0)">⚔️ Меч</div>
+                <div class="item-slot" onclick="useItem(1)">🛡️ Щит</div>
+                <div class="item-slot" onclick="useItem(2)">⛑️ Шлем</div>
+                <div class="item-slot" onclick="useItem(3)">🧪 Зелье x3</div>
             </div>
             
             <div class="controls">
                 <button class="ctrl-btn" id="attackBtn">⚔️ АТАКА</button>
-                <button class="ctrl-btn" id="skillBtn">✨ УМЕНИЕ</button>
+                <button class="ctrl-btn" id="skillBtn">✨ МАГИЯ</button>
             </div>
         </div>
     </div>
@@ -205,386 +139,166 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
-        // ==================== ПАРТИКЛЫ ====================
-        function createParticles(x, y, color = '#ffd700') {
-            for (let i = 0; i < 10; i++) {
-                let particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                particle.style.background = color;
-                particle.style.animationDelay = Math.random() * 0.2 + 's';
-                document.getElementById('gameContainer').appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
-            }
-        }
-        
-        function showDamage(x, y, damage) {
-            let div = document.createElement('div');
-            div.className = 'damage-number';
-            div.style.left = x + 'px';
-            div.style.top = y + 'px';
-            div.textContent = '-' + damage;
-            document.getElementById('gameContainer').appendChild(div);
-            setTimeout(() => div.remove(), 1000);
-        }
-        
         // ==================== ИГРОК ====================
         let player = {
             x: 200, y: 250,
             health: 100,
             maxHealth: 100,
-            attack: 45,
-            defense: 22,
-            level: 5,
+            attack: 25,
+            defense: 15,
+            level: 1,
             exp: 0,
-            gold: 1250,
-            weapon: { name: 'Экскалибур', damage: 25 },
-            armor: { name: 'Доспехи героя', defense: 15 },
-            helmet: { name: 'Шлем славы', defense: 7 },
-            critChance: 0.15,
-            critDamage: 2.0,
+            expToNext: 100,
+            gold: 100,
+            mana: 50,
+            maxMana: 50,
             attackCooldown: 0,
-            animationFrame: 0,
-            className: 'warrior'
+            invincible: 0,
+            speed: 3,
+            weapon: { name: 'Меч', damage: 5, equipped: true },
+            armor: { name: 'Щит', defense: 3, equipped: true },
+            helmet: { name: 'Шлем', defense: 2, equipped: true },
+            potions: 3
         };
         
-        // ==================== ПРОТИВНИКИ ====================
-        class Enemy {
-            constructor(x, y, type) {
-                this.x = x;
-                this.y = y;
-                this.type = type;
-                this.health = 200;
-                this.maxHealth = 200;
-                this.attack = 30;
-                this.defense = 12;
-                this.speed = 1;
-                this.animationFrame = 0;
-                this.size = 30;
-                this.goldValue = 150;
-                this.expValue = 100;
-            }
-        }
-        
+        // ==================== ВРАГИ ====================
         let enemies = [
-            new Enemy(300, 200, 'dragon'),
-            new Enemy(100, 300, 'demon')
+            { x: 300, y: 200, health: 80, maxHealth: 80, attack: 12, defense: 5, exp: 30, gold: 20, speed: 1.5, size: 20, type: 'goblin' },
+            { x: 100, y: 300, health: 80, maxHealth: 80, attack: 12, defense: 5, exp: 30, gold: 20, speed: 1.5, size: 20, type: 'goblin' }
         ];
         
-        // ==================== РИСОВАНИЕ КАРТЫ ====================
-        function drawMap() {
-            // Небо с градиентом
-            let gradient = ctx.createLinearGradient(0, 0, 0, 500);
-            gradient.addColorStop(0, '#3a6a8a');
-            gradient.addColorStop(0.5, '#1a3a5a');
-            gradient.addColorStop(1, '#0a1a2a');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 400, 500);
-            
-            // Облака
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.beginPath();
-            ctx.arc(50, 50, 30, 0, Math.PI*2);
-            ctx.arc(80, 40, 25, 0, Math.PI*2);
-            ctx.arc(110, 50, 35, 0, MathPI*2);
-            ctx.fill();
-            
-            // Дальний план - горы
-            ctx.fillStyle = '#2a4a6a';
-            ctx.beginPath();
-            ctx.moveTo(0, 200);
-            ctx.lineTo(100, 100);
-            ctx.lineTo(200, 180);
-            ctx.lineTo(300, 80);
-            ctx.lineTo(400, 150);
-            ctx.lineTo(400, 250);
-            ctx.lineTo(0, 250);
-            ctx.fill();
-            
-            // Тень от гор
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.fillRect(0, 180, 400, 70);
-            
-            // Арена
-            ctx.fillStyle = '#3a5a3a';
-            ctx.beginPath();
-            ctx.ellipse(200, 300, 150, 80, 0, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Свет от центра
-            let radialGradient = ctx.createRadialGradient(200, 300, 0, 200, 300, 150);
-            radialGradient.addColorStop(0, 'rgba(255,255,200,0.3)');
-            radialGradient.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = radialGradient;
-            ctx.fillRect(0, 0, 400, 500);
-        }
+        // ==================== БОСС ====================
+        let boss = {
+            x: 200, y: 100,
+            health: 500,
+            maxHealth: 500,
+            attack: 30,
+            defense: 15,
+            exp: 200,
+            gold: 200,
+            speed: 0.8,
+            size: 40,
+            type: 'boss',
+            active: true
+        };
         
-        // ==================== РИСОВАНИЕ ИГРОКА ====================
-        function drawPlayer() {
-            player.animationFrame += 0.05;
-            let idleOffset = Math.sin(player.animationFrame) * 2;
+        // ==================== РИСОВАНИЕ ====================
+        function draw() {
+            ctx.clearRect(0, 0, 400, 500);
             
-            // Тень
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(player.x, player.y + 15, 15, 5, 0, 0, Math.PI*2);
-            ctx.fill();
+            // Пол
+            ctx.fillStyle = '#3a5a3a';
+            ctx.fillRect(0, 0, 400, 500);
             
-            // Плащ
-            ctx.fillStyle = '#c44';
-            ctx.beginPath();
-            ctx.ellipse(player.x - 5, player.y - 10, 10, 20, 0.1, 0, Math.PI*2);
-            ctx.fill();
+            // Трава
+            ctx.fillStyle = '#2a4a2a';
+            for (let i = 0; i < 50; i++) {
+                ctx.fillRect(Math.random()*400, Math.random()*500, 2, 5);
+            }
             
-            // Доспех
-            ctx.fillStyle = '#6a8';
-            ctx.fillRect(player.x-15, player.y-15, 30, 30);
+            // Босс
+            if (boss.active && boss.health > 0) {
+                // Тело босса
+                ctx.fillStyle = '#a44';
+                ctx.beginPath();
+                ctx.arc(boss.x, boss.y, 30, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Глаза
+                ctx.fillStyle = '#ff0';
+                ctx.beginPath();
+                ctx.arc(boss.x-10, boss.y-10, 5, 0, Math.PI*2);
+                ctx.arc(boss.x+10, boss.y-10, 5, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(boss.x-10, boss.y-10, 2, 0, Math.PI*2);
+                ctx.arc(boss.x+10, boss.y-10, 2, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Рога
+                ctx.fillStyle = '#622';
+                ctx.fillRect(boss.x-20, boss.y-40, 5, 15);
+                ctx.fillRect(boss.x+15, boss.y-40, 5, 15);
+                
+                // Полоска здоровья босса
+                ctx.fillStyle = '#000';
+                ctx.fillRect(boss.x-40, boss.y-50, 80, 8);
+                let bossHp = boss.health / boss.maxHealth;
+                ctx.fillStyle = '#f44';
+                ctx.fillRect(boss.x-40, boss.y-50, 80 * bossHp, 8);
+            }
             
-            // Наплечники
-            ctx.fillStyle = '#8ac';
-            ctx.beginPath();
-            ctx.ellipse(player.x-20, player.y-20, 8, 5, 0, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(player.x+20, player.y-20, 8, 5, 0, 0, Math.PI*2);
-            ctx.fill();
+            // Враги
+            for (let e of enemies) {
+                ctx.fillStyle = '#4a8';
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, 15, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Глаза
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(e.x-5, e.y-5, 3, 0, Math.PI*2);
+                ctx.arc(e.x+5, e.y-5, 3, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(e.x-5, e.y-5, 1, 0, Math.PI*2);
+                ctx.arc(e.x+5, e.y-5, 1, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Полоска здоровья
+                ctx.fillStyle = '#000';
+                ctx.fillRect(e.x-20, e.y-25, 40, 3);
+                let hp = e.health / e.maxHealth;
+                ctx.fillStyle = '#f44';
+                ctx.fillRect(e.x-20, e.y-25, 40 * hp, 3);
+            }
             
-            // Голова
-            ctx.fillStyle = '#f0d0a0';
+            // Игрок
+            ctx.fillStyle = '#44a';
             ctx.beginPath();
-            ctx.arc(player.x, player.y-30 + idleOffset, 12, 0, Math.PI*2);
+            ctx.arc(player.x, player.y, 15, 0, Math.PI*2);
             ctx.fill();
             
             // Шлем
-            ctx.fillStyle = '#8ac';
-            ctx.fillRect(player.x-8, player.y-40, 16, 12);
+            ctx.fillStyle = '#88c';
+            ctx.fillRect(player.x-10, player.y-25, 20, 8);
             
             // Глаза
             ctx.fillStyle = '#fff';
             ctx.beginPath();
-            ctx.arc(player.x-4, player.y-32, 2, 0, Math.PI*2);
-            ctx.arc(player.x+4, player.y-32, 2, 0, Math.PI*2);
+            ctx.arc(player.x-5, player.y-5, 2, 0, Math.PI*2);
+            ctx.arc(player.x+5, player.y-5, 2, 0, Math.PI*2);
             ctx.fill();
             
-            ctx.fillStyle = '#000';
+            // Меч
+            ctx.strokeStyle = '#aaa';
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.arc(player.x-4, player.y-32, 1, 0, Math.PI*2);
-            ctx.arc(player.x+4, player.y-32, 1, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Оружие (экскалибур)
-            ctx.strokeStyle = '#ffd700';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(player.x+20, player.y-15);
-            ctx.lineTo(player.x+60, player.y-35);
+            ctx.moveTo(player.x+15, player.y-5);
+            ctx.lineTo(player.x+35, player.y-15);
             ctx.stroke();
             
-            // Свечение оружия
-            ctx.shadowColor = '#ffd700';
-            ctx.shadowBlur = 20;
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(player.x+20, player.y-15);
-            ctx.lineTo(player.x+60, player.y-35);
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-            
-            // Полоска здоровья
+            // Полоска здоровья игрока
             ctx.fillStyle = '#000';
-            ctx.fillRect(player.x-25, player.y-55, 50, 5);
-            let hpPercent = player.health / player.maxHealth;
-            ctx.fillStyle = '#ff4444';
-            ctx.fillRect(player.x-25, player.y-55, 50 * hpPercent, 5);
-        }
-        
-        // ==================== РИСОВАНИЕ ДРАКОНА ====================
-        function drawDragon(x, y, animation) {
-            let idleOffset = Math.sin(animation) * 3;
+            ctx.fillRect(player.x-20, player.y-35, 40, 4);
+            let playerHp = player.health / player.maxHealth;
+            ctx.fillStyle = '#4f4';
+            ctx.fillRect(player.x-20, player.y-35, 40 * playerHp, 4);
             
-            // Тень
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(x, y + 30, 20, 8, 0, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Тело
-            ctx.fillStyle = '#a44';
-            ctx.beginPath();
-            ctx.ellipse(x, y-5 + idleOffset, 20, 15, 0, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Шея
-            ctx.fillStyle = '#a44';
-            ctx.beginPath();
-            ctx.ellipse(x, y-25 + idleOffset, 10, 15, 0.2, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Голова
-            ctx.fillStyle = '#a44';
-            ctx.beginPath();
-            ctx.ellipse(x+10, y-35 + idleOffset, 12, 8, 0.1, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Глаза
-            ctx.fillStyle = '#ff0';
-            ctx.beginPath();
-            ctx.arc(x+15, y-37 + idleOffset, 3, 0, Math.PI*2);
-            ctx.fill();
-            
+            // Полоска маны
             ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x+16, y-37 + idleOffset, 1.5, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Рога
-            ctx.fillStyle = '#632';
-            ctx.beginPath();
-            ctx.moveTo(x+5, y-45);
-            ctx.lineTo(x, y-55);
-            ctx.lineTo(x-5, y-45);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(x+15, y-45);
-            ctx.lineTo(x+20, y-55);
-            ctx.lineTo(x+10, y-45);
-            ctx.fill();
-            
-            // Крылья
-            ctx.fillStyle = '#822';
-            ctx.beginPath();
-            ctx.moveTo(x-15, y-20);
-            ctx.lineTo(x-40, y-40);
-            ctx.lineTo(x-20, y-30);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(x+15, y-20);
-            ctx.lineTo(x+40, y-40);
-            ctx.lineTo(x+20, y-30);
-            ctx.fill();
-            
-            // Огонь из пасти
-            if (Math.random() < 0.1) {
-                ctx.fillStyle = '#f90';
-                ctx.beginPath();
-                ctx.arc(x+25, y-37, 10, 0, Math.PI*2);
-                ctx.fill();
-            }
+            ctx.fillRect(player.x-20, player.y-40, 40, 3);
+            let mana = player.mana / player.maxMana;
+            ctx.fillStyle = '#44f';
+            ctx.fillRect(player.x-20, player.y-40, 40 * mana, 3);
         }
         
-        // ==================== РИСОВАНИЕ ДЕМОНА ====================
-        function drawDemon(x, y, animation) {
-            let idleOffset = Math.sin(animation) * 2;
-            
-            // Тень
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(x, y + 25, 20, 6, 0, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Тело
-            ctx.fillStyle = '#646';
-            ctx.fillRect(x-15, y-15 + idleOffset, 30, 35);
-            
-            // Голова
-            ctx.fillStyle = '#747';
-            ctx.beginPath();
-            ctx.arc(x, y-25 + idleOffset, 12, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Глаза
-            ctx.fillStyle = '#f00';
-            ctx.beginPath();
-            ctx.arc(x-4, y-28 + idleOffset, 2, 0, Math.PI*2);
-            ctx.arc(x+4, y-28 + idleOffset, 2, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Рога
-            ctx.fillStyle = '#422';
-            ctx.beginPath();
-            ctx.moveTo(x-8, y-35);
-            ctx.lineTo(x-15, y-45);
-            ctx.lineTo(x-5, y-37);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(x+8, y-35);
-            ctx.lineTo(x+15, y-45);
-            ctx.lineTo(x+5, y-37);
-            ctx.fill();
-            
-            // Огненный меч
-            ctx.fillStyle = '#f90';
-            ctx.fillRect(x+20, y-20, 30, 5);
-            ctx.fillRect(x+45, y-30, 5, 20);
-            
-            // Эффект огня
-            ctx.shadowColor = '#f90';
-            ctx.shadowBlur = 20;
-            ctx.fillStyle = '#f90';
-            ctx.beginPath();
-            ctx.arc(x+50, y-20, 8, 0, Math.PI*2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-        
-        // ==================== АТАКА ====================
-        function attack() {
-            if (player.attackCooldown > 0) return;
-            player.attackCooldown = 20;
-            
-            createParticles(player.x + 50, player.y - 30, '#ffaa00');
-            
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                let e = enemies[i];
-                let dx = e.x - player.x;
-                let dy = e.y - player.y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
-                
-                if (dist < 80) {
-                    let isCrit = Math.random() < player.critChance;
-                    let damage = player.attack + player.weapon.damage - e.defense;
-                    if (isCrit) damage *= player.critDamage;
-                    
-                    e.health -= damage;
-                    showDamage(e.x, e.y-50, Math.floor(damage));
-                    
-                    if (isCrit) {
-                        for (let j = 0; j < 20; j++) {
-                            createParticles(e.x, e.y-30, '#ffaa00');
-                        }
-                    }
-                    
-                    if (e.health <= 0) {
-                        player.gold += e.goldValue;
-                        player.exp += e.expValue;
-                        enemies.splice(i, 1);
-                        createParticles(e.x, e.y, '#ffaa00');
-                    }
-                }
-            }
-            
-            updateUI();
-        }
-        
-        // ==================== УМЕНИЕ ====================
-        function useSkill() {
-            if (player.attackCooldown > 0) return;
-            player.attackCooldown = 30;
-            
-            // Ультимейт - огненный дождь
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    for (let e of enemies) {
-                        e.health -= 50;
-                        createParticles(e.x, e.y-30, '#ffaa00');
-                    }
-                }, i * 100);
-            }
-        }
-        
-        // ==================== ДВИЖЕНИЕ ====================
+        // ==================== УПРАВЛЕНИЕ ====================
         let keys = {};
         
         canvas.addEventListener('touchstart', (e) => {
@@ -594,9 +308,12 @@
             let x = touch.clientX - rect.left;
             let y = touch.clientY - rect.top;
             
-            if (x < 80 && y > 400) keys['left'] = true;
-            else if (x > 320 && y > 400) keys['right'] = true;
-            else if (x > 160 && x < 240 && y > 400) keys['up'] = true;
+            // Джойстик в левой части экрана
+            if (x < 150 && y > 350) {
+                if (x < 50) keys['left'] = true;
+                else if (x > 100) keys['right'] = true;
+                else keys['up'] = true;
+            }
         });
         
         canvas.addEventListener('touchend', () => {
@@ -604,33 +321,121 @@
         });
         
         function movePlayer() {
-            if (keys['left']) player.x -= 3;
-            if (keys['right']) player.x += 3;
-            if (keys['up']) player.y -= 3;
+            if (keys['left']) player.x -= player.speed;
+            if (keys['right']) player.x += player.speed;
+            if (keys['up']) player.y -= player.speed;
             
-            player.x = Math.max(50, Math.min(350, player.x));
-            player.y = Math.max(80, Math.min(400, player.y));
+            player.x = Math.max(20, Math.min(380, player.x));
+            player.y = Math.max(40, Math.min(460, player.y));
         }
         
-        // ==================== ОБНОВЛЕНИЕ UI ====================
-        function updateUI() {
-            document.getElementById('hp').textContent = player.health + '/' + player.maxHealth;
-            document.getElementById('atk').textContent = player.attack + player.weapon.damage;
-            document.getElementById('def').textContent = player.defense + player.armor.defense + player.helmet.defense;
-            document.getElementById('lvl').textContent = player.level;
-            document.getElementById('gold').textContent = player.gold;
-        }
-        
-        // ==================== ИГРОВОЙ ЦИКЛ ====================
-        function gameLoop() {
-            movePlayer();
+        // ==================== АТАКА ====================
+        function attack() {
+            if (player.attackCooldown > 0) return;
+            player.attackCooldown = 15;
             
-            if (player.attackCooldown > 0) player.attackCooldown--;
+            let totalDamage = player.attack + (player.weapon.equipped ? 5 : 0);
             
-            // Движение врагов
-            for (let e of enemies) {
-                e.animationFrame += 0.03;
+            // Атака по врагам
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                let e = enemies[i];
+                let dx = e.x - player.x;
+                let dy = e.y - player.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
                 
+                if (dist < 50) {
+                    let damage = totalDamage - e.defense;
+                    if (damage < 1) damage = 1;
+                    e.health -= damage;
+                    
+                    if (e.health <= 0) {
+                        player.exp += e.exp;
+                        player.gold += e.gold;
+                        enemies.splice(i, 1);
+                    }
+                }
+            }
+            
+            // Атака по боссу
+            if (boss.active && boss.health > 0) {
+                let dx = boss.x - player.x;
+                let dy = boss.y - player.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < 60) {
+                    let damage = totalDamage - boss.defense;
+                    if (damage < 1) damage = 1;
+                    boss.health -= damage;
+                    
+                    if (boss.health <= 0) {
+                        player.exp += boss.exp;
+                        player.gold += boss.gold;
+                        boss.active = false;
+                    }
+                }
+            }
+            
+            // Проверка уровня
+            while (player.exp >= player.expToNext) {
+                player.level++;
+                player.exp -= player.expToNext;
+                player.expToNext = Math.floor(player.expToNext * 1.5);
+                player.maxHealth += 20;
+                player.health = player.maxHealth;
+                player.attack += 3;
+                player.defense += 2;
+            }
+        }
+        
+        // ==================== МАГИЯ ====================
+        function castSpell() {
+            if (player.mana < 20) return;
+            player.mana -= 20;
+            
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                let e = enemies[i];
+                e.health -= 50;
+                if (e.health <= 0) {
+                    player.exp += e.exp;
+                    player.gold += e.gold;
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            if (boss.active) {
+                boss.health -= 100;
+                if (boss.health <= 0) {
+                    player.exp += boss.exp;
+                    player.gold += boss.gold;
+                    boss.active = false;
+                }
+            }
+        }
+        
+        // ==================== ИНВЕНТАРЬ ====================
+        function useItem(index) {
+            if (index === 3 && player.potions > 0) { // Зелье
+                player.health = Math.min(player.maxHealth, player.health + 30);
+                player.potions--;
+                updateInventory();
+            } else if (index === 0) { // Меч
+                player.weapon.equipped = !player.weapon.equipped;
+            } else if (index === 1) { // Щит
+                player.armor.equipped = !player.armor.equipped;
+            }
+        }
+        
+        function updateInventory() {
+            let slots = document.querySelectorAll('.item-slot');
+            slots[0].innerHTML = player.weapon.equipped ? '⚔️ Меч' : '⚔️ Меч (off)';
+            slots[1].innerHTML = player.armor.equipped ? '🛡️ Щит' : '🛡️ Щит (off)';
+            slots[2].innerHTML = '⛑️ Шлем';
+            slots[3].innerHTML = `🧪 Зелье x${player.potions}`;
+        }
+        
+        // ==================== ДВИЖЕНИЕ ВРАГОВ ====================
+        function moveEnemies() {
+            for (let e of enemies) {
                 let dx = player.x - e.x;
                 let dy = player.y - e.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
@@ -641,40 +446,84 @@
                 }
                 
                 // Атака врага
-                if (dist < 40 && player.attackCooldown === 0) {
-                    let damage = e.attack - player.defense;
+                if (dist < 30 && player.invincible <= 0) {
+                    let damage = e.attack - player.defense - (player.armor.equipped ? 3 : 0);
                     if (damage < 1) damage = 1;
                     player.health -= damage;
-                    player.attackCooldown = 10;
-                    showDamage(player.x, player.y-50, damage);
+                    player.invincible = 20;
                 }
             }
             
-            // Отрисовка
-            drawMap();
-            
-            for (let e of enemies) {
-                if (e.type === 'dragon') drawDragon(e.x, e.y, e.animationFrame);
-                else drawDemon(e.x, e.y, e.animationFrame);
+            // Движение босса
+            if (boss.active && boss.health > 0) {
+                let dx = player.x - boss.x;
+                let dy = player.y - boss.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                // Полоска здоровья
-                ctx.fillStyle = '#000';
-                ctx.fillRect(e.x-25, e.y-50, 50, 5);
-                let hpPercent = e.health / e.maxHealth;
-                ctx.fillStyle = '#ff4444';
-                ctx.fillRect(e.x-25, e.y-50, 50 * hpPercent, 5);
+                if (dist > 0) {
+                    boss.x += dx / dist * boss.speed;
+                    boss.y += dy / dist * boss.speed;
+                }
+                
+                if (dist < 40 && player.invincible <= 0) {
+                    let damage = boss.attack - player.defense;
+                    if (damage < 1) damage = 1;
+                    player.health -= damage;
+                    player.invincible = 30;
+                }
+            }
+        }
+        
+        // ==================== ОБНОВЛЕНИЕ UI ====================
+        function updateUI() {
+            document.getElementById('hp').textContent = Math.floor(player.health);
+            document.getElementById('atk').textContent = player.attack + (player.weapon.equipped ? 5 : 0);
+            document.getElementById('def').textContent = player.defense + (player.armor.equipped ? 3 : 0);
+            document.getElementById('lvl').textContent = player.level;
+            document.getElementById('gold').textContent = player.gold;
+        }
+        
+        // ==================== ИГРОВОЙ ЦИКЛ ====================
+        function gameLoop() {
+            movePlayer();
+            moveEnemies();
+            
+            if (player.attackCooldown > 0) player.attackCooldown--;
+            if (player.invincible > 0) player.invincible--;
+            
+            // Восстановление маны
+            if (player.mana < player.maxMana) {
+                player.mana += 0.1;
             }
             
-            drawPlayer();
+            // Спавн новых врагов
+            if (enemies.length < 2 && boss.active) {
+                enemies.push({
+                    x: Math.random() * 300 + 50,
+                    y: Math.random() * 300 + 100,
+                    health: 80,
+                    maxHealth: 80,
+                    attack: 12,
+                    defense: 5,
+                    exp: 30,
+                    gold: 20,
+                    speed: 1.5,
+                    size: 20,
+                    type: 'goblin'
+                });
+            }
+            
+            draw();
+            updateUI();
             
             requestAnimationFrame(gameLoop);
         }
         
         document.getElementById('attackBtn').addEventListener('click', attack);
-        document.getElementById('skillBtn').addEventListener('click', useSkill);
+        document.getElementById('skillBtn').addEventListener('click', castSpell);
         
         gameLoop();
-        updateUI();
+        updateInventory();
     </script>
 </body>
 </html>
