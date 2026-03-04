@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Shadow Quest — эпическая RPG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EPIC QUEST — ЛЕГЕНДАРНАЯ RPG</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -17,7 +17,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
         
         body {
-            background: #0a0508;
+            background: #0a0502;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,133 +27,102 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            color: #e0c9a5;
         }
         
         #gameContainer {
             position: relative;
             width: 100%;
             height: 100%;
-            max-width: 400px;
+            max-width: 450px;
             margin: 0 auto;
-            background: #1a1512;
+            background: #2a1a0a;
             border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            border: 2px solid #b89b7b;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+            border: 3px solid #b89b7b;
         }
         
-        /* Стартовый экран */
-        #startScreen {
+        /* ==================== ЭКРАН ВЫБОРА КЛАССА ==================== */
+        #classSelectScreen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(145deg, #1e1916, #0f0b08);
+            z-index: 200;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            z-index: 100;
             padding: 20px;
-            text-align: center;
+            overflow-y: auto;
+            color: #e6d5b8;
         }
         
         .game-title {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 8px;
-            color: #e6d5b8;
-            text-shadow: 0 0 20px #b89b7b, 0 0 40px #8b6b4b;
-            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 0 0 30px #b89b7b;
+            margin: 20px 0;
             animation: titlePulse 3s infinite;
         }
         
         @keyframes titlePulse {
-            0%, 100% { text-shadow: 0 0 20px #b89b7b, 0 0 40px #8b6b4b; }
-            50% { text-shadow: 0 0 30px #e6d5b8, 0 0 60px #b89b7b; }
+            0%, 100% { text-shadow: 0 0 30px #b89b7b; }
+            50% { text-shadow: 0 0 60px #ffd700; }
         }
         
-        .hero-selection {
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             width: 100%;
-            margin: 30px 0;
+            margin: 20px 0;
         }
         
-        .hero-option {
-            background: rgba(184, 155, 123, 0.2);
-            border: 2px solid #b89b7b;
+        .class-card {
+            background: rgba(184, 155, 123, 0.15);
+            border: 3px solid #b89b7b;
             border-radius: 20px;
             padding: 15px;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s;
+            text-align: center;
             cursor: pointer;
-            backdrop-filter: blur(5px);
+            transition: all 0.3s;
         }
         
-        .hero-option:hover {
-            background: rgba(184, 155, 123, 0.4);
-            transform: scale(1.02);
+        .class-card:hover {
+            transform: scale(1.05);
+            background: rgba(184, 155, 123, 0.3);
             box-shadow: 0 0 30px #b89b7b;
         }
         
-        .hero-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(145deg, #4a3f35, #2a1f1a);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            border: 2px solid #b89b7b;
+        .class-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
         }
         
-        .hero-info {
-            flex: 1;
-            text-align: left;
-        }
-        
-        .hero-name {
-            font-size: 20px;
+        .class-name {
+            font-size: 18px;
             font-weight: 700;
-            color: #e6d5b8;
-            margin-bottom: 5px;
+            color: #ffd700;
         }
         
-        .hero-desc {
+        .class-stats {
             font-size: 12px;
-            color: #a0896b;
+            color: #a0b0d0;
+            margin: 10px 0;
         }
         
-        .start-btn {
-            background: linear-gradient(145deg, #b89b7b, #8b6b4b);
-            border: none;
-            border-radius: 40px;
-            padding: 20px 50px;
-            font-size: 24px;
-            font-weight: 700;
-            color: #1e1916;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            cursor: pointer;
-            box-shadow: 0 10px 0 #5a4a3a;
-            transition: all 0.1s;
-            margin-top: 30px;
-            font-family: 'Cinzel', serif;
-            width: 100%;
+        .class-ability {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 5px;
+            font-size: 11px;
+            color: #ffaa00;
         }
         
-        .start-btn:active {
-            transform: translateY(5px);
-            box-shadow: 0 5px 0 #5a4a3a;
-        }
-        
-        /* Игровой экран */
+        /* ==================== ОСНОВНОЙ ЭКРАН ==================== */
         #gameScreen {
             position: absolute;
             top: 0;
@@ -161,418 +130,554 @@
             width: 100%;
             height: 100%;
             display: none;
-            background: #0a0f1e;
+            background: #1a1f2e;
         }
         
         canvas {
             display: block;
             width: 100%;
             height: 100%;
-            background: #1a2a1a;
+            background: #3a5a3a;
             touch-action: none;
         }
         
-        .ui-overlay {
+        .top-panel {
             position: absolute;
             top: 10px;
             left: 10px;
             right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 50;
             pointer-events: none;
         }
         
-        .stats-panel {
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
+        .stat-card {
+            background: rgba(20, 12, 8, 0.9);
             border: 2px solid #b89b7b;
-            border-radius: 30px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-around;
-            color: #e6d5b8;
-            font-size: 16px;
-            text-shadow: 2px 2px 0 #000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        
-        .stat-item {
+            border-radius: 20px;
+            padding: 8px 12px;
+            flex: 1;
+            color: #f0e0b0;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+        
+        .exp-bar {
+            background: #3a2a1a;
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 2px;
+        }
+        
+        .exp-fill {
+            background: #ffd700;
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+        }
+        
+        .inventory-btn {
+            position: absolute;
+            top: 80px;
+            right: 10px;
+            background: rgba(20, 12, 8, 0.9);
+            border: 2px solid #b89b7b;
+            border-radius: 30px;
+            padding: 10px 20px;
+            color: #ffd700;
+            font-size: 16px;
+            z-index: 50;
+            pointer-events: auto;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* ==================== ИНВЕНТАРЬ ==================== */
+        #inventoryScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 5, 2, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 150;
+            display: none;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .inventory-title {
+            color: #ffd700;
+            font-size: 24px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .equipment-slot {
+            background: rgba(184, 155, 123, 0.2);
+            border: 2px solid #b89b7b;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            color: #f0e0b0;
+            min-height: 80px;
+        }
+        
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        
+        .item-slot {
+            background: rgba(30, 20, 10, 0.8);
+            border: 2px solid #b89b7b;
+            border-radius: 10px;
+            padding: 10px;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .item-rarity-common { border-color: #a0a0a0; }
+        .item-rarity-rare { border-color: #44f; }
+        .item-rarity-epic { border-color: #a4f; }
+        .item-rarity-legendary { border-color: #fa4; }
+        .item-rarity-mythic { border-color: #f44; animation: glow 2s infinite; }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px #f44; }
+            50% { box-shadow: 0 0 30px #f44; }
+        }
+        
+        .item-name {
+            font-size: 10px;
+            color: #f0e0b0;
+            margin-top: 5px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #b89b7b;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            color: #1e1916;
+            font-weight: bold;
+            cursor: pointer;
         }
         
         .joystick-area {
             position: absolute;
             bottom: 30px;
             left: 30px;
-            width: 100px;
-            height: 100px;
-            background: rgba(0,0,0,0.5);
-            border: 2px solid #b89b7b;
-            border-radius: 60px;
+            width: 120px;
+            height: 120px;
+            background: rgba(30, 20, 10, 0.7);
+            border: 4px solid #b89b7b;
+            border-radius: 70px;
             backdrop-filter: blur(5px);
             touch-action: none;
             pointer-events: auto;
+            z-index: 100;
         }
         
         .joystick-handle {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             background: #b89b7b;
             border-radius: 30px;
             position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 0 0 20px #e6d5b8;
+            top: 35px;
+            left: 35px;
+            box-shadow: 0 0 20px #f0d0a0;
             pointer-events: none;
+            border: 2px solid #5a4a3a;
         }
         
-        .attack-btn {
+        .action-buttons {
             position: absolute;
             bottom: 30px;
             right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .action-btn {
             width: 80px;
             height: 80px;
             background: linear-gradient(145deg, #c44, #a22);
-            border: 3px solid #e6d5b8;
+            border: 4px solid #e6d5b8;
             border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 36px;
             color: white;
-            text-shadow: 2px 2px 0 #000;
-            box-shadow: 0 5px 0 #622;
+            text-shadow: 3px 3px 0 #3a1a1a;
+            box-shadow: 0 6px 0 #622;
             cursor: pointer;
             pointer-events: auto;
-            transition: all 0.05s;
-            touch-action: none;
         }
         
-        .attack-btn:active {
-            transform: translateY(5px);
+        .action-btn:active {
+            transform: translateY(6px);
             box-shadow: 0 0 0 #622;
-        }
-        
-        .skill-btn {
-            position: absolute;
-            bottom: 30px;
-            right: 120px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(145deg, #46a, #228);
-            border: 2px solid #e6d5b8;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-            text-shadow: 2px 2px 0 #000;
-            box-shadow: 0 4px 0 #224;
-            cursor: pointer;
-            pointer-events: auto;
-            touch-action: none;
-        }
-        
-        .skill-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #224;
-        }
-        
-        .pause-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(0,0,0,0.7);
-            border: 2px solid #b89b7b;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #e6d5b8;
-            cursor: pointer;
-            pointer-events: auto;
-            z-index: 50;
-        }
-        
-        .inventory-panel {
-            position: absolute;
-            bottom: 120px;
-            left: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            border: 2px solid #b89b7b;
-            border-radius: 20px;
-            padding: 10px;
-            display: flex;
-            gap: 5px;
-            pointer-events: auto;
-            transform: translateY(200%);
-            transition: transform 0.3s;
-        }
-        
-        .inventory-panel.show {
-            transform: translateY(0);
-        }
-        
-        .inv-slot {
-            flex: 1;
-            aspect-ratio: 1;
-            background: rgba(184, 155, 123, 0.2);
-            border: 1px solid #b89b7b;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
         }
         
         .damage-number {
             position: absolute;
-            color: #ff6b6b;
+            color: #ffaa00;
             font-weight: bold;
             font-size: 20px;
             text-shadow: 2px 2px 0 #000;
             pointer-events: none;
             animation: floatUp 1s forwards;
+            z-index: 200;
         }
         
         @keyframes floatUp {
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-50px); opacity: 0; }
         }
+        
+        .boss-alert {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff4444;
+            font-size: 32px;
+            text-shadow: 3px 3px 0 #000;
+            animation: bossPulse 2s infinite;
+            z-index: 300;
+            pointer-events: none;
+        }
+        
+        @keyframes bossPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
     </style>
 </head>
 <body>
     <div id="gameContainer">
-        <!-- Стартовый экран -->
-        <div id="startScreen">
-            <div class="game-title">SHADOW QUEST</div>
+        <!-- Экран выбора класса -->
+        <div id="classSelectScreen">
+            <div class="game-title">⚔️ EPIC QUEST ⚔️</div>
             <div style="color: #b89b7b; margin-bottom: 20px;">ВЫБЕРИ ГЕРОЯ</div>
             
-            <div class="hero-selection">
-                <div class="hero-option" onclick="selectHero('warrior')">
-                    <div class="hero-icon">⚔️</div>
-                    <div class="hero-info">
-                        <div class="hero-name">ВОИН</div>
-                        <div class="hero-desc">Сила и выносливость</div>
-                    </div>
-                </div>
-                
-                <div class="hero-option" onclick="selectHero('rogue')">
-                    <div class="hero-icon">🗡️</div>
-                    <div class="hero-info">
-                        <div class="hero-name">РАЗБОЙНИК</div>
-                        <div class="hero-desc">Скорость и криты</div>
-                    </div>
-                </div>
-                
-                <div class="hero-option" onclick="selectHero('mage')">
-                    <div class="hero-icon">🔮</div>
-                    <div class="hero-info">
-                        <div class="hero-name">МАГ</div>
-                        <div class="hero-desc">Магия и интеллект</div>
-                    </div>
-                </div>
-            </div>
+            <div class="class-grid" id="classGrid"></div>
             
-            <button class="start-btn" onclick="startGame()">НАЧАТЬ</button>
+            <div style="color: #b89b7b; margin-top: 20px; font-size: 14px;">👥 5 легендарных классов</div>
         </div>
         
         <!-- Игровой экран -->
         <div id="gameScreen">
             <canvas id="gameCanvas" width="800" height="800"></canvas>
             
-            <div class="ui-overlay">
-                <div class="stats-panel">
-                    <div class="stat-item">❤️ <span id="healthVal">100</span></div>
-                    <div class="stat-item">⚔️ <span id="powerVal">15</span></div>
-                    <div class="stat-item">🛡️ <span id="defenseVal">8</span></div>
-                    <div class="stat-item">📊 <span id="levelVal">1</span></div>
-                    <div class="stat-item">💰 <span id="goldVal">0</span></div>
-                </div>
+            <div class="top-panel">
+                <div class="stat-card">❤️ <span id="healthVal">100</span>/<span id="maxHealthVal">100</span></div>
+                <div class="stat-card">⚔️ <span id="powerVal">20</span></div>
+                <div class="stat-card">🛡️ <span id="defenseVal">15</span></div>
+                <div class="stat-card">📊 <span id="levelVal">1</span></div>
             </div>
+            
+            <div class="exp-bar">
+                <div class="exp-fill" id="expBar" style="width: 0%"></div>
+            </div>
+            
+            <button class="inventory-btn" onclick="toggleInventory()">🎒 Инвентарь</button>
             
             <div class="joystick-area" id="joystick">
                 <div class="joystick-handle" id="joystickHandle"></div>
             </div>
             
-            <button class="attack-btn" id="attackBtn">⚔️</button>
-            <button class="skill-btn" id="skillBtn">✨</button>
-            <button class="pause-btn" id="pauseBtn">⏸️</button>
-            
-            <div class="inventory-panel" id="inventoryPanel">
-                <div class="inv-slot">⚔️</div>
-                <div class="inv-slot">🛡️</div>
-                <div class="inv-slot">🧪</div>
-                <div class="inv-slot">📿</div>
+            <div class="action-buttons">
+                <button class="action-btn" id="attackBtn">⚔️</button>
+                <button class="action-btn skill-btn" id="skillBtn">✨</button>
             </div>
+        </div>
+        
+        <!-- Инвентарь -->
+        <div id="inventoryScreen">
+            <button class="close-btn" onclick="toggleInventory()">✕</button>
+            <div class="inventory-title">⚔️ СНАРЯЖЕНИЕ ⚔️</div>
+            
+            <div class="equipment-grid">
+                <div class="equipment-slot" id="weaponSlot">⚔️<br><span style="font-size: 10px;">Оружие</span></div>
+                <div class="equipment-slot" id="armorSlot">🛡️<br><span style="font-size: 10px;">Броня</span></div>
+                <div class="equipment-slot" id="helmetSlot">⛑️<br><span style="font-size: 10px;">Шлем</span></div>
+            </div>
+            
+            <div class="inventory-title">📦 СУМКА</div>
+            <div class="inventory-grid" id="inventoryGrid"></div>
+            
+            <div style="color: #ffd700; text-align: center; margin-top: 20px;">💰 <span id="goldVal">0</span> золота</div>
         </div>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        let selectedHero = 'warrior';
-        let gameStarted = false;
         
-        // ==================== КЛАССЫ ПЕРСОНАЖЕЙ ====================
-        const heroes = {
-            warrior: {
-                name: 'ВОИН',
-                health: 150,
-                power: 20,
-                defense: 15,
-                speed: 2,
+        // ==================== КЛАССЫ ГЕРОЕВ ====================
+        const CLASSES = [
+            {
+                id: 'warrior',
+                name: '⚔️ ВОИН',
+                icon: '⚔️',
+                baseHealth: 150,
+                basePower: 20,
+                baseDefense: 15,
+                baseSpeed: 2.5,
+                ability: 'Ярость',
+                abilityDesc: 'Удваивает урон на 5 сек',
                 color: '#c44',
-                icon: '⚔️'
+                startWeapon: { name: 'Меч', power: 5, rarity: 'common' }
             },
-            rogue: {
-                name: 'РАЗБОЙНИК',
-                health: 100,
-                power: 25,
-                defense: 8,
-                speed: 3,
+            {
+                id: 'archer',
+                name: '🏹 ЛУЧНИК',
+                icon: '🏹',
+                baseHealth: 100,
+                basePower: 25,
+                baseDefense: 8,
+                baseSpeed: 3.5,
+                ability: 'Прицел',
+                abilityDesc: 'Дальняя атака +100%',
                 color: '#4a4',
-                icon: '🗡️'
+                startWeapon: { name: 'Лук', power: 8, rarity: 'common' }
             },
-            mage: {
-                name: 'МАГ',
-                health: 80,
-                power: 30,
-                defense: 5,
-                speed: 2.5,
+            {
+                id: 'mage',
+                name: '🔮 МАГ',
+                icon: '🔮',
+                baseHealth: 80,
+                basePower: 30,
+                baseDefense: 5,
+                baseSpeed: 2.0,
+                ability: 'Огненный шар',
+                abilityDesc: 'АОЕ урон по площади',
                 color: '#44a',
-                icon: '🔮'
+                startWeapon: { name: 'Посох', power: 10, rarity: 'common' }
+            },
+            {
+                id: 'paladin',
+                name: '🛡️ ПАЛАДИН',
+                icon: '🛡️',
+                baseHealth: 180,
+                basePower: 15,
+                baseDefense: 20,
+                baseSpeed: 2.0,
+                ability: 'Благословение',
+                abilityDesc: 'Щит +50% защиты',
+                color: '#fa4',
+                startWeapon: { name: 'Булава', power: 5, rarity: 'common' }
+            },
+            {
+                id: 'assassin',
+                name: '🗡️ УБИЙЦА',
+                icon: '🗡️',
+                baseHealth: 90,
+                basePower: 35,
+                baseDefense: 5,
+                baseSpeed: 4.0,
+                ability: 'Смертельный удар',
+                abilityDesc: 'х3 урон, 20% шанс',
+                color: '#a4a',
+                startWeapon: { name: 'Кинжалы', power: 12, rarity: 'common' }
             }
+        ];
+        
+        // ==================== ПРЕДМЕТЫ ====================
+        const ITEMS = {
+            common: ['Меч', 'Щит', 'Шлем', 'Сапоги', 'Кольцо'],
+            rare: ['Огненный меч', 'Ледяной щит', 'Корона', 'Плащ теней'],
+            epic: ['Драконий клинок', 'Броня титана', 'Венец мудрости'],
+            legendary: ['Экскалибур', 'Щит Ада', 'Корона богов'],
+            mythic: ['Клинок бесконечности', 'Доспехи богов', 'Венец всевластия']
         };
         
-        // ==================== ИГРОК ====================
+        // ==================== ТЕКУЩИЙ ИГРОК ====================
         let player = {
-            x: 400,
-            y: 400,
-            size: 18,
-            health: 100,
-            maxHealth: 100,
-            power: 15,
-            defense: 8,
+            class: null,
             level: 1,
             exp: 0,
             expToNext: 100,
-            gold: 0,
+            health: 100,
+            maxHealth: 100,
+            power: 10,
+            defense: 5,
+            speed: 2,
+            gold: 100,
+            x: 400,
+            y: 400,
             attackCooldown: 0,
-            attackCooldownMax: 20,
             invincible: 0,
-            speed: 2.5,
-            color: '#4af',
-            animation: 0,
-            direction: 'down'
+            inventory: [],
+            equipment: {
+                weapon: null,
+                armor: null,
+                helmet: null
+            }
         };
         
-        // ==================== ВРАГИ С УНИКАЛЬНЫМ ДИЗАЙНОМ ====================
-        let enemies = [
-            { 
-                x: 200, y: 200, size: 16, 
-                health: 40, maxHealth: 40, power: 6, defense: 2, speed: 1.2,
-                type: 'goblin', color: '#4a4', pattern: 'bandit',
-                expValue: 20, goldValue: 10,
-                animation: 0
-            },
-            { 
-                x: 600, y: 300, size: 24, 
-                health: 80, maxHealth: 80, power: 12, defense: 5, speed: 0.6,
-                type: 'ogre', color: '#c44', pattern: 'brute',
-                expValue: 50, goldValue: 30,
-                animation: 0
-            },
-            { 
-                x: 300, y: 600, size: 14, 
-                health: 30, maxHealth: 30, power: 8, defense: 1, speed: 1.8,
-                type: 'imp', color: '#f90', pattern: 'shadow',
-                expValue: 15, goldValue: 8,
-                animation: 0
+        // ==================== ВРАГИ С МАСШТАБИРОВАНИЕМ ====================
+        let enemies = [];
+        
+        function generateEnemies() {
+            let avgLevel = player.level;
+            let count = 3 + Math.floor(avgLevel / 5);
+            enemies = [];
+            
+            for (let i = 0; i < count; i++) {
+                let isBoss = (i === count - 1 && Math.random() < 0.2); // 20% шанс босса
+                let level = isBoss ? avgLevel + 5 : avgLevel + Math.floor(Math.random() * 3) - 1;
+                
+                enemies.push({
+                    id: 'enemy_' + i,
+                    x: 200 + Math.random() * 400,
+                    y: 200 + Math.random() * 400,
+                    size: isBoss ? 40 : 20,
+                    health: (isBoss ? 500 : 50) + level * 20,
+                    maxHealth: (isBoss ? 500 : 50) + level * 20,
+                    power: (isBoss ? 30 : 10) + level * 2,
+                    defense: (isBoss ? 15 : 5) + level,
+                    speed: isBoss ? 0.5 : 1.0,
+                    level: level,
+                    isBoss: isBoss,
+                    type: isBoss ? 'boss' : ['goblin','skeleton','spider'][Math.floor(Math.random()*3)],
+                    expValue: (isBoss ? 200 : 20) * level,
+                    goldValue: (isBoss ? 100 : 10) * level
+                });
             }
-        ];
+        }
         
-        // ==================== ПРЕДМЕТЫ С ЭФФЕКТАМИ ====================
-        let items = [
-            { x: 500, y: 500, size: 8, type: 'gold', value: 5, glow: 0 },
-            { x: 350, y: 350, size: 10, type: 'potion', value: 10, glow: 0 }
-        ];
+        generateEnemies();
         
-        // ==================== ДЖОЙСТИК ====================
-        let joystick = {
-            active: false,
-            startX: 0,
-            startY: 0,
-            currentX: 0,
-            currentY: 0,
-            handle: document.getElementById('joystickHandle')
-        };
+        // ==================== ОТРИСОВКА КЛАССОВ ====================
+        function renderClassSelection() {
+            const grid = document.getElementById('classGrid');
+            grid.innerHTML = CLASSES.map(c => `
+                <div class="class-card" onclick="selectClass('${c.id}')">
+                    <div class="class-icon">${c.icon}</div>
+                    <div class="class-name">${c.name}</div>
+                    <div class="class-stats">
+                        ❤️ ${c.baseHealth} ⚔️ ${c.basePower}<br>
+                        🛡️ ${c.baseDefense} ⚡ ${c.baseSpeed}
+                    </div>
+                    <div class="class-ability">✨ ${c.ability}</div>
+                </div>
+            `).join('');
+        }
         
-        const joystickArea = document.getElementById('joystick');
-        const attackBtn = document.getElementById('attackBtn');
-        const skillBtn = document.getElementById('skillBtn');
-        
-        // ==================== ДЖОЙСТИК УПРАВЛЕНИЕ ====================
-        joystickArea.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            let touch = e.touches[0];
-            let rect = joystickArea.getBoundingClientRect();
-            joystick.active = true;
-            joystick.startX = rect.left + rect.width/2;
-            joystick.startY = rect.top + rect.height/2;
-            updateJoystick(touch.clientX, touch.clientY);
-        });
-        
-        joystickArea.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (!joystick.active) return;
-            let touch = e.touches[0];
-            updateJoystick(touch.clientX, touch.clientY);
-        });
-        
-        joystickArea.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            joystick.active = false;
-            joystick.handle.style.transform = 'translate(30px, 30px)';
-        });
-        
-        function updateJoystick(touchX, touchY) {
-            let dx = touchX - joystick.startX;
-            let dy = touchY - joystick.startY;
-            let distance = Math.min(30, Math.sqrt(dx*dx + dy*dy));
-            let angle = Math.atan2(dy, dx);
+        // ==================== ВЫБОР КЛАССА ====================
+        function selectClass(classId) {
+            let c = CLASSES.find(c => c.id === classId);
+            player.class = c;
+            player.maxHealth = c.baseHealth;
+            player.health = c.baseHealth;
+            player.power = c.basePower;
+            player.defense = c.baseDefense;
+            player.speed = c.baseSpeed;
+            player.color = c.color;
             
-            let moveX = Math.cos(angle) * distance;
-            let moveY = Math.sin(angle) * distance;
+            // Стартовый предмет
+            player.equipment.weapon = {
+                name: c.startWeapon.name,
+                power: c.startWeapon.power,
+                rarity: c.startWeapon.rarity
+            };
             
-            joystick.handle.style.transform = `translate(${30 + moveX}px, ${30 + moveY}px)`;
-            
-            // Движение игрока
-            player.x += Math.cos(angle) * player.speed * (distance/30);
-            player.y += Math.sin(angle) * player.speed * (distance/30);
-            
-            // Границы
-            player.x = Math.max(player.size, Math.min(800 - player.size, player.x));
-            player.y = Math.max(player.size, Math.min(800 - player.size, player.y));
-            
-            // Анимация направления
-            if (Math.abs(dx) > Math.abs(dy)) {
-                player.direction = dx > 0 ? 'right' : 'left';
-            } else {
-                player.direction = dy > 0 ? 'down' : 'up';
+            // Несколько стартовых предметов
+            for (let i = 0; i < 3; i++) {
+                player.inventory.push(generateItem('common'));
             }
+            
+            document.getElementById('classSelectScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            updateUI();
+            gameLoop();
+        }
+        
+        // ==================== ГЕНЕРАЦИЯ ПРЕДМЕТОВ ====================
+        function generateItem(rarity) {
+            let r = rarity || (() => {
+                let rand = Math.random();
+                if (rand < 0.6) return 'common';
+                if (rand < 0.85) return 'rare';
+                if (rand < 0.95) return 'epic';
+                if (rand < 0.99) return 'legendary';
+                return 'mythic';
+            })();
+            
+            let type = ['weapon','armor','helmet'][Math.floor(Math.random()*3)];
+            let names = ITEMS[r];
+            let name = names[Math.floor(Math.random() * names.length)];
+            
+            let powerBonus = {
+                common: 5,
+                rare: 15,
+                epic: 30,
+                legendary: 50,
+                mythic: 100
+            }[r];
+            
+            return {
+                id: 'item_' + Date.now() + Math.random(),
+                name: name,
+                type: type,
+                rarity: r,
+                power: powerBonus,
+                icon: type === 'weapon' ? '⚔️' : (type === 'armor' ? '🛡️' : '⛑️')
+            };
+        }
+        
+        // ==================== ВЫПАДЕНИЕ С БОССА ====================
+        function generateBossLoot() {
+            let items = [];
+            // Гарантированный легендарный
+            items.push(generateItem('legendary'));
+            
+            // Шанс на мифический
+            if (Math.random() < 0.2) {
+                items.push(generateItem('mythic'));
+            }
+            
+            // 2-3 редких
+            for (let i = 0; i < 2 + Math.floor(Math.random()*2); i++) {
+                items.push(generateItem('rare'));
+            }
+            
+            return items;
         }
         
         // ==================== АТАКА ====================
         function attack() {
             if (player.attackCooldown > 0) return;
-            player.attackCooldown = player.attackCooldownMax;
+            player.attackCooldown = 15;
             
             for (let i = enemies.length - 1; i >= 0; i--) {
                 let e = enemies[i];
@@ -580,20 +685,31 @@
                 let dy = e.y - player.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                if (dist < 60) {
-                    let damage = player.power - e.defense;
-                    if (damage < 1) damage = 1;
-                    
+                if (dist < 70) {
+                    let weaponBonus = player.equipment.weapon?.power || 0;
+                    let damage = Math.max(1, player.power + weaponBonus - e.defense);
                     e.health -= damage;
-                    showDamage(e.x, e.y, damage);
+                    showFloatingText(e.x, e.y, '-' + damage, '#ffaa00');
                     
                     if (e.health <= 0) {
                         player.gold += e.goldValue;
                         player.exp += e.expValue;
-                        enemies.splice(i, 1);
-                        showFloatingText(e.x, e.y, `+${e.goldValue}💰`, '#ffd700');
                         
-                        if (player.exp >= player.expToNext) {
+                        if (e.isBoss) {
+                            let loot = generateBossLoot();
+                            player.inventory.push(...loot);
+                            showFloatingText(400, 300, '🔥 ЛЕГЕНДАРНЫЙ ЛУТ! 🔥', '#ffaa00');
+                        } else {
+                            if (Math.random() < 0.3) {
+                                player.inventory.push(generateItem());
+                            }
+                        }
+                        
+                        enemies.splice(i, 1);
+                        showFloatingText(e.x, e.y, '+' + e.goldValue + '💰', '#ffd700');
+                        
+                        // Проверка уровня
+                        while (player.exp >= player.expToNext) {
                             player.level++;
                             player.exp -= player.expToNext;
                             player.expToNext = Math.floor(player.expToNext * 1.5);
@@ -601,22 +717,107 @@
                             player.health = player.maxHealth;
                             player.power += 3;
                             player.defense += 2;
-                            showFloatingText(player.x, player.y-50, 'LEVEL UP!', '#e6d5b8');
+                            showFloatingText(player.x, player.y-50, 'LEVEL UP!', '#aa88ff');
                         }
+                    }
+                }
+            }
+            
+            if (enemies.length === 0) {
+                generateEnemies();
+                showFloatingText(400, 300, '⚔️ НОВАЯ ВОЛНА ⚔️', '#ffd700');
+            }
+        }
+        
+        // ==================== СПОСОБНОСТЬ ====================
+        function useAbility() {
+            if (!player.class) return;
+            
+            if (player.class.id === 'warrior') {
+                player.power *= 2;
+                setTimeout(() => player.power /= 2, 5000);
+            } else if (player.class.id === 'mage') {
+                for (let e of enemies) {
+                    let dx = e.x - player.x;
+                    let dy = e.y - player.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 150) {
+                        e.health -= player.power * 2;
+                    }
+                }
+            } else if (player.class.id === 'assassin') {
+                if (Math.random() < 0.2) {
+                    for (let e of enemies) {
+                        e.health -= player.power * 3;
                     }
                 }
             }
         }
         
-        // ==================== ВИЗУАЛЬНЫЕ ЭФФЕКТЫ ====================
-        function showDamage(x, y, amount) {
-            let div = document.createElement('div');
-            div.className = 'damage-number';
-            div.style.left = x/800*100 + '%';
-            div.style.top = y/800*100 + '%';
-            div.textContent = '-' + amount;
-            document.getElementById('gameScreen').appendChild(div);
-            setTimeout(() => div.remove(), 1000);
+        // ==================== ИНВЕНТАРЬ ====================
+        function toggleInventory() {
+            let inv = document.getElementById('inventoryScreen');
+            inv.style.display = inv.style.display === 'none' ? 'block' : 'none';
+            renderInventory();
+        }
+        
+        function renderInventory() {
+            const grid = document.getElementById('inventoryGrid');
+            grid.innerHTML = player.inventory.map((item, index) => `
+                <div class="item-slot item-rarity-${item.rarity}" onclick="useItem(${index})">
+                    ${item.icon}<br>
+                    <span class="item-name">${item.name}</span>
+                    <span style="font-size: 8px;">+${item.power}</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('weaponSlot').innerHTML = player.equipment.weapon ? 
+                `${player.equipment.weapon.icon}<br>${player.equipment.weapon.name}` : '⚔️<br>Пусто';
+            document.getElementById('goldVal').textContent = player.gold;
+        }
+        
+        function useItem(index) {
+            let item = player.inventory[index];
+            if (item.type === 'weapon' || item.type === 'armor' || item.type === 'helmet') {
+                // Экипируем
+                let oldItem = player.equipment[item.type];
+                if (oldItem) player.inventory.push(oldItem);
+                player.equipment[item.type] = item;
+                player.inventory.splice(index, 1);
+                renderInventory();
+                updateUI();
+            }
+        }
+        
+        // ==================== СОХРАНЕНИЕ ====================
+        function saveGame() {
+            let save = {
+                player: player,
+                version: 1
+            };
+            localStorage.setItem('epicQuestSave', JSON.stringify(save));
+        }
+        
+        function loadGame() {
+            let save = localStorage.getItem('epicQuestSave');
+            if (save) {
+                try {
+                    let data = JSON.parse(save);
+                    player = data.player;
+                    document.getElementById('classSelectScreen').style.display = 'none';
+                    document.getElementById('gameScreen').style.display = 'block';
+                } catch (e) {}
+            }
+        }
+        
+        // ==================== UI ====================
+        function updateUI() {
+            document.getElementById('healthVal').textContent = Math.floor(player.health);
+            document.getElementById('maxHealthVal').textContent = player.maxHealth;
+            document.getElementById('powerVal').textContent = player.power + (player.equipment.weapon?.power || 0);
+            document.getElementById('defenseVal').textContent = player.defense + (player.equipment.armor?.power || 0);
+            document.getElementById('levelVal').textContent = player.level;
+            document.getElementById('expBar').style.width = (player.exp / player.expToNext * 100) + '%';
         }
         
         function showFloatingText(x, y, text, color) {
@@ -626,7 +827,7 @@
             div.style.top = y/800*100 + '%';
             div.style.color = color;
             div.textContent = text;
-            document.getElementById('gameScreen').appendChild(div);
+            document.getElementById('gameContainer').appendChild(div);
             setTimeout(() => div.remove(), 1000);
         }
         
@@ -634,149 +835,111 @@
         function draw() {
             ctx.clearRect(0, 0, 800, 800);
             
-            // Динамический фон
-            let gradient = ctx.createRadialGradient(400, 400, 0, 400, 400, 800);
-            gradient.addColorStop(0, '#2a4a2a');
-            gradient.addColorStop(1, '#1a2a1a');
-            ctx.fillStyle = gradient;
+            // Фон
+            ctx.fillStyle = '#3a5a3a';
             ctx.fillRect(0, 0, 800, 800);
             
-            // Рисуем траву/текстуру
-            ctx.fillStyle = 'rgba(255,255,255,0.03)';
-            for (let i = 0; i < 50; i++) {
-                ctx.beginPath();
-                ctx.arc(100 + i*15, 100 + i*10, 5, 0, Math.PI*2);
-                ctx.fill();
-            }
-            
-            // Предметы с эффектом свечения
-            for (let item of items) {
-                item.glow = (item.glow + 0.05) % (Math.PI*2);
-                let glowSize = Math.sin(item.glow) * 3;
-                
-                ctx.shadowColor = item.type === 'gold' ? '#ffd700' : '#ff6b6b';
-                ctx.shadowBlur = 15 + glowSize;
-                
-                ctx.fillStyle = item.type === 'gold' ? '#ffd700' : '#ff6b6b';
-                ctx.beginPath();
-                ctx.arc(item.x, item.y, item.size + glowSize/2, 0, Math.PI*2);
-                ctx.fill();
-                
-                ctx.shadowBlur = 0;
-            }
-            
-            // Враги с уникальным дизайном
+            // Враги
             for (let e of enemies) {
-                e.animation = (e.animation + 0.1) % (Math.PI*2);
-                let bobY = Math.sin(e.animation) * 2;
-                
-                // Тень
-                ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                ctx.fillStyle = e.isBoss ? '#c44' : (e.type === 'skeleton' ? '#eee' : '#4a8');
                 ctx.beginPath();
-                ctx.ellipse(e.x, e.y + e.size/2, e.size*0.8, e.size*0.3, 0, 0, Math.PI*2);
+                ctx.arc(e.x, e.y, e.size, 0, Math.PI*2);
                 ctx.fill();
                 
-                // Тело
-                ctx.fillStyle = e.color;
-                ctx.shadowColor = e.color;
-                ctx.shadowBlur = 20;
-                ctx.beginPath();
-                ctx.arc(e.x, e.y + bobY, e.size, 0, Math.PI*2);
-                ctx.fill();
-                
-                // Глаза
+                // Уровень врага
                 ctx.fillStyle = '#fff';
-                ctx.shadowBlur = 5;
-                ctx.beginPath();
-                ctx.arc(e.x - 4, e.y - 4 + bobY, 3, 0, Math.PI*2);
-                ctx.arc(e.x + 4, e.y - 4 + bobY, 3, 0, Math.PI*2);
-                ctx.fill();
-                
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(e.x - 4, e.y - 4 + bobY, 1.5, 0, Math.PI*2);
-                ctx.arc(e.x + 4, e.y - 4 + bobY, 1.5, 0, Math.PI*2);
-                ctx.fill();
+                ctx.font = '12px Arial';
+                ctx.fillText('👾 ' + e.level, e.x-15, e.y-40);
                 
                 // Полоска здоровья
-                ctx.shadowBlur = 0;
                 ctx.fillStyle = '#000';
-                ctx.fillRect(e.x-15, e.y-25 + bobY, 30, 4);
+                ctx.fillRect(e.x-25, e.y-30, 50, 5);
                 let hpPercent = e.health / e.maxHealth;
                 ctx.fillStyle = '#ff4444';
-                ctx.fillRect(e.x-15, e.y-25 + bobY, 30 * hpPercent, 4);
+                ctx.fillRect(e.x-25, e.y-30, 50 * hpPercent, 5);
+                
+                if (e.isBoss) {
+                    ctx.fillStyle = '#ffaa00';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('👑 БОСС', e.x-30, e.y-50);
+                }
             }
             
-            // Игрок с анимацией
-            player.animation = (player.animation + 0.2) % (Math.PI*2);
-            let bobY = Math.sin(player.animation) * 2;
-            
-            // Тень игрока
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            // Игрок
+            ctx.fillStyle = player.color || '#4af';
             ctx.beginPath();
-            ctx.ellipse(player.x, player.y + player.size/2, player.size*0.8, player.size*0.3, 0, 0, Math.PI*2);
+            ctx.arc(player.x, player.y, 18, 0, Math.PI*2);
             ctx.fill();
             
-            // Тело игрока
-            ctx.fillStyle = player.color;
-            ctx.shadowColor = player.invincible > 0 ? '#ffff00' : player.color;
-            ctx.shadowBlur = player.invincible > 0 ? 40 : 20;
-            ctx.beginPath();
-            ctx.arc(player.x, player.y + bobY, player.size, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Глаза игрока
+            // Уровень игрока
             ctx.fillStyle = '#fff';
-            ctx.shadowBlur = 5;
-            ctx.beginPath();
-            ctx.arc(player.x - 5, player.y - 5 + bobY, 4, 0, Math.PI*2);
-            ctx.arc(player.x + 5, player.y - 5 + bobY, 4, 0, Math.PI*2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(player.x - 5, player.y - 5 + bobY, 2, 0, Math.PI*2);
-            ctx.arc(player.x + 5, player.y - 5 + bobY, 2, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Оружие в зависимости от направления
-            ctx.strokeStyle = '#aaa';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            switch(player.direction) {
-                case 'right':
-                    ctx.moveTo(player.x + 10, player.y + bobY - 5);
-                    ctx.lineTo(player.x + 25, player.y + bobY - 10);
-                    break;
-                case 'left':
-                    ctx.moveTo(player.x - 10, player.y + bobY - 5);
-                    ctx.lineTo(player.x - 25, player.y + bobY - 10);
-                    break;
-                case 'up':
-                    ctx.moveTo(player.x + 5, player.y + bobY - 15);
-                    ctx.lineTo(player.x + 15, player.y + bobY - 30);
-                    break;
-                case 'down':
-                    ctx.moveTo(player.x + 5, player.y + bobY + 5);
-                    ctx.lineTo(player.x + 15, player.y + bobY + 20);
-                    break;
-            }
-            ctx.stroke();
-            
-            // Полоска здоровья игрока
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#000';
-            ctx.fillRect(player.x-20, player.y-35 + bobY, 40, 5);
-            let hpPercent = player.health / player.maxHealth;
-            ctx.fillStyle = '#44ff44';
-            ctx.fillRect(player.x-20, player.y-35 + bobY, 40 * hpPercent, 5);
+            ctx.font = '14px Arial';
+            ctx.fillText(player.class?.name || 'Герой', player.x-20, player.y-40);
         }
         
-        // ==================== ОБНОВЛЕНИЕ ====================
-        function update() {
-            if (!gameStarted) return;
+        // ==================== ДВИЖЕНИЕ ====================
+        let joystick = {
+            active: false,
+            startX: 0,
+            startY: 0,
+            handle: document.getElementById('joystickHandle')
+        };
+        
+        const joystickArea = document.getElementById('joystick');
+        
+        joystickArea.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            let touch = e.touches[0];
+            let rect = joystickArea.getBoundingClientRect();
+            joystick.active = true;
+            joystick.startX = rect.left + rect.width/2;
+            joystick.startY = rect.top + rect.height/2;
+        });
+        
+        joystickArea.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!joystick.active) return;
             
-            // Движение врагов
+            let touch = e.touches[0];
+            let dx = touch.clientX - joystick.startX;
+            let dy = touch.clientY - joystick.startY;
+            let distance = Math.min(40, Math.sqrt(dx*dx + dy*dy));
+            let angle = Math.atan2(dy, dx);
+            
+            let moveX = Math.cos(angle) * distance;
+            let moveY = Math.sin(angle) * distance;
+            
+            joystick.handle.style.transform = `translate(${35 + moveX}px, ${35 + moveY}px)`;
+            
+            player.x += Math.cos(angle) * player.speed * (distance/40);
+            player.y += Math.sin(angle) * player.speed * (distance/40);
+            
+            player.x = Math.max(40, Math.min(760, player.x));
+            player.y = Math.max(40, Math.min(760, player.y));
+        });
+        
+        joystickArea.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            joystick.active = false;
+            joystick.handle.style.transform = 'translate(35px, 35px)';
+        });
+        
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        document.getElementById('attackBtn').addEventListener('click', attack);
+        document.getElementById('skillBtn').addEventListener('click', useAbility);
+        
+        renderClassSelection();
+        loadGame();
+        
+        // Автосохранение каждые 10 секунд
+        setInterval(saveGame, 10000);
+        
+        // ==================== ИГРОВОЙ ЦИКЛ ====================
+        function gameLoop() {
+            if (player.attackCooldown > 0) player.attackCooldown--;
+            if (player.invincible > 0) player.invincible--;
+            
+            // Движение врагов к игроку
             for (let e of enemies) {
                 let dx = player.x - e.x;
                 let dy = player.y - e.y;
@@ -785,102 +948,15 @@
                 if (dist > 0) {
                     e.x += dx / dist * e.speed;
                     e.y += dy / dist * e.speed;
-                    e.x = Math.max(e.size, Math.min(800 - e.size, e.x));
-                    e.y = Math.max(e.size, Math.min(800 - e.size, e.y));
+                    e.x = Math.max(40, Math.min(760, e.x));
+                    e.y = Math.max(40, Math.min(760, e.y));
                 }
             }
-            
-            // Сбор предметов
-            for (let i = items.length - 1; i >= 0; i--) {
-                let item = items[i];
-                let dx = player.x - item.x;
-                let dy = player.y - item.y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
-                
-                if (dist < player.size + item.size) {
-                    if (item.type === 'gold') {
-                        player.gold += item.value;
-                        showFloatingText(item.x, item.y, `+${item.value}💰`, '#ffd700');
-                    } else if (item.type === 'potion') {
-                        player.health = Math.min(player.maxHealth, player.health + item.value);
-                        showFloatingText(item.x, item.y, `+${item.value}❤️`, '#ff6b6b');
-                    }
-                    items.splice(i, 1);
-                }
-            }
-            
-            // Проверка коллизий
-            if (player.invincible > 0) {
-                player.invincible--;
-            } else {
-                for (let e of enemies) {
-                    let dx = player.x - e.x;
-                    let dy = player.y - e.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if (dist < player.size + e.size) {
-                        let damage = Math.max(1, e.power - player.defense);
-                        player.health -= damage;
-                        player.invincible = 30;
-                        showDamage(player.x, player.y, damage);
-                        
-                        if (player.health <= 0) {
-                            showFloatingText(400, 300, 'GAME OVER', '#ff0000');
-                            gameStarted = false;
-                        }
-                    }
-                }
-            }
-            
-            player.attackCooldown--;
-            
-            // Обновление UI
-            document.getElementById('healthVal').textContent = player.health;
-            document.getElementById('powerVal').textContent = player.power;
-            document.getElementById('defenseVal').textContent = player.defense;
-            document.getElementById('levelVal').textContent = player.level;
-            document.getElementById('goldVal').textContent = player.gold;
             
             draw();
+            updateUI();
+            requestAnimationFrame(gameLoop);
         }
-        
-        // ==================== ВЫБОР ГЕРОЯ ====================
-        function selectHero(hero) {
-            selectedHero = hero;
-            document.querySelectorAll('.hero-option').forEach(opt => {
-                opt.style.background = 'rgba(184, 155, 123, 0.2)';
-            });
-            event.currentTarget.style.background = 'rgba(184, 155, 123, 0.4)';
-        }
-        
-        // ==================== СТАРТ ИГРЫ ====================
-        function startGame() {
-            let hero = heroes[selectedHero];
-            player.health = hero.health;
-            player.maxHealth = hero.health;
-            player.power = hero.power;
-            player.defense = hero.defense;
-            player.speed = hero.speed;
-            player.color = hero.color;
-            
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            gameStarted = true;
-            
-            // Запуск игрового цикла
-            setInterval(update, 1000/60);
-        }
-        
-        // ==================== УПРАВЛЕНИЕ КНОПКАМИ ====================
-        attackBtn.addEventListener('click', attack);
-        
-        document.getElementById('skillBtn').addEventListener('click', () => {
-            // Умение пока не реализовано
-        });
-        
-        document.getElementById('pauseBtn').addEventListener('click', () => {
-            gameStarted = !gameStarted;
-        });
     </script>
 </body>
 </html>
