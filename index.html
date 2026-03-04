@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EPIC REALM — НАСТОЯЩАЯ RPG</title>
+    <title>LEGENDARY ARENA — PREMIUM GRAPHICS</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -14,87 +14,120 @@
         }
         
         body {
-            background: #000;
+            background: #0a0a0a;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
         
         #gameContainer {
             position: relative;
             width: 400px;
             height: 700px;
-            background: #1a2a1a;
-            border-radius: 20px;
+            background: linear-gradient(145deg, #1a2a3a, #0f1a2a);
+            border-radius: 30px;
             overflow: hidden;
-            border: 3px solid #b89b7b;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            border: 3px solid #ffd700;
         }
         
         canvas {
             display: block;
             width: 100%;
             height: 500px;
-            background: #3a5a3a;
+            background: radial-gradient(circle at 30% 30%, #3a6a8a, #1a3a5a);
             touch-action: none;
         }
         
         .ui-panel {
             height: 200px;
-            background: #2a1a0a;
-            padding: 10px;
-            color: #e6d5b8;
-            border-top: 3px solid #b89b7b;
+            background: linear-gradient(145deg, #2a2a3a, #1a1a2a);
+            padding: 15px;
+            color: #fff;
+            border-top: 3px solid #ffd700;
             overflow-y: auto;
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
         }
         
         .stats {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 10px;
-            background: #3a2a1a;
-            padding: 10px;
-            border-radius: 10px;
+            margin-bottom: 15px;
+            background: rgba(255,215,0,0.1);
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #ffd700;
+            backdrop-filter: blur(5px);
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #ffd700;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
         }
         
         .inventory {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
         
         .item-slot {
-            background: #3a2a1a;
-            border: 2px solid #b89b7b;
-            border-radius: 8px;
-            height: 40px;
+            background: linear-gradient(145deg, #3a3a4a, #2a2a3a);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
+            color: #ffd700;
+            box-shadow: 0 5px 0 #8a6a2a;
+            transition: all 0.1s;
+        }
+        
+        .item-slot:active {
+            transform: translateY(5px);
+            box-shadow: none;
         }
         
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
         }
         
         .ctrl-btn {
-            background: #b89b7b;
+            background: linear-gradient(145deg, #ffd700, #d4af37);
             border: none;
-            border-radius: 30px;
-            padding: 10px 20px;
+            border-radius: 40px;
+            padding: 15px 30px;
             color: #1a0a0a;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
+            box-shadow: 0 8px 0 #8a6a2a;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            flex: 1;
         }
         
         .ctrl-btn:active {
-            transform: scale(0.95);
+            transform: translateY(8px);
+            box-shadow: none;
         }
         
         .joystick-area {
@@ -103,9 +136,41 @@
             left: 20px;
             width: 80px;
             height: 80px;
-            background: rgba(0,0,0,0.5);
-            border: 3px solid #b89b7b;
-            border-radius: 40px;
+            background: rgba(0,0,0,0.6);
+            border: 3px solid #ffd700;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 2px;
+            pointer-events: none;
+            animation: particleFloat 1s forwards;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: translateY(-50px) scale(0); opacity: 0; }
+        }
+        
+        .damage-number {
+            position: absolute;
+            color: #ffaa00;
+            font-weight: bold;
+            font-size: 24px;
+            text-shadow: 2px 2px 0 #000;
+            pointer-events: none;
+            animation: damageFloat 1s forwards;
+        }
+        
+        @keyframes damageFloat {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
@@ -115,23 +180,23 @@
         
         <div class="ui-panel">
             <div class="stats">
-                <div>❤️ <span id="hp">100</span>/100</div>
-                <div>⚔️ <span id="atk">15</span></div>
-                <div>🛡️ <span id="def">10</span></div>
-                <div>📊 <span id="lvl">1</span></div>
-                <div>💰 <span id="gold">0</span></div>
+                <div class="stat-item">❤️<div class="stat-value" id="hp">100/100</div></div>
+                <div class="stat-item">⚔️<div class="stat-value" id="atk">45</div></div>
+                <div class="stat-item">🛡️<div class="stat-value" id="def">22</div></div>
+                <div class="stat-item">📊<div class="stat-value" id="lvl">5</div></div>
+                <div class="stat-item">💰<div class="stat-value" id="gold">1250</div></div>
             </div>
             
             <div class="inventory" id="inventory">
-                <div class="item-slot">⚔️</div>
-                <div class="item-slot">🛡️</div>
-                <div class="item-slot">⛑️</div>
-                <div class="item-slot">🧪</div>
+                <div class="item-slot">⚔️+5</div>
+                <div class="item-slot">🛡️+3</div>
+                <div class="item-slot">⛑️+2</div>
+                <div class="item-slot">🧪x3</div>
             </div>
             
             <div class="controls">
-                <button class="ctrl-btn" id="attackBtn">⚔️ Атака</button>
-                <button class="ctrl-btn" id="skillBtn">✨ Умение</button>
+                <button class="ctrl-btn" id="attackBtn">⚔️ АТАКА</button>
+                <button class="ctrl-btn" id="skillBtn">✨ УМЕНИЕ</button>
             </div>
         </div>
     </div>
@@ -140,216 +205,336 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
+        // ==================== ПАРТИКЛЫ ====================
+        function createParticles(x, y, color = '#ffd700') {
+            for (let i = 0; i < 10; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.background = color;
+                particle.style.animationDelay = Math.random() * 0.2 + 's';
+                document.getElementById('gameContainer').appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+        
+        function showDamage(x, y, damage) {
+            let div = document.createElement('div');
+            div.className = 'damage-number';
+            div.style.left = x + 'px';
+            div.style.top = y + 'px';
+            div.textContent = '-' + damage;
+            document.getElementById('gameContainer').appendChild(div);
+            setTimeout(() => div.remove(), 1000);
+        }
+        
         // ==================== ИГРОК ====================
         let player = {
             x: 200, y: 250,
             health: 100,
             maxHealth: 100,
-            attack: 15,
-            defense: 10,
-            level: 1,
+            attack: 45,
+            defense: 22,
+            level: 5,
             exp: 0,
-            expToNext: 100,
-            gold: 50,
-            weapon: { name: 'Меч', damage: 5 },
-            armor: { name: 'Кожаная броня', defense: 3 },
-            inventory: ['🧪 Зелье', '⚔️ Кинжал', '🛡️ Щит'],
-            attackCooldown: 0
+            gold: 1250,
+            weapon: { name: 'Экскалибур', damage: 25 },
+            armor: { name: 'Доспехи героя', defense: 15 },
+            helmet: { name: 'Шлем славы', defense: 7 },
+            critChance: 0.15,
+            critDamage: 2.0,
+            attackCooldown: 0,
+            animationFrame: 0,
+            className: 'warrior'
         };
         
-        // ==================== ВРАГИ ====================
-        let enemies = [
-            {
-                x: 300, y: 200,
-                type: 'goblin',
-                health: 50,
-                maxHealth: 50,
-                attack: 8,
-                defense: 2,
-                exp: 20,
-                gold: 10,
-                size: 20,
-                speed: 1
-            },
-            {
-                x: 100, y: 300,
-                type: 'skeleton',
-                health: 70,
-                maxHealth: 70,
-                attack: 12,
-                defense: 3,
-                exp: 30,
-                gold: 15,
-                size: 22,
-                speed: 0.8
+        // ==================== ПРОТИВНИКИ ====================
+        class Enemy {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.health = 200;
+                this.maxHealth = 200;
+                this.attack = 30;
+                this.defense = 12;
+                this.speed = 1;
+                this.animationFrame = 0;
+                this.size = 30;
+                this.goldValue = 150;
+                this.expValue = 100;
             }
+        }
+        
+        let enemies = [
+            new Enemy(300, 200, 'dragon'),
+            new Enemy(100, 300, 'demon')
         ];
         
         // ==================== РИСОВАНИЕ КАРТЫ ====================
         function drawMap() {
-            // Небо
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, 400, 100);
+            // Небо с градиентом
+            let gradient = ctx.createLinearGradient(0, 0, 0, 500);
+            gradient.addColorStop(0, '#3a6a8a');
+            gradient.addColorStop(0.5, '#1a3a5a');
+            gradient.addColorStop(1, '#0a1a2a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 500);
             
-            // Горы
-            ctx.fillStyle = '#6a5a4a';
+            // Облака
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
             ctx.beginPath();
-            ctx.moveTo(50, 100);
-            ctx.lineTo(100, 40);
-            ctx.lineTo(150, 100);
+            ctx.arc(50, 50, 30, 0, Math.PI*2);
+            ctx.arc(80, 40, 25, 0, Math.PI*2);
+            ctx.arc(110, 50, 35, 0, MathPI*2);
             ctx.fill();
             
+            // Дальний план - горы
+            ctx.fillStyle = '#2a4a6a';
             ctx.beginPath();
-            ctx.moveTo(250, 100);
-            ctx.lineTo(300, 30);
-            ctx.lineTo(350, 100);
+            ctx.moveTo(0, 200);
+            ctx.lineTo(100, 100);
+            ctx.lineTo(200, 180);
+            ctx.lineTo(300, 80);
+            ctx.lineTo(400, 150);
+            ctx.lineTo(400, 250);
+            ctx.lineTo(0, 250);
             ctx.fill();
             
-            // Лес
-            ctx.fillStyle = '#2a5a2a';
-            for (let i = 0; i < 5; i++) {
-                let x = i * 70 + 30;
-                ctx.fillRect(x, 120, 15, 40);
-                ctx.beginPath();
-                ctx.arc(x + 7, 110, 15, 0, Math.PI*2);
-                ctx.fill();
-            }
+            // Тень от гор
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fillRect(0, 180, 400, 70);
             
-            // Трава
-            ctx.fillStyle = '#3a7a3a';
-            ctx.fillRect(0, 150, 400, 350);
+            // Арена
+            ctx.fillStyle = '#3a5a3a';
+            ctx.beginPath();
+            ctx.ellipse(200, 300, 150, 80, 0, 0, Math.PI*2);
+            ctx.fill();
             
-            // Детали травы
-            ctx.fillStyle = '#2a6a2a';
-            for (let i = 0; i < 30; i++) {
-                let x = Math.random() * 400;
-                let y = 150 + Math.random() * 350;
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-                ctx.lineTo(x-5, y+15);
-                ctx.lineTo(x+5, y+15);
-                ctx.fill();
-            }
+            // Свет от центра
+            let radialGradient = ctx.createRadialGradient(200, 300, 0, 200, 300, 150);
+            radialGradient.addColorStop(0, 'rgba(255,255,200,0.3)');
+            radialGradient.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = radialGradient;
+            ctx.fillRect(0, 0, 400, 500);
         }
         
-        // ==================== РИСОВАНИЕ ПЕРСОНАЖЕЙ ====================
-        function drawGoblin(x, y) {
-            // Тело
-            ctx.fillStyle = '#4a8';
-            ctx.fillRect(x-10, y-5, 20, 25);
-            
-            // Голова
-            ctx.fillStyle = '#6a4';
-            ctx.beginPath();
-            ctx.arc(x, y-15, 10, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Глаза
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(x-4, y-18, 2, 0, Math.PI*2);
-            ctx.arc(x+4, y-18, 2, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Зрачки
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x-4, y-18, 1, 0, Math.PI*2);
-            ctx.arc(x+4, y-18, 1, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Уши
-            ctx.fillStyle = '#4a8';
-            ctx.beginPath();
-            ctx.ellipse(x-8, y-20, 2, 5, -0.2, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(x+8, y-20, 2, 5, 0.2, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Оружие
-            ctx.strokeStyle = '#888';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x+10, y-5);
-            ctx.lineTo(x+25, y-10);
-            ctx.stroke();
-        }
-        
-        function drawSkeleton(x, y) {
-            // Тело
-            ctx.fillStyle = '#ddd';
-            ctx.fillRect(x-8, y-5, 16, 25);
-            
-            // Голова
-            ctx.beginPath();
-            ctx.arc(x, y-18, 8, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Глаза
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(x-3, y-20, 2, 0, Math.PI*2);
-            ctx.arc(x+3, y-20, 2, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Меч
-            ctx.strokeStyle = '#aaa';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(x+12, y-10);
-            ctx.lineTo(x+30, y-20);
-            ctx.stroke();
-        }
-        
+        // ==================== РИСОВАНИЕ ИГРОКА ====================
         function drawPlayer() {
-            // Тело
-            ctx.fillStyle = '#44a';
-            ctx.fillRect(player.x-12, player.y-10, 24, 30);
+            player.animationFrame += 0.05;
+            let idleOffset = Math.sin(player.animationFrame) * 2;
+            
+            // Тень
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(player.x, player.y + 15, 15, 5, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Плащ
+            ctx.fillStyle = '#c44';
+            ctx.beginPath();
+            ctx.ellipse(player.x - 5, player.y - 10, 10, 20, 0.1, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Доспех
+            ctx.fillStyle = '#6a8';
+            ctx.fillRect(player.x-15, player.y-15, 30, 30);
+            
+            // Наплечники
+            ctx.fillStyle = '#8ac';
+            ctx.beginPath();
+            ctx.ellipse(player.x-20, player.y-20, 8, 5, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(player.x+20, player.y-20, 8, 5, 0, 0, Math.PI*2);
+            ctx.fill();
             
             // Голова
-            ctx.fillStyle = '#e0b07a';
+            ctx.fillStyle = '#f0d0a0';
             ctx.beginPath();
-            ctx.arc(player.x, player.y-20, 12, 0, Math.PI*2);
-            ctx.fill();
-            
-            // Глаза
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(player.x-5, player.y-23, 2, 0, Math.PI*2);
-            ctx.arc(player.x+5, player.y-23, 2, 0, Math.PI*2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(player.x-5, player.y-23, 1, 0, Math.PI*2);
-            ctx.arc(player.x+5, player.y-23, 1, 0, Math.PI*2);
+            ctx.arc(player.x, player.y-30 + idleOffset, 12, 0, Math.PI*2);
             ctx.fill();
             
             // Шлем
-            ctx.fillStyle = '#ccc';
-            ctx.fillRect(player.x-13, player.y-32, 26, 8);
+            ctx.fillStyle = '#8ac';
+            ctx.fillRect(player.x-8, player.y-40, 16, 12);
             
-            // Оружие
-            ctx.strokeStyle = '#aaa';
+            // Глаза
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(player.x-4, player.y-32, 2, 0, Math.PI*2);
+            ctx.arc(player.x+4, player.y-32, 2, 0, Math.PI*2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(player.x-4, player.y-32, 1, 0, Math.PI*2);
+            ctx.arc(player.x+4, player.y-32, 1, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Оружие (экскалибур)
+            ctx.strokeStyle = '#ffd700';
             ctx.lineWidth = 4;
             ctx.beginPath();
-            ctx.moveTo(player.x+15, player.y-10);
-            ctx.lineTo(player.x+35, player.y-15);
+            ctx.moveTo(player.x+20, player.y-15);
+            ctx.lineTo(player.x+60, player.y-35);
             ctx.stroke();
+            
+            // Свечение оружия
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 20;
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(player.x+20, player.y-15);
+            ctx.lineTo(player.x+60, player.y-35);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
             
             // Полоска здоровья
             ctx.fillStyle = '#000';
-            ctx.fillRect(player.x-20, player.y-40, 40, 4);
+            ctx.fillRect(player.x-25, player.y-55, 50, 5);
             let hpPercent = player.health / player.maxHealth;
             ctx.fillStyle = '#ff4444';
-            ctx.fillRect(player.x-20, player.y-40, 40 * hpPercent, 4);
+            ctx.fillRect(player.x-25, player.y-55, 50 * hpPercent, 5);
         }
         
-        // ==================== БОЙ ====================
+        // ==================== РИСОВАНИЕ ДРАКОНА ====================
+        function drawDragon(x, y, animation) {
+            let idleOffset = Math.sin(animation) * 3;
+            
+            // Тень
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(x, y + 30, 20, 8, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Тело
+            ctx.fillStyle = '#a44';
+            ctx.beginPath();
+            ctx.ellipse(x, y-5 + idleOffset, 20, 15, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Шея
+            ctx.fillStyle = '#a44';
+            ctx.beginPath();
+            ctx.ellipse(x, y-25 + idleOffset, 10, 15, 0.2, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Голова
+            ctx.fillStyle = '#a44';
+            ctx.beginPath();
+            ctx.ellipse(x+10, y-35 + idleOffset, 12, 8, 0.1, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Глаза
+            ctx.fillStyle = '#ff0';
+            ctx.beginPath();
+            ctx.arc(x+15, y-37 + idleOffset, 3, 0, Math.PI*2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x+16, y-37 + idleOffset, 1.5, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Рога
+            ctx.fillStyle = '#632';
+            ctx.beginPath();
+            ctx.moveTo(x+5, y-45);
+            ctx.lineTo(x, y-55);
+            ctx.lineTo(x-5, y-45);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x+15, y-45);
+            ctx.lineTo(x+20, y-55);
+            ctx.lineTo(x+10, y-45);
+            ctx.fill();
+            
+            // Крылья
+            ctx.fillStyle = '#822';
+            ctx.beginPath();
+            ctx.moveTo(x-15, y-20);
+            ctx.lineTo(x-40, y-40);
+            ctx.lineTo(x-20, y-30);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x+15, y-20);
+            ctx.lineTo(x+40, y-40);
+            ctx.lineTo(x+20, y-30);
+            ctx.fill();
+            
+            // Огонь из пасти
+            if (Math.random() < 0.1) {
+                ctx.fillStyle = '#f90';
+                ctx.beginPath();
+                ctx.arc(x+25, y-37, 10, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+        
+        // ==================== РИСОВАНИЕ ДЕМОНА ====================
+        function drawDemon(x, y, animation) {
+            let idleOffset = Math.sin(animation) * 2;
+            
+            // Тень
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(x, y + 25, 20, 6, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Тело
+            ctx.fillStyle = '#646';
+            ctx.fillRect(x-15, y-15 + idleOffset, 30, 35);
+            
+            // Голова
+            ctx.fillStyle = '#747';
+            ctx.beginPath();
+            ctx.arc(x, y-25 + idleOffset, 12, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Глаза
+            ctx.fillStyle = '#f00';
+            ctx.beginPath();
+            ctx.arc(x-4, y-28 + idleOffset, 2, 0, Math.PI*2);
+            ctx.arc(x+4, y-28 + idleOffset, 2, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Рога
+            ctx.fillStyle = '#422';
+            ctx.beginPath();
+            ctx.moveTo(x-8, y-35);
+            ctx.lineTo(x-15, y-45);
+            ctx.lineTo(x-5, y-37);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x+8, y-35);
+            ctx.lineTo(x+15, y-45);
+            ctx.lineTo(x+5, y-37);
+            ctx.fill();
+            
+            // Огненный меч
+            ctx.fillStyle = '#f90';
+            ctx.fillRect(x+20, y-20, 30, 5);
+            ctx.fillRect(x+45, y-30, 5, 20);
+            
+            // Эффект огня
+            ctx.shadowColor = '#f90';
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = '#f90';
+            ctx.beginPath();
+            ctx.arc(x+50, y-20, 8, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+        
+        // ==================== АТАКА ====================
         function attack() {
             if (player.attackCooldown > 0) return;
             player.attackCooldown = 20;
+            
+            createParticles(player.x + 50, player.y - 30, '#ffaa00');
             
             for (let i = enemies.length - 1; i >= 0; i--) {
                 let e = enemies[i];
@@ -357,49 +542,46 @@
                 let dy = e.y - player.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                if (dist < 50) {
-                    let damage = player.attack + (player.weapon?.damage || 0) - e.defense;
-                    if (damage < 1) damage = 1;
+                if (dist < 80) {
+                    let isCrit = Math.random() < player.critChance;
+                    let damage = player.attack + player.weapon.damage - e.defense;
+                    if (isCrit) damage *= player.critDamage;
                     
                     e.health -= damage;
+                    showDamage(e.x, e.y-50, Math.floor(damage));
+                    
+                    if (isCrit) {
+                        for (let j = 0; j < 20; j++) {
+                            createParticles(e.x, e.y-30, '#ffaa00');
+                        }
+                    }
                     
                     if (e.health <= 0) {
-                        player.gold += e.gold;
-                        player.exp += e.exp;
+                        player.gold += e.goldValue;
+                        player.exp += e.expValue;
                         enemies.splice(i, 1);
-                        
-                        // Повышение уровня
-                        while (player.exp >= player.expToNext) {
-                            player.level++;
-                            player.exp -= player.expToNext;
-                            player.expToNext = Math.floor(player.expToNext * 1.5);
-                            player.maxHealth += 20;
-                            player.health = player.maxHealth;
-                            player.attack += 3;
-                            player.defense += 2;
-                        }
-                        
-                        // Добавляем нового врага
-                        if (enemies.length < 3) {
-                            enemies.push({
-                                x: Math.random() * 350 + 25,
-                                y: Math.random() * 400 + 50,
-                                type: Math.random() < 0.5 ? 'goblin' : 'skeleton',
-                                health: 50 + player.level * 10,
-                                maxHealth: 50 + player.level * 10,
-                                attack: 8 + player.level,
-                                defense: 2 + Math.floor(player.level/2),
-                                exp: 20 + player.level * 5,
-                                gold: 10 + player.level * 2,
-                                size: 20,
-                                speed: 1
-                            });
-                        }
+                        createParticles(e.x, e.y, '#ffaa00');
                     }
                 }
             }
             
             updateUI();
+        }
+        
+        // ==================== УМЕНИЕ ====================
+        function useSkill() {
+            if (player.attackCooldown > 0) return;
+            player.attackCooldown = 30;
+            
+            // Ультимейт - огненный дождь
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    for (let e of enemies) {
+                        e.health -= 50;
+                        createParticles(e.x, e.y-30, '#ffaa00');
+                    }
+                }, i * 100);
+            }
         }
         
         // ==================== ДВИЖЕНИЕ ====================
@@ -412,9 +594,9 @@
             let x = touch.clientX - rect.left;
             let y = touch.clientY - rect.top;
             
-            if (x < 100 && y > 400) keys['left'] = true;
-            else if (x > 300 && y > 400) keys['right'] = true;
-            else if (x > 150 && x < 250 && y > 400) keys['up'] = true;
+            if (x < 80 && y > 400) keys['left'] = true;
+            else if (x > 320 && y > 400) keys['right'] = true;
+            else if (x > 160 && x < 240 && y > 400) keys['up'] = true;
         });
         
         canvas.addEventListener('touchend', () => {
@@ -425,25 +607,18 @@
             if (keys['left']) player.x -= 3;
             if (keys['right']) player.x += 3;
             if (keys['up']) player.y -= 3;
-            if (keys['down']) player.y += 3;
             
-            player.x = Math.max(20, Math.min(380, player.x));
-            player.y = Math.max(40, Math.min(460, player.y));
+            player.x = Math.max(50, Math.min(350, player.x));
+            player.y = Math.max(80, Math.min(400, player.y));
         }
         
         // ==================== ОБНОВЛЕНИЕ UI ====================
         function updateUI() {
-            document.getElementById('hp').textContent = player.health;
-            document.getElementById('atk').textContent = player.attack + (player.weapon?.damage || 0);
-            document.getElementById('def').textContent = player.defense + (player.armor?.defense || 0);
+            document.getElementById('hp').textContent = player.health + '/' + player.maxHealth;
+            document.getElementById('atk').textContent = player.attack + player.weapon.damage;
+            document.getElementById('def').textContent = player.defense + player.armor.defense + player.helmet.defense;
             document.getElementById('lvl').textContent = player.level;
             document.getElementById('gold').textContent = player.gold;
-            
-            // Инвентарь
-            let slots = document.querySelectorAll('.item-slot');
-            player.inventory.forEach((item, i) => {
-                if (slots[i]) slots[i].textContent = item;
-            });
         }
         
         // ==================== ИГРОВОЙ ЦИКЛ ====================
@@ -454,6 +629,8 @@
             
             // Движение врагов
             for (let e of enemies) {
+                e.animationFrame += 0.03;
+                
                 let dx = player.x - e.x;
                 let dy = player.y - e.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
@@ -464,13 +641,12 @@
                 }
                 
                 // Атака врага
-                if (dist < 30 && player.attackCooldown === 0) {
+                if (dist < 40 && player.attackCooldown === 0) {
                     let damage = e.attack - player.defense;
                     if (damage < 1) damage = 1;
                     player.health -= damage;
                     player.attackCooldown = 10;
-                    
-                    if (player.health < 0) player.health = 0;
+                    showDamage(player.x, player.y-50, damage);
                 }
             }
             
@@ -478,15 +654,15 @@
             drawMap();
             
             for (let e of enemies) {
-                if (e.type === 'goblin') drawGoblin(e.x, e.y);
-                else drawSkeleton(e.x, e.y);
+                if (e.type === 'dragon') drawDragon(e.x, e.y, e.animationFrame);
+                else drawDemon(e.x, e.y, e.animationFrame);
                 
-                // Полоска здоровья врага
+                // Полоска здоровья
                 ctx.fillStyle = '#000';
-                ctx.fillRect(e.x-15, e.y-25, 30, 3);
+                ctx.fillRect(e.x-25, e.y-50, 50, 5);
                 let hpPercent = e.health / e.maxHealth;
                 ctx.fillStyle = '#ff4444';
-                ctx.fillRect(e.x-15, e.y-25, 30 * hpPercent, 3);
+                ctx.fillRect(e.x-25, e.y-50, 50 * hpPercent, 5);
             }
             
             drawPlayer();
@@ -495,12 +671,7 @@
         }
         
         document.getElementById('attackBtn').addEventListener('click', attack);
-        document.getElementById('skillBtn').addEventListener('click', () => {
-            // Умение - огненный шар
-            for (let e of enemies) {
-                e.health -= 30;
-            }
-        });
+        document.getElementById('skillBtn').addEventListener('click', useSkill);
         
         gameLoop();
         updateUI();
