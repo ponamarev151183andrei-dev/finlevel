@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HERO'S PATH — НОРМАЛЬНОЕ УПРАВЛЕНИЕ</title>
+    <title>HERO'S PATH — БОЛЬШАЯ КАРТА</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -106,7 +105,6 @@
             color: white;
         }
         
-        /* Джойстик */
         .joystick {
             position: absolute;
             bottom: 210px;
@@ -146,24 +144,6 @@
             0% { transform: translateY(0) scale(1); opacity: 1; }
             100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
         }
-        
-        .level-up {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ffd700;
-            font-size: 40px;
-            font-weight: bold;
-            text-shadow: 3px 3px 0 #000;
-            animation: levelPulse 2s;
-        }
-        
-        @keyframes levelPulse {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
     </style>
 </head>
 <body>
@@ -194,9 +174,22 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
+        // ==================== РАЗМЕРЫ МИРА ====================
+        const WORLD_WIDTH = 2000;
+        const WORLD_HEIGHT = 2000;
+        
+        // ==================== КАМЕРА ====================
+        let camera = {
+            x: 0,
+            y: 0,
+            width: 400,
+            height: 500
+        };
+        
         // ==================== ИГРОК ====================
         let player = {
-            x: 200, y: 250,
+            x: 1000,
+            y: 1000,
             health: 100,
             maxHealth: 100,
             attack: 15,
@@ -206,22 +199,19 @@
             expToNext: 100,
             attackCooldown: 0,
             invincible: 0,
-            speed: 3,
+            speed: 5,
             weapon: 2,
-            armor: 1,
-            potions: 3
+            armor: 1
         };
         
         // ==================== МОНСТРЫ ====================
         let monsters = [
-            { x: 100, y: 100, health: 40, maxHealth: 40, attack: 8, defense: 2, exp: 25, speed: 1.5, size: 15 },
-            { x: 300, y: 150, health: 60, maxHealth: 60, attack: 12, defense: 4, exp: 40, speed: 1.2, size: 16 },
-            { x: 150, y: 350, health: 80, maxHealth: 80, attack: 15, defense: 5, exp: 60, speed: 1.0, size: 18 },
-            { x: 250, y: 400, health: 50, maxHealth: 50, attack: 10, defense: 3, exp: 35, speed: 2.0, size: 14 }
+            { x: 300, y: 300, health: 40, maxHealth: 40, attack: 8, defense: 2, exp: 25, speed: 1.5, size: 20 },
+            { x: 1500, y: 500, health: 60, maxHealth: 60, attack: 12, defense: 4, exp: 40, speed: 1.2, size: 22 },
+            { x: 800, y: 1600, health: 80, maxHealth: 80, attack: 15, defense: 5, exp: 60, speed: 1.0, size: 24 },
+            { x: 1700, y: 1700, health: 50, maxHealth: 50, attack: 10, defense: 3, exp: 35, speed: 2.0, size: 18 },
+            { x: 400, y: 1200, health: 70, maxHealth: 70, attack: 14, defense: 4, exp: 45, speed: 1.3, size: 21 }
         ];
-        
-        // ==================== БОСС ====================
-        let boss = null;
         
         // ==================== ДЖОЙСТИК ====================
         let joystick = {
@@ -274,71 +264,212 @@
                 player.y += joystick.currentY / 10 * player.speed;
             }
             
-            player.x = Math.max(20, Math.min(380, player.x));
-            player.y = Math.max(30, Math.min(470, player.y));
+            // Границы мира
+            player.x = Math.max(20, Math.min(WORLD_WIDTH - 20, player.x));
+            player.y = Math.max(20, Math.min(WORLD_HEIGHT - 20, player.y));
+            
+            // Двигаем камеру за игроком
+            camera.x = player.x - camera.width/2;
+            camera.y = player.y - camera.height/2;
+            
+            // Не выходим за границы мира
+            camera.x = Math.max(0, Math.min(WORLD_WIDTH - camera.width, camera.x));
+            camera.y = Math.max(0, Math.min(WORLD_HEIGHT - camera.height, camera.y));
         }
         
-        // ==================== РИСОВАНИЕ ====================
-        function draw() {
-            ctx.fillStyle = '#2a4a2a';
+        // ==================== РИСОВАНИЕ МИРА ====================
+        function drawWorld() {
+            // Небо
+            ctx.fillStyle = '#7ec8e0';
             ctx.fillRect(0, 0, 400, 500);
             
-            // Текстура
-            ctx.fillStyle = '#1a3a1a';
-            for (let i = 0; i < 30; i++) {
-                ctx.fillRect(Math.random()*400, Math.random()*500, 4, 8);
+            // Облака
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.beginPath();
+            ctx.arc(50, 80, 25, 0, Math.PI*2);
+            ctx.arc(80, 70, 20, 0, Math.PI*2);
+            ctx.arc(110, 80, 30, 0, Math.PI*2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(250, 120, 30, 0, Math.PI*2);
+            ctx.arc(280, 110, 25, 0, Math.PI*2);
+            ctx.arc(310, 120, 35, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Дальние горы
+            ctx.fillStyle = '#5a7a6a';
+            ctx.beginPath();
+            ctx.moveTo(0, 300);
+            ctx.lineTo(100, 200);
+            ctx.lineTo(200, 250);
+            ctx.lineTo(300, 150);
+            ctx.lineTo(400, 200);
+            ctx.lineTo(400, 300);
+            ctx.fill();
+            
+            ctx.fillStyle = '#4a6a5a';
+            ctx.beginPath();
+            ctx.moveTo(0, 350);
+            ctx.lineTo(150, 220);
+            ctx.lineTo(250, 280);
+            ctx.lineTo(350, 180);
+            ctx.lineTo(400, 220);
+            ctx.lineTo(400, 350);
+            ctx.fill();
+            
+            // Лес
+            for (let i = 0; i < 15; i++) {
+                let wx = 100 + i * 150;
+                let wy = 400 + Math.sin(i) * 50;
+                
+                let screenX = wx - camera.x;
+                let screenY = wy - camera.y;
+                
+                if (screenX > -50 && screenX < 450 && screenY > -50 && screenY < 550) {
+                    ctx.fillStyle = '#5a3a2a';
+                    ctx.fillRect(screenX-5, screenY, 10, 40);
+                    
+                    ctx.fillStyle = '#2a7a2a';
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY-15, 18, 0, Math.PI*2);
+                    ctx.fill();
+                }
             }
             
-            // Монстры
-            monsters.forEach(m => {
-                ctx.fillStyle = '#c44';
-                ctx.beginPath();
-                ctx.arc(m.x, m.y, m.size, 0, Math.PI*2);
-                ctx.fill();
+            // Замок
+            let castleX = 1500 - camera.x;
+            let castleY = 800 - camera.y;
+            
+            if (castleX > -100 && castleX < 500 && castleY > -100 && castleY < 600) {
+                ctx.fillStyle = '#8a6a4a';
+                ctx.fillRect(castleX-40, castleY-50, 80, 100);
                 
-                ctx.fillStyle = '#000';
-                ctx.fillRect(m.x-15, m.y-20, 30, 4);
+                ctx.fillStyle = '#a88a6a';
+                ctx.fillRect(castleX-20, castleY-70, 10, 30);
+                ctx.fillRect(castleX+10, castleY-70, 10, 30);
+                
                 ctx.fillStyle = '#f44';
-                ctx.fillRect(m.x-15, m.y-20, 30 * (m.health/m.maxHealth), 4);
-            });
-            
-            // Босс
-            if (boss) {
-                ctx.fillStyle = '#a0a';
-                ctx.beginPath();
-                ctx.arc(boss.x, boss.y, 25, 0, Math.PI*2);
-                ctx.fill();
-                
-                ctx.fillStyle = '#000';
-                ctx.fillRect(boss.x-30, boss.y-35, 60, 5);
-                ctx.fillStyle = '#f4f';
-                ctx.fillRect(boss.x-30, boss.y-35, 60 * (boss.health/boss.maxHealth), 5);
+                ctx.fillRect(castleX-5, castleY-85, 20, 5);
             }
             
-            // Игрок
+            // Озеро
+            let lakeX = 300 - camera.x;
+            let lakeY = 1500 - camera.y;
+            
+            if (lakeX > -50 && lakeX < 450 && lakeY > -50 && lakeY < 550) {
+                ctx.fillStyle = '#3a8ad0';
+                ctx.beginPath();
+                ctx.ellipse(lakeX, lakeY, 80, 40, 0, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#5aa0e0';
+                ctx.beginPath();
+                ctx.ellipse(lakeX-20, lakeY-10, 20, 10, 0, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            // Трава на переднем плане
+            ctx.fillStyle = '#3a5a3a';
+            ctx.fillRect(0, 400, 400, 100);
+            
+            ctx.fillStyle = '#2a4a2a';
+            for (let i = 0; i < 30; i++) {
+                ctx.fillRect(Math.random()*400, 400 + Math.random()*100, 5, 10);
+            }
+        }
+        
+        // ==================== РИСОВАНИЕ МОНСТРОВ ====================
+        function drawMonsters() {
+            monsters.forEach(m => {
+                let screenX = m.x - camera.x;
+                let screenY = m.y - camera.y;
+                
+                if (screenX > -30 && screenX < 430 && screenY > -30 && screenY < 530) {
+                    // Тень
+                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                    ctx.beginPath();
+                    ctx.ellipse(screenX, screenY + m.size/2, m.size/2, m.size/4, 0, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Тело
+                    ctx.fillStyle = m.size > 22 ? '#c44' : '#4a8';
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, m.size/2, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Глаза
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(screenX-4, screenY-4, 3, 0, Math.PI*2);
+                    ctx.arc(screenX+4, screenY-4, 3, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(screenX-4, screenY-4, 1, 0, Math.PI*2);
+                    ctx.arc(screenX+4, screenY-4, 1, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Полоска здоровья
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(screenX-15, screenY-20, 30, 4);
+                    let hpPercent = m.health / m.maxHealth;
+                    ctx.fillStyle = '#f44';
+                    ctx.fillRect(screenX-15, screenY-20, 30 * hpPercent, 4);
+                }
+            });
+        }
+        
+        // ==================== РИСОВАНИЕ ИГРОКА ====================
+        function drawPlayer() {
+            let screenX = 200; // центр экрана
+            let screenY = 250;
+            
+            // Тень
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(screenX, screenY + 15, 15, 5, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Тело
             ctx.fillStyle = '#44a';
             ctx.beginPath();
-            ctx.arc(player.x, player.y, 15, 0, Math.PI*2);
+            ctx.arc(screenX, screenY, 15, 0, Math.PI*2);
             ctx.fill();
+            
+            // Шлем
+            ctx.fillStyle = '#66c';
+            ctx.fillRect(screenX-8, screenY-18, 16, 6);
             
             // Глаза
             ctx.fillStyle = '#fff';
             ctx.beginPath();
-            ctx.arc(player.x-5, player.y-5, 3, 0, Math.PI*2);
-            ctx.arc(player.x+5, player.y-5, 3, 0, Math.PI*2);
+            ctx.arc(screenX-5, screenY-5, 3, 0, Math.PI*2);
+            ctx.arc(screenX+5, screenY-5, 3, 0, Math.PI*2);
             ctx.fill();
             
             ctx.fillStyle = '#000';
             ctx.beginPath();
-            ctx.arc(player.x-5, player.y-5, 1, 0, Math.PI*2);
-            ctx.arc(player.x+5, player.y-5, 1, 0, Math.PI*2);
+            ctx.arc(screenX-5, screenY-5, 1, 0, Math.PI*2);
+            ctx.arc(screenX+5, screenY-5, 1, 0, Math.PI*2);
             ctx.fill();
+            
+            // Оружие
+            ctx.fillStyle = '#aaa';
+            ctx.fillRect(screenX+15, screenY-5, 20, 4);
+            ctx.fillRect(screenX+30, screenY-8, 4, 8);
             
             // Полоска здоровья
             ctx.fillStyle = '#000';
-            ctx.fillRect(player.x-20, player.y-30, 40, 4);
+            ctx.fillRect(screenX-20, screenY-30, 40, 4);
             ctx.fillStyle = '#4f4';
-            ctx.fillRect(player.x-20, player.y-30, 40 * (player.health/player.maxHealth), 4);
+            ctx.fillRect(screenX-20, screenY-30, 40 * (player.health/player.maxHealth), 4);
+            
+            // Уровень
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '12px Arial';
+            ctx.fillText('Ур.' + player.level, screenX-15, screenY-40);
         }
         
         // ==================== АТАКА ====================
@@ -348,12 +479,13 @@
             
             let totalAttack = player.attack + (player.weapon || 0);
             
-            monsters.forEach((m, i) => {
+            for (let i = monsters.length - 1; i >= 0; i--) {
+                let m = monsters[i];
                 let dx = m.x - player.x;
                 let dy = m.y - player.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                if (dist < 40) {
+                if (dist < 50) {
                     let damage = totalAttack - m.defense;
                     if (damage < 1) damage = 1;
                     m.health -= damage;
@@ -373,24 +505,12 @@
                         }
                     }
                 }
-            });
-            
-            if (monsters.length === 0 && !boss) {
-                boss = {
-                    x: 200, y: 250,
-                    health: 300,
-                    maxHealth: 300,
-                    attack: 25,
-                    defense: 10,
-                    exp: 500
-                };
             }
         }
         
         // ==================== УМЕНИЕ ====================
         function useSkill() {
             monsters.forEach(m => m.health -= 30);
-            if (boss) boss.health -= 50;
         }
         
         // ==================== ОБНОВЛЕНИЕ UI ====================
@@ -423,7 +543,9 @@
             
             if (player.attackCooldown > 0) player.attackCooldown--;
             
-            draw();
+            drawWorld();
+            drawMonsters();
+            drawPlayer();
             updateUI();
             
             requestAnimationFrame(gameLoop);
